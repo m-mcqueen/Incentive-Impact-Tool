@@ -67,16 +67,34 @@ EBike <- EBike_raw %>%
            Battery_Storage = mixed_units(Battery_Storage, Battery_Storage_Units), #Add Units
            Range = mixed_units(Range,Range_Units)) %>%  #Add Units
     select(-Battery_Storage_Units, -Range_Units)
-mix <- mix_raw %>% 
+mix <- mix_raw %>%
     left_join(BEV_raw %>% select(Make, Model, epa_econ), by = c("make" = "Make", "model" = "Model")) %>% #join BEV fuel economy info
     left_join(PHEV_raw %>% select(Make, Model, epa_elec_econ, range_elec, epa_ic_econ), by = c("make" = "Make", "model" = "Model")) %>% 
     left_join(FCEV_raw %>% select(Make, Model, epa_h2_econ), by = c("make" = "Make", "model" = "Model")) %>% 
-    group_by(mix_type, mix_name) %>% #group by vehicle type (BEV, PHEV, etc.) and mix name (ex: OR_Feb_20)
+    group_by(mix_type, mix_name, make, model) %>%   #group by vehicle type (BEV, PHEV, etc.) and mix name (ex: OR_Feb_20)
+    #this next mutate is to fix the case where agencies provide make info but not model info for their counts. In this case, the data tables have "na" for model.
+    #This code takes the mean of the relevant attribute(s) for all of that make's vehicles that are in the table and uses that for the weighted mean computations
+    #in the next step
+    mutate(epa_econ = case_when(mix_type == "BEV" & is.na(epa_econ) ~ mean(BEV_raw %>% filter(Make == make) %>% pull(epa_econ), na.rm = T),
+                                T ~ as.double(epa_econ)),
+           epa_elec_econ = case_when(mix_type == "PHEV" & is.na(epa_elec_econ) ~ mean(PHEV_raw %>% filter(Make == make) %>% pull(epa_elec_econ), na.rm = T),
+                                     T ~ as.double(epa_elec_econ)),
+           range_elec = case_when(mix_type == "PHEV" & is.na(range_elec) ~ mean(PHEV_raw %>% filter(Make == make) %>% pull(range_elec), na.rm = T),
+                                     T ~ as.double(range_elec)),
+           epa_ic_econ = case_when(mix_type == "PHEV" & is.na(epa_ic_econ) ~ mean(PHEV_raw %>% filter(Make == make) %>% pull(epa_ic_econ), na.rm = T),
+                                  T ~ as.double(epa_ic_econ)),
+           epa_h2_econ = case_when(mix_type == "FCEV" & is.na(epa_h2_econ) ~ mean(FCEV_raw %>% filter(Make == make) %>% pull(epa_h2_econ), na.rm = T),
+                                   T ~ as.double(epa_h2_econ))
+           ) %>% 
+    ungroup() %>% #Things get borked if you don't ungroup at this point
+    group_by(mix_name, mix_type) %>% 
+    #Summarize the weighted average fuel economies and ranges by type and by mix. If the agency didn't specify the model, the weighted averages are calculated
+    #By using the mean values for the attribute of all of the known models within the make
     summarize(epa_econ_wm = weighted.mean(epa_econ, count, na.rm = T),
               epa_elec_econ_wm = weighted.mean(epa_elec_econ, count, na.rm = T),
               range_elec_wm = weighted.mean(range_elec, count, na.rm = T),
               epa_ic_econ_wm = weighted.mean(epa_ic_econ, count, na.rm = T),
-              epa_h2_econ_wm = weighted.mean(epa_h2_econ, count, na.rm = T)) #Summarize the weighted average fuel economies and ranges by type and by mix
+              epa_h2_econ_wm = weighted.mean(epa_h2_econ, count, na.rm = T)) 
 
 #Remove unecessary tables
 rm(BEV_raw, PHEV_raw, FCEV_raw, EBike_raw, Electricity_raw, IC_raw, Incentives_raw, Trips_raw, mix_raw)
