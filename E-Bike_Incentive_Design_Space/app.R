@@ -466,6 +466,7 @@ server = function(input, output, session) {
     FCEV_emissions_year <- reactive({
         FCEV_H2_econ <- set_units(input$in_FCEV_econ, "mi / kg") #get H2 fuel economy
         FCEV_renew_energy_ratio <- input$in_renew_energy_ratio #get ratio of energy required for electrolysis that is 100% renewable (zero emissions)
+        FCEV_H2_required_day <- mileage_day() / FCEV_H2_econ #get required H2 per day
         FCEV_elec_required_day <- set_units(set_units(drop_units(FCEV_H2_required_day), "H2_kg"), "kiloWatthour") #get electricity required for 1 day of average driving defined on trips tab
         FCEV_nonrenew_elec_required_day <- FCEV_elec_required_day * (1 - FCEV_renew_energy_ratio) #get non-renewable electricity total that is required
         FCEV_emissions_day <- set_units(FCEV_nonrenew_elec_required_day * Elec_gen_emissions(), "kg") #calculate emissions from non-renewable electricity and convert to kg based on generation profile selected
