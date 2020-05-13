@@ -1,0 +1,7 @@
+﻿State,Vehicle_Type,Incentive_Type,Amount,Amount_Units
+CA,FCEV,Standard,4500,$
+CA,FCEV,Increased,7000,$
+CA,BEV,Standard,2000,$
+CA,BEV,Increased,4500,$
+CA,PHEV,Standard,1000,$
+CA,PHEV,Increased,3500,$

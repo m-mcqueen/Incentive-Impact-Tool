@@ -1,0 +1,5 @@
+﻿Make,Model,Battery_Storage,Battery_Storage_Units,Range,Range_Units,Ride_Type
+Average,Standard,422,Wh,26,mi,"Assist 3, Normal Pedaling, 20 mph"
+Average,Extended,614,Wh,38,mi,"Assist 3, Normal Pedaling, 20 mph"
+Average,SuperExtended,673,Wh,39,mi,"Assist 3, Normal Pedaling, 20 mph"
+Average,HyperExtended,995,Wh,57,mi,"Assist 3, Normal Pedaling, 20 mph"
