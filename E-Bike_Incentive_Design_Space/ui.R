@@ -15,7 +15,7 @@ library(stringr)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("E-Bike Incentive Cost and Impact"),
+  titlePanel("Electric Vehicle Incentive Cost and Impact"),
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
@@ -102,7 +102,9 @@ ui <- fluidPage(
                                              min = 0,
                                              max = 100,
                                              value = 0,
-                                             step = 1)
+                                             step = 1),
+                                 actionButton("in_update_budget_per",
+                                              "Update Budget Allotment")
                                ),
                                plotOutput("g_budget_total")
                              )

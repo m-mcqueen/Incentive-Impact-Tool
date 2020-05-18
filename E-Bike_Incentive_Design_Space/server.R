@@ -127,6 +127,10 @@ server <-  function(input, output, session) {
                                                          mix_name == input$in_preset_FCEV) %>% 
                                                   pull(epa_h2_econ_wm)), 2))
   })
+  #Update plots that use budget allotments
+  observeEvent(input$in_update_budget_per, {
+    update
+  })
   
   #================================
   #Calcs
@@ -408,20 +412,28 @@ server <-  function(input, output, session) {
   })
   #Budget distribution specific number incentivized
   output$g4 <- renderPlot({
-    ggplot(num_incentivized_distrib(), aes(budget, num, color = mode)) +
+    #Don't update this plot until the update button is pressed
+    input$in_update_budget_per
+    
+    isolate(ggplot(num_incentivized_distrib(), aes(budget, num, color = mode)) +
       geom_line(size = 1.5) + #plot mode lines
       ylim(0, 10000) +
       geom_point(data = test_budget_points_distrib(), aes(budget, num, color = mode)) + #plot specific test points
       geom_segment(data = test_budget_points_distrib(), aes(x = min(num_incentivized()$budget), y = num, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points_distrib(), aes(x = budget, y = 0, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5)
+      )
   })
   #Budget distribution specific CO2 avoided
   output$g5 <- renderPlot({
-    ggplot(CO2_avoided_distrib(), aes(budget, CO2_avoided, color = mode)) +
+    #Don't update this plot until the update button is pressed
+    input$in_update_budget_per
+    
+    isolate(ggplot(CO2_avoided_distrib(), aes(budget, CO2_avoided, color = mode)) +
       geom_line(size = 1.5) +
       ylim(0, 1e7) +
       geom_segment(data = test_budget_points_w_CO2_distrib(), aes(x = min(num_incentivized()$budget), y = CO2_avoided, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points_w_CO2_distrib(), aes(x = budget, y = 0, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5)
+    )
   })
   #Plot to show percentage of budget used
   output$g_budget_total <- renderPlot({
