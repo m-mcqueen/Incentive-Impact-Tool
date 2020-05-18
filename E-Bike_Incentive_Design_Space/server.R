@@ -315,8 +315,71 @@ server = function(input, output, session) {
   })
   
   #================================
+  
+  #Budget Distribution Specific Total vehicles incentivized and total budget
+  num_incentivized_distrib <- reactive({
+    total_budget_range = seq(1000000, 5000000, by = 100)
+    BEV_num_incentivized = tibble(budget = total_budget_range, mode = "BEV", num = total_budget_range * (input$in_BEV_per_budget * .01) / BEV_incentive())
+    EBike_num_incentivized = tibble(budget = total_budget_range, mode = "EBike", num = total_budget_range * (input$in_EBike_per_budget * .01) / EBike_incentive())
+    PHEV_num_incentivized = tibble(budget = total_budget_range, mode = "PHEV", num = total_budget_range * (input$in_PHEV_per_budget * .01) / PHEV_incentive())
+    FCEV_num_incentivized = tibble(budget = total_budget_range, mode = "FCEV", num = total_budget_range * (input$in_FCEV_per_budget * .01) / FCEV_incentive())
+    tibble() %>% 
+      bind_rows(BEV_num_incentivized, EBike_num_incentivized, PHEV_num_incentivized, FCEV_num_incentivized) %>% 
+      exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
+  })
+  
+  #Pull specific points of interest
+  test_budget_points_distrib <- reactive({
+    test_budget <- input$in_test_budget
+    BEV_budget_test_point <- tibble(mode = "BEV",
+                                    budget = test_budget,
+                                    num = num_incentivized_distrib() %>%
+                                      filter(mode == "BEV" & budget == test_budget) %>%
+                                      pull(num))
+    EBike_budget_test_point <- tibble(mode = "EBike",
+                                      budget = test_budget,
+                                      num = num_incentivized_distrib() %>%
+                                        filter(mode == "EBike" & budget == test_budget) %>%
+                                        pull(num))
+    PHEV_budget_test_point <- tibble(mode = "PHEV",
+                                     budget = test_budget,
+                                     num = num_incentivized_distrib() %>%
+                                       filter(mode == "PHEV" & budget == test_budget) %>%
+                                       pull(num))
+    FCEV_budget_test_point <- tibble(mode = "FCEV",
+                                     budget = test_budget,
+                                     num = num_incentivized_distrib() %>% 
+                                       filter(mode == "FCEV" & budget == test_budget) %>% 
+                                       pull(num))
+    EBike_budget_test_point %>% 
+      bind_rows(BEV_budget_test_point, PHEV_budget_test_point, FCEV_budget_test_point) %>% 
+      exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
+  })
+  
+  #================================
+  
+  #Budget Distribution Specific Total CO2 avoided per year and total budget
+  CO2_avoided_distrib <- reactive({
+    num_incentivized_distrib() %>% 
+      mutate(CO2_avoided = case_when(mode == "BEV" ~ num * BEV_CO2_saved(),
+                                     mode == "EBike" ~ num * EBike_CO2_saved(),
+                                     mode == "PHEV" ~ num * PHEV_CO2_saved(),
+                                     mode == "FCEV" ~ num * FCEV_CO2_saved(),
+                                     TRUE ~ 0)) %>% 
+      exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
+  })
+  
+  #Pull specific points of interest
+  test_budget_points_w_CO2_distrib <- reactive({
+    test_budget_points() %>% 
+      left_join(CO2_avoided_distrib() %>% select(mode, budget, CO2_avoided), by = c("mode", "budget")) %>% 
+      exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
+  })
+  
+  #================================
   #Plots
   #================================
+  #Cost per kg CO2 avoided by mode
   output$g1 <- renderPlot({
     ggplot(costperkg(), aes(incentive, costperkg, color=mode)) +
       xlim(min(costperkg()$incentive), max(costperkg()$incentive)) +
@@ -326,19 +389,39 @@ server = function(input, output, session) {
       geom_segment(data = test_points(), aes(x = 0, y = costperkg, xend = incentive, yend = costperkg, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_points(), aes(x = incentive, y = 0, xend = incentive, yend = costperkg, color = mode), linetype = "dashed", size = 1.5)
   })
+  #Number incentivized
   output$g2 <- renderPlot({
     ggplot(num_incentivized(), aes(budget, num, color = mode)) +
       geom_line(size = 1.5) + #plot mode lines
+      ylim(0, 10000) +
       geom_point(data = test_budget_points(), aes(budget, num, color = mode)) + #plot specific test points
       geom_segment(data = test_budget_points(), aes(x = min(num_incentivized()$budget), y = num, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points(), aes(x = budget, y = 0, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5)
   })
+  #CO2 avoided
   output$g3 <- renderPlot({
     ggplot(CO2_avoided(), aes(budget, CO2_avoided, color = mode)) +
       geom_line(size = 1.5) +
       ylim(0, 1e7) +
       geom_segment(data = test_budget_points_w_CO2(), aes(x = min(num_incentivized()$budget), y = CO2_avoided, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points_w_CO2(), aes(x = budget, y = 0, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5)
+  })
+  #Budget distribution specific number incentivized
+  output$g4 <- renderPlot({
+    ggplot(num_incentivized_distrib(), aes(budget, num, color = mode)) +
+      geom_line(size = 1.5) + #plot mode lines
+      ylim(0, 10000) +
+      geom_point(data = test_budget_points_distrib(), aes(budget, num, color = mode)) + #plot specific test points
+      geom_segment(data = test_budget_points_distrib(), aes(x = min(num_incentivized()$budget), y = num, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5) +
+      geom_segment(data = test_budget_points_distrib(), aes(x = budget, y = 0, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5)
+  })
+  #Budget distribution specific CO2 avoided
+  output$g5 <- renderPlot({
+    ggplot(CO2_avoided_distrib(), aes(budget, CO2_avoided, color = mode)) +
+      geom_line(size = 1.5) +
+      ylim(0, 1e7) +
+      geom_segment(data = test_budget_points_w_CO2_distrib(), aes(x = min(num_incentivized()$budget), y = CO2_avoided, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5) +
+      geom_segment(data = test_budget_points_w_CO2_distrib(), aes(x = budget, y = 0, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5)
   })
   #Plot to show percentage of budget used
   output$g_budget_total <- renderPlot({

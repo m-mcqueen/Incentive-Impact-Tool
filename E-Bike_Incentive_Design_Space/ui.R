@@ -335,13 +335,31 @@ ui <- fluidPage(
     ),
     # Show a plot of the generated distribution
     mainPanel(
-      splitLayout(
-        #titlePanel("Cost per kg CO2 Avoided (1 year)"),
-        plotOutput("g1"),
-        #titlePanel("Number of Vehicles Incentivized"),
-        plotOutput("g2"),
-        #titlePanel("Total CO2 Avoided (1 year)"),
-        plotOutput("g3")
+      verticalLayout(
+        verticalLayout(
+          h4("Cost per kg CO2 Avoided (1 year)"),
+          plotOutput("g1")
+        ),
+        splitLayout(
+          verticalLayout(
+            h4("Number of Vehicles Incentivized"),
+            plotOutput("g2")
+          ),
+          verticalLayout(
+            h4("Total CO2 Avoided (1 year)"),
+            plotOutput("g3")
+          )
+        ),
+        splitLayout(
+          verticalLayout(
+            h4("Number of Vehicles Incentivized, Budget Distribution Specific"),
+            plotOutput("g4")
+          ),
+          verticalLayout(
+            h4("Total CO2 Avoided (1 year), Budget Distribution Specific"),
+            plotOutput("g5")
+          )
+        )
       )
     )
   )
