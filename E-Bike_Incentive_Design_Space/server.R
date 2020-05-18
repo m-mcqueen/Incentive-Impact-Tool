@@ -340,4 +340,16 @@ server = function(input, output, session) {
       geom_segment(data = test_budget_points_w_CO2(), aes(x = min(num_incentivized()$budget), y = CO2_avoided, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points_w_CO2(), aes(x = budget, y = 0, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5)
   })
+  #Plot to show percentage of budget used
+  output$g_budget_total <- renderPlot({
+    total <-  sum(input$in_BEV_per_budget, input$in_EBike_per_budget, input$in_PHEV_per_budget, input$in_FCEV_per_budget)
+    #Make it red if the total is more than 100
+    color <- if (total > 100) {
+      "red"
+    } else if (total == 100) {
+      "green"
+      } else ("blue")
+    #Build plot
+    barplot(total, ylim = c(0,120), main = paste(total, "% Used", sep = ""), col = color)
+  })
 }

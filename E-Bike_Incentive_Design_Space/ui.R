@@ -192,7 +192,36 @@ ui <- fluidPage(
                              numericInput("in_test_budget",
                                           "Total budget ($)",
                                           value = 3000000,
-                                          step = 10000)
+                                          step = 10000),
+                             splitLayout(cellWidths = c("75%", "25%"),
+                               verticalLayout(
+                                 sliderInput("in_BEV_per_budget",
+                                            "BEV Budget Percentage Allotment",
+                                            min = 0,
+                                            max = 100,
+                                            value = 0,
+                                            step = 1),
+                                 sliderInput("in_EBike_per_budget",
+                                             "E-Bike Budget Percentage Allotment",
+                                             min = 0,
+                                             max = 100,
+                                             value = 0,
+                                             step = 1),
+                                 sliderInput("in_PHEV_per_budget",
+                                             "PHEV Budget Percentage Allotment",
+                                             min = 0,
+                                             max = 100,
+                                             value = 0,
+                                             step = 1),
+                                 sliderInput("in_FCEV_per_budget",
+                                             "FCEV Budget Percentage Allotment",
+                                             min = 0,
+                                             max = 100,
+                                             value = 0,
+                                             step = 1)
+                               ),
+                               plotOutput("g_budget_total")
+                             )
                            )
                   ),
                   tabPanel("IC",
