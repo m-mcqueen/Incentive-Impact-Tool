@@ -35,7 +35,7 @@ exclude_items <- function(data, EBike, PHEV, BEV, FCEV) {
 }
 
 # Define server logic required calculate and draw plots
-server = function(input, output, session) {
+server <-  function(input, output, session) {
   
   #================================
   #Text input default value updaters
