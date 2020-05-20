@@ -15,6 +15,7 @@ library(stringr)
 ####Define Helper Functions####
 #================================#
 
+#~General Helper Functions####
 #Exclude Items that are not selected
 exclude_items <- function(data, EBike, PHEV, BEV, FCEV) {
   if(!EBike) {
@@ -36,6 +37,17 @@ exclude_items <- function(data, EBike, PHEV, BEV, FCEV) {
   return(data)
 }
 
+#Calculate cost per kg CO2 saved
+calc_costperkg <- function (incentive, CO2_saved) {
+  
+  #calculate cost per kg CO2 saved
+  result <- incentive / CO2_saved
+  
+  #return result
+  return(result)
+}
+
+#~IC Helper Functions####
 #Calculate CO2 emissions per year by IC
 calc_IC_emissions_year <- function(mileage_day, IC_Fuel_Economy) {
   IC_emissions_day <- set_units(drop_units(set_units(mileage_day / IC_Fuel_Economy, "kiloCO2_g")), "kg") #calculate emissions and convert to kg
@@ -43,6 +55,7 @@ calc_IC_emissions_year <- function(mileage_day, IC_Fuel_Economy) {
   return(IC_emissions_year)
 }
 
+#~BEV Helper Functions####
 #Calculate CO2 emissions per year by BEV
 calc_BEV_emissions_year <- function(in_BEV_econ, Elec_gen_emissions, mileage_day){
   BEV_Fuel_Economy <- set_units(in_BEV_econ, "kilowatthour / hectomi")
@@ -56,6 +69,7 @@ calc_BEV_CO2_saved <- function(IC_emissions_year, BEV_emissions_year){
   drop_units(IC_emissions_year) - drop_units(BEV_emissions_year)
 }
 
+#~PHEV Helper Functions####
 #Calculate CO2 emissions per year by PHEV
 calc_PHEV_emissions_year <- function(in_PHEV_elec_econ, in_PHEV_range_elec, in_PHEV_ic_econ, mileage_day, Elec_gen_emissions){
   PHEV_elec_econ <- set_units(in_PHEV_elec_econ, "kilowatthour / hectomi")
@@ -82,6 +96,7 @@ calc_PHEV_CO2_saved <- function(IC_emissions_year, PHEV_emissions_year){
   return(drop_units(IC_emissions_year) - drop_units(PHEV_emissions_year))
   }
 
+#~FCEV Helper Functions####
 #Calculate CO2 emissions per year by FCEV
 calc_FCEV_emissions_year <- function(in_FCEV_econ, in_renew_energy_ratio, mileage_day, Elec_gen_emissions){
   FCEV_H2_econ <- set_units(in_FCEV_econ, "mi / kg") #get H2 fuel economy
@@ -99,6 +114,7 @@ calc_FCEV_CO2_saved <- function(IC_emissions_year, FCEV_emissions_year){
   return(drop_units(IC_emissions_year) - drop_units(FCEV_emissions_year))
   }
 
+#~E-Bike Helper Functions####
 #Calculate CO2 emissions per year by E-Bike
 calc_EBike_emissions_year <- function(in_EBike_Battery_Storage, in_EBike_Range, Elec_gen_emissions, mileage_day, VMT_r) {
   EBike_Battery_Storage <- set_units(in_EBike_Battery_Storage, "Watthour")
@@ -114,16 +130,6 @@ calc_EBike_CO2_saved <- function(mileage_day, VMT_r, IC_Fuel_Economy, IC_emissio
   IC_remaining_emissions_year <- IC_remaining_emissions_day * 365 #multiply to get year total
   EBike_CO2_saved <- drop_units(IC_emissions_year) - (drop_units(EBike_emissions_year) + drop_units(IC_remaining_emissions_year))
   return(EBike_CO2_saved)
-}
-
-#Calculate cost per kg CO2 saved
-calc_costperkg <- function (incentive, CO2_saved) {
-  
-  #calculate cost per kg CO2 saved
-  result <- incentive / CO2_saved
-  
-  #return result
-  return(result)
 }
 
 #================================#

@@ -285,24 +285,16 @@ server <-  function(input, output, session) {
     test_budget <- input$in_test_budget
     BEV_budget_test_point <- tibble(mode = "BEV",
                                     budget = test_budget,
-                                    num = num_incentivized() %>%
-                                      filter(mode == "BEV" & budget == test_budget) %>%
-                                      pull(num))
+                                    num = budget / BEV_incentive())
     EBike_budget_test_point <- tibble(mode = "EBike",
                                       budget = test_budget,
-                                      num = num_incentivized() %>%
-                                        filter(mode == "EBike" & budget == test_budget) %>%
-                                        pull(num))
+                                      num = budget / EBike_incentive())
     PHEV_budget_test_point <- tibble(mode = "PHEV",
                                      budget = test_budget,
-                                     num = num_incentivized() %>%
-                                       filter(mode == "PHEV" & budget == test_budget) %>%
-                                       pull(num))
+                                     num = budget / PHEV_incentive())
     FCEV_budget_test_point <- tibble(mode = "FCEV",
                                      budget = test_budget,
-                                     num = num_incentivized() %>% 
-                                       filter(mode == "FCEV" & budget == test_budget) %>% 
-                                       pull(num))
+                                     num = budget / FCEV_incentive())
     EBike_budget_test_point %>% 
       bind_rows(BEV_budget_test_point, PHEV_budget_test_point, FCEV_budget_test_point) %>% 
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
