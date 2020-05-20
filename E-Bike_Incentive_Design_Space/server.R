@@ -316,8 +316,8 @@ server <-  function(input, output, session) {
   #~~Pull specific points of interest####
   test_budget_points_w_CO2 <- reactive({
     test_budget_points() %>% 
-      left_join(test_points() %>% select(mode, CO2_saved), by = "mode") %>% 
-      mutate(total_CO2_saved = CO2_saved * num) %>% 
+      left_join(test_points() %>% select(mode, CO2_saved), by = "mode") %>% #join CO2 saved per vehicle info
+      mutate(total_CO2_saved = CO2_saved * num) %>% #calculated total CO2 saved
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include)   #Exclude items that are not selected in GUI
   })
   
@@ -340,24 +340,21 @@ server <-  function(input, output, session) {
     test_budget <- input$in_test_budget
     BEV_budget_test_point <- tibble(mode = "BEV",
                                     budget = test_budget,
-                                    num = num_incentivized_distrib() %>%
-                                      filter(mode == "BEV" & budget == test_budget) %>%
-                                      pull(num))
+                                    budget_portion = (input$in_BEV_per_budget * .01) * test_budget,
+                                    num = round(budget_portion / BEV_incentive()))
     EBike_budget_test_point <- tibble(mode = "EBike",
                                       budget = test_budget,
-                                      num = num_incentivized_distrib() %>%
-                                        filter(mode == "EBike" & budget == test_budget) %>%
-                                        pull(num))
+                                      budget_portion = (input$in_EBike_per_budget * .01) * test_budget,
+                                      num = round(budget_portion / EBike_incentive()))
     PHEV_budget_test_point <- tibble(mode = "PHEV",
                                      budget = test_budget,
-                                     num = num_incentivized_distrib() %>%
-                                       filter(mode == "PHEV" & budget == test_budget) %>%
-                                       pull(num))
+                                     budget_portion = (input$in_PHEV_per_budget * .01) * test_budget,
+                                     num = round(budget_portion / PHEV_incentive()))
     FCEV_budget_test_point <- tibble(mode = "FCEV",
                                      budget = test_budget,
-                                     num = num_incentivized_distrib() %>% 
-                                       filter(mode == "FCEV" & budget == test_budget) %>% 
-                                       pull(num))
+                                     budget_portion = (input$in_FCEV_per_budget * .01) * test_budget,
+                                     num = round(budget_portion / FCEV_incentive()))
+
     EBike_budget_test_point %>% 
       bind_rows(BEV_budget_test_point, PHEV_budget_test_point, FCEV_budget_test_point) %>% 
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
@@ -378,8 +375,9 @@ server <-  function(input, output, session) {
   
   #~~Pull specific points of interest####
   test_budget_points_w_CO2_distrib <- reactive({
-    test_budget_points() %>% 
-      left_join(CO2_saved_distrib() %>% select(mode, budget, CO2_saved), by = c("mode", "budget")) %>% 
+    test_budget_points_distrib() %>% 
+      left_join(test_points() %>% select(mode, CO2_saved), by = "mode") %>% #join per vehicle CO2 saved info
+      mutate(total_CO2_saved = num * CO2_saved) %>% #calculate total CO2 saved info
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
@@ -447,18 +445,18 @@ server <-  function(input, output, session) {
       geom_area() +
       coord_cartesian(ylim = c(0, 1e7)) +
       geom_point(data = test_budget_points_w_CO2_distrib(),
-                 aes(budget,sum(CO2_saved)),
+                 aes(budget,sum(total_CO2_saved)),
                  size = 5) +
       geom_segment(data = test_budget_points_w_CO2_distrib(), #horizontal line
                    aes(x = min(num_incentivized()$budget),
-                       y = sum(CO2_saved), xend = budget,
-                       yend = sum(CO2_saved)),
+                       y = sum(total_CO2_saved), xend = budget,
+                       yend = sum(total_CO2_saved)),
                    linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points_w_CO2_distrib(), #vertical line
                    aes(x = budget,
                        y = 0,
                        xend = budget,
-                       yend = sum(CO2_saved)),
+                       yend = sum(total_CO2_saved)),
                    linetype = "dashed", size = 1.5)
     )
   })
