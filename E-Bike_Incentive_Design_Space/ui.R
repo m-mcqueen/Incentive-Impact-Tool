@@ -105,9 +105,7 @@ ui <- fluidPage(
                                              min = 0,
                                              max = 100,
                                              value = 0,
-                                             step = 1),
-                                 actionButton("in_update_budget_per",
-                                              "Update Budget Allotment")
+                                             step = 1)
                                ),
                                plotOutput("g_budget_total")
                              )

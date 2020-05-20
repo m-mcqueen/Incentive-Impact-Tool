@@ -18,6 +18,7 @@ server <-  function(input, output, session) {
   
   #================================#
   #Plot Dimensions####
+  #(These should be defined in UI)
   #================================#
   #cost per kg CO2 saved
   costperkg_x <- c(0, 5000)
@@ -120,10 +121,6 @@ server <-  function(input, output, session) {
                                                   filter(mix_type == "FCEV",
                                                          mix_name == input$in_preset_FCEV) %>% 
                                                   pull(epa_h2_econ_wm)), 2))
-  })
-  #~Update plots that use budget allotments####
-  observeEvent(input$in_update_budget_per, {
-    update
   })
   
   #================================#
@@ -428,10 +425,7 @@ server <-  function(input, output, session) {
   })
   #~Budget distribution specific number incentivized####
   output$g4 <- renderPlot({
-    #Don't update this plot until the update button is pressed
-    input$in_update_budget_per
-    
-    isolate(ggplot(num_incentivized_distrib(), aes(budget, num, fill = mode)) +
+    ggplot(num_incentivized_distrib(), aes(budget, num, fill = mode)) +
       geom_area() + 
       coord_cartesian(ylim = num_y) +
       geom_point(data = test_budget_points_distrib(),
@@ -449,14 +443,11 @@ server <-  function(input, output, session) {
                        yend = sum(num)),
                    linetype = "dashed",
                    size = 1.5)
-      )
+      
   })
   #~Budget distribution specific CO2 saved####
   output$g5 <- renderPlot({
-    #Don't update this plot until the update button is pressed
-    input$in_update_budget_per
-    
-    isolate(ggplot(CO2_saved_distrib(), aes(budget, CO2_saved, fill = mode)) +
+    ggplot(CO2_saved_distrib(), aes(budget, CO2_saved, fill = mode)) +
       geom_area() +
       coord_cartesian(ylim = CO2_saved_y) +
       geom_point(data = test_budget_points_w_CO2_distrib(),
@@ -473,7 +464,6 @@ server <-  function(input, output, session) {
                        xend = budget,
                        yend = sum(total_CO2_saved)),
                    linetype = "dashed", size = 1.5)
-    )
   })
   #~Plot to show percentage of budget used####
   output$g_budget_total <- renderPlot({
