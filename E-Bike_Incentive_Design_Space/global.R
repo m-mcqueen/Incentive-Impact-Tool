@@ -11,6 +11,31 @@ library(units)
 library(measurements)
 library(stringr)
 
+#================================#
+####Define Helper Functions####
+#================================#
+
+#Exclude Items that are not selected
+exclude_items <- function(data, EBike, PHEV, BEV, FCEV) {
+  if(!EBike) {
+    data <- data %>% 
+      filter(mode != "EBike")
+  }
+  if(!PHEV) {
+    data <- data %>% 
+      filter(mode != "PHEV")
+  }
+  if(!BEV) {
+    data <- data %>% 
+      filter(mode != "BEV")
+  }
+  if(!FCEV) {
+    data <- data %>% 
+      filter(mode != "FCEV")
+  }
+  return(data)
+}
+
 #================================
 #Load data tables
 #================================

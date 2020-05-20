@@ -11,28 +11,7 @@ library(units)
 library(measurements)
 library(stringr)
 
-#================================
-#Exclude Items that are not selected
-#================================
-exclude_items <- function(data, EBike, PHEV, BEV, FCEV) {
-  if(!EBike) {
-    data <- data %>% 
-      filter(mode != "EBike")
-  }
-  if(!PHEV) {
-    data <- data %>% 
-      filter(mode != "PHEV")
-  }
-  if(!BEV) {
-    data <- data %>% 
-      filter(mode != "BEV")
-  }
-  if(!FCEV) {
-    data <- data %>% 
-      filter(mode != "FCEV")
-  }
-  return(data)
-}
+
 
 # Define server logic required calculate and draw plots
 server <-  function(input, output, session) {
