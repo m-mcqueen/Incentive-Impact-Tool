@@ -17,6 +17,21 @@ library(stringr)
 server <-  function(input, output, session) {
   
   #================================#
+  #Plot Dimensions####
+  #================================#
+  #cost per kg CO2 saved
+  costperkg_x <- c(0, 5000)
+  costperkg_y <- c(0, 4)
+  
+  #number of vehicles incentivized
+  num_x <- c(0, 5e6)
+  num_y <- c(0, 10000)
+  
+  #total CO2 saved
+  CO2_saved_x <- c(0, 5e6)
+  CO2_saved_y <- c(0, 1e7)
+  
+  #================================#
   #Text input value updaters####
   #================================#
   #~Update Trips panel with preset####
@@ -190,7 +205,7 @@ server <-  function(input, output, session) {
   
   #~Cost/kg CO2 saved####
   costperkg <- reactive({ #done
-    incentive_range = seq(0, 5000, by = 1000) #Set the range of incentive dollar amounts
+    incentive_range = costperkg_x #Set the range of incentive dollar amounts
     
     BEV_CO2_saved_cost <- incentive_range / BEV_CO2_saved() #Calculate the cost per kg CO2 saved for BEV
     BEV_costperkg <- tibble(mode = "BEV", incentive = incentive_range, costperkg = BEV_CO2_saved_cost) #Put these values in a tibble for plotting
@@ -270,7 +285,7 @@ server <-  function(input, output, session) {
   
   #~Total vehicles incentivized and total budget####
   num_incentivized <- reactive({
-    total_budget_range = seq(1e6, 5e6, by = 1e6)
+    total_budget_range = num_x
     BEV_num_incentivized = tibble(budget = total_budget_range, mode = "BEV", num = total_budget_range / BEV_incentive())
     EBike_num_incentivized = tibble(budget = total_budget_range, mode = "EBike", num = total_budget_range / EBike_incentive())
     PHEV_num_incentivized = tibble(budget = total_budget_range, mode = "PHEV", num = total_budget_range / PHEV_incentive())
@@ -325,7 +340,7 @@ server <-  function(input, output, session) {
   
   #~Budget Distribution Specific Total vehicles incentivized and total budget####
   num_incentivized_distrib <- reactive({
-    total_budget_range = seq(1e6, 5e6, by = 1e6)
+    total_budget_range = num_x
     BEV_num_incentivized = tibble(budget = total_budget_range, mode = "BEV", num = total_budget_range * (input$in_BEV_per_budget * .01) / BEV_incentive())
     EBike_num_incentivized = tibble(budget = total_budget_range, mode = "EBike", num = total_budget_range * (input$in_EBike_per_budget * .01) / EBike_incentive())
     PHEV_num_incentivized = tibble(budget = total_budget_range, mode = "PHEV", num = total_budget_range * (input$in_PHEV_per_budget * .01) / PHEV_incentive())
@@ -387,7 +402,7 @@ server <-  function(input, output, session) {
   #~Cost per kg CO2 saved by mode####
   output$g1 <- renderPlot({
     ggplot(costperkg(), aes(incentive, costperkg, color=mode)) +
-      coord_cartesian(xlim = c(min(costperkg()$incentive), max(costperkg()$incentive)), ylim = c(0, 4)) +
+      coord_cartesian(xlim = costperkg_x, ylim = costperkg_y) +
       geom_line(size = 1.5) + #plot mode lines
       geom_point(data = test_points(), aes(incentive, costperkg, color = mode), size = 5) + #plot specific test points
       geom_segment(data = test_points(), aes(x = 0, y = costperkg, xend = incentive, yend = costperkg, color = mode), linetype = "dashed", size = 1.5) +
@@ -397,7 +412,7 @@ server <-  function(input, output, session) {
   output$g2 <- renderPlot({
     ggplot(num_incentivized(), aes(budget, num, color = mode)) +
       geom_line(size = 1.5) + #plot mode lines
-      coord_cartesian(ylim = c(0, 10000)) +
+      coord_cartesian(ylim = num_y) +
       geom_point(data = test_budget_points(), aes(budget, num, color = mode), size = 5) + #plot specific test points
       geom_segment(data = test_budget_points(), aes(x = min(num_incentivized()$budget), y = num, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points(), aes(x = budget, y = 0, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5)
@@ -406,7 +421,7 @@ server <-  function(input, output, session) {
   output$g3 <- renderPlot({
     ggplot(CO2_saved(), aes(budget, CO2_saved, color = mode)) +
       geom_line(size = 1.5) +
-      coord_cartesian(ylim = c(0, 1e7)) +
+      coord_cartesian(ylim = CO2_saved_y) +
       geom_point(data = test_budget_points_w_CO2(), aes(budget, total_CO2_saved), size = 5) +
       geom_segment(data = test_budget_points_w_CO2(), aes(x = min(num_incentivized()$budget), y = total_CO2_saved, xend = budget, yend = total_CO2_saved, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points_w_CO2(), aes(x = budget, y = 0, xend = budget, yend = total_CO2_saved, color = mode), linetype = "dashed", size = 1.5)
@@ -418,7 +433,7 @@ server <-  function(input, output, session) {
     
     isolate(ggplot(num_incentivized_distrib(), aes(budget, num, fill = mode)) +
       geom_area() + 
-      coord_cartesian(ylim = c(0, 10000)) +
+      coord_cartesian(ylim = num_y) +
       geom_point(data = test_budget_points_distrib(),
                  aes(budget, sum(num)),
                  size = 5) + #plot specific test points
@@ -443,7 +458,7 @@ server <-  function(input, output, session) {
     
     isolate(ggplot(CO2_saved_distrib(), aes(budget, CO2_saved, fill = mode)) +
       geom_area() +
-      coord_cartesian(ylim = c(0, 1e7)) +
+      coord_cartesian(ylim = CO2_saved_y) +
       geom_point(data = test_budget_points_w_CO2_distrib(),
                  aes(budget,sum(total_CO2_saved)),
                  size = 5) +
