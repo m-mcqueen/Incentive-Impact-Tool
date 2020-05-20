@@ -135,7 +135,7 @@ server <-  function(input, output, session) {
     BEV_emissions_day * 365 #multiply to get year total
   })
   BEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(BEV_emissions_year())}) #done
-  BEV_incentive <- reactive({round(input$in_BEV_incentive, -1)})
+  BEV_incentive <- reactive({input$in_BEV_incentive})
   
   #~PHEV####
   PHEV_emissions_year <- reactive({ #done
@@ -157,7 +157,7 @@ server <-  function(input, output, session) {
     PHEV_total_emissions_day * 365
   })
   PHEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(PHEV_emissions_year())}) #done
-  PHEV_incentive <- reactive({round(input$in_PHEV_incentive, -1)})
+  PHEV_incentive <- reactive({input$in_PHEV_incentive})
   
   #~FCEV####
   FCEV_emissions_year <- reactive({ #done
@@ -170,7 +170,7 @@ server <-  function(input, output, session) {
     FCEV_emissions_day * 365 #multiply to get year total
   })
   FCEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(FCEV_emissions_year())}) #done
-  FCEV_incentive <- reactive({round(input$in_FCEV_incentive, -1)})
+  FCEV_incentive <- reactive({input$in_FCEV_incentive})
   
   #~E-Bike#####
   VMT_r <- reactive({input$in_EBike_VMT_r}) #Ratio of car mileage replaced by e-bike
@@ -186,7 +186,7 @@ server <-  function(input, output, session) {
     IC_remaining_emissions_year <- IC_remaining_emissions_day * 365 #multiply to get year total
     drop_units(IC_emissions_year()) - (drop_units(EBike_emissions_year()) + drop_units(IC_remaining_emissions_year))
   })
-  EBike_incentive <- reactive({round(input$in_EBike_incentive, -1)})
+  EBike_incentive <- reactive({input$in_EBike_incentive})
   
   #~Cost/kg CO2 saved####
   costperkg <- reactive({ #done
@@ -210,36 +210,59 @@ server <-  function(input, output, session) {
   })
   
   #~~Pull specific points of interest####
-  test_points <- reactive({
-    #Grab e-bike test point
-    #EBike_incentive_test_point <- costperkg() %>%
-      #filter(incentive == EBike_incentive(),
-             #mode == "EBike")
-    #print(EBike_incentive_test_point)
+  #Grab e-bike test point
+  EBike_incentive_test_point <- reactive({
+    #e-bike emissions per year
     EBike_emissions_year <- calc_EBike_emissions_year(input$in_EBike_Battery_Storage, input$in_EBike_Range, Elec_gen_emissions(), mileage_day(), VMT_r())
+    #e-bike CO2 saved per year
     EBike_CO2_saved <- calc_EBike_CO2_saved(mileage_day(), VMT_r(), IC_Fuel_Economy(), IC_emissions_year(), EBike_emissions_year)
+    #e-bike cost per kg CO2 saved
     EBike_costperkg <- calc_costperkg(incentive = EBike_incentive(), CO2_saved = EBike_CO2_saved)
-    EBike_incentive_test_point <- tibble(mode = "EBike", incentive = EBike_incentive(), costperkg = EBike_costperkg)
-    print(EBike_incentive_test_point)
-    
-    #Grab BEV test point
-    BEV_incentive_test_point <- costperkg() %>%
-      filter(incentive == BEV_incentive(),
-             mode == "BEV")
-    
-    #Grab PHEV test point
-    PHEV_incentive_test_point <- costperkg() %>% 
-      filter(incentive == PHEV_incentive(),
-             mode == "PHEV")
-    
-    #Grab FCEV test point
-    FCEV_incentive_test_point <- costperkg() %>% 
-      filter(incentive == FCEV_incentive(),
-             mode == "FCEV")
-    
+    #e-bike incentive test point
+    tibble(mode = "EBike", incentive = EBike_incentive(), costperkg = EBike_costperkg)
+  })
+  
+  #Grab BEV test point
+  BEV_incentive_test_point <- reactive({
+    #BEV emissions per year
+    BEV_emissions_year <- calc_BEV_emissions_year(input$in_BEV_econ, Elec_gen_emissions(), mileage_day())
+    #BEV CO2 saved per year
+    BEV_CO2_saved <- calc_BEV_CO2_saved(IC_emissions_year(), BEV_emissions_year)
+    #BEV cost per kg CO2 saved
+    BEV_costperkg <- calc_costperkg(incentive = BEV_incentive(), CO2_saved = BEV_CO2_saved)
+    #BEV incentive test point
+    tibble(mode = "BEV", incentive = BEV_incentive(), costperkg = BEV_costperkg)
+  })
+  
+  #Grab PHEV test point
+  PHEV_incentive_test_point <- reactive({
+    #PHEV emissions per year
+    PHEV_emissions_year <- calc_PHEV_emissions_year(input$in_PHEV_elec_econ, input$in_PHEV_range_elec, input$in_PHEV_ic_econ, mileage_day(), Elec_gen_emissions())
+    #PHEV CO2 saved per year
+    PHEV_CO2_saved <- calc_PHEV_CO2_saved(IC_emissions_year(), PHEV_emissions_year)
+    #PHEV cost per kg CO2 saved
+    PHEV_costperkg <- calc_costperkg(incentive = PHEV_incentive(), CO2_saved = PHEV_CO2_saved)
+    #PHEV incentive test point
+    tibble(mode = "PHEV", incentive = PHEV_incentive(), costperkg = PHEV_costperkg)
+  })
+  
+  #Grab FCEV test point
+  FCEV_incentive_test_point <- reactive({
+    #FCEV emissions per year
+    FCEV_emissions_year <- calc_FCEV_emissions_year(input$in_FCEV_econ, input$in_renew_energy_ratio, mileage_day(), Elec_gen_emissions())
+    #FCEV CO2 saved per year
+    FCEV_CO2_saved <- calc_FCEV_CO2_saved(IC_emissions_year(), FCEV_emissions_year)
+    #FCEV cost per kg CO2 saved
+    FCEV_costperkg <- calc_costperkg(incentive = FCEV_incentive(), CO2_saved = FCEV_CO2_saved)
+    #FCEV incentive test point
+    tibble(mode = "FCEV", incentive = FCEV_incentive(), costperkg = FCEV_costperkg)
+  })
+  
+  #Bind all test points together for plotting
+  test_points <- reactive({
     #bind to single testpoints tibble
-    EBike_incentive_test_point %>% 
-      bind_rows(BEV_incentive_test_point, PHEV_incentive_test_point, FCEV_incentive_test_point) %>% 
+    EBike_incentive_test_point() %>% 
+      bind_rows(BEV_incentive_test_point(), PHEV_incentive_test_point(), FCEV_incentive_test_point()) %>% 
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
