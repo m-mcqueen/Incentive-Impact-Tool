@@ -219,7 +219,7 @@ server <-  function(input, output, session) {
     #e-bike cost per kg CO2 saved
     EBike_costperkg <- calc_costperkg(incentive = EBike_incentive(), CO2_saved = EBike_CO2_saved)
     #e-bike incentive test point
-    tibble(mode = "EBike", incentive = EBike_incentive(), costperkg = EBike_costperkg)
+    tibble(mode = "EBike", incentive = EBike_incentive(), costperkg = EBike_costperkg, CO2_saved = EBike_CO2_saved)
   })
   
   #Grab BEV test point
@@ -231,7 +231,7 @@ server <-  function(input, output, session) {
     #BEV cost per kg CO2 saved
     BEV_costperkg <- calc_costperkg(incentive = BEV_incentive(), CO2_saved = BEV_CO2_saved)
     #BEV incentive test point
-    tibble(mode = "BEV", incentive = BEV_incentive(), costperkg = BEV_costperkg)
+    tibble(mode = "BEV", incentive = BEV_incentive(), costperkg = BEV_costperkg, CO2_saved = BEV_CO2_saved)
   })
   
   #Grab PHEV test point
@@ -243,7 +243,7 @@ server <-  function(input, output, session) {
     #PHEV cost per kg CO2 saved
     PHEV_costperkg <- calc_costperkg(incentive = PHEV_incentive(), CO2_saved = PHEV_CO2_saved)
     #PHEV incentive test point
-    tibble(mode = "PHEV", incentive = PHEV_incentive(), costperkg = PHEV_costperkg)
+    tibble(mode = "PHEV", incentive = PHEV_incentive(), costperkg = PHEV_costperkg, CO2_saved = PHEV_CO2_saved)
   })
   
   #Grab FCEV test point
@@ -255,7 +255,7 @@ server <-  function(input, output, session) {
     #FCEV cost per kg CO2 saved
     FCEV_costperkg <- calc_costperkg(incentive = FCEV_incentive(), CO2_saved = FCEV_CO2_saved)
     #FCEV incentive test point
-    tibble(mode = "FCEV", incentive = FCEV_incentive(), costperkg = FCEV_costperkg)
+    tibble(mode = "FCEV", incentive = FCEV_incentive(), costperkg = FCEV_costperkg, CO2_saved = FCEV_CO2_saved)
   })
   
   #Bind all test points together for plotting
@@ -302,10 +302,10 @@ server <-  function(input, output, session) {
   
   #================================#
   
-  #~Total CO2 avoided per year and total budget####
-  CO2_avoided <- reactive({
+  #~Total CO2 saved per year and total budget####
+  CO2_saved <- reactive({
     num_incentivized() %>% 
-      mutate(CO2_avoided = case_when(mode == "BEV" ~ num * BEV_CO2_saved(),
+      mutate(CO2_saved = case_when(mode == "BEV" ~ num * BEV_CO2_saved(),
                                      mode == "EBike" ~ num * EBike_CO2_saved(),
                                      mode == "PHEV" ~ num * PHEV_CO2_saved(),
                                      mode == "FCEV" ~ num * FCEV_CO2_saved(),
@@ -316,8 +316,9 @@ server <-  function(input, output, session) {
   #~~Pull specific points of interest####
   test_budget_points_w_CO2 <- reactive({
     test_budget_points() %>% 
-      left_join(CO2_avoided() %>% select(mode, budget, CO2_avoided), by = c("mode", "budget")) %>% 
-      exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
+      left_join(test_points() %>% select(mode, CO2_saved), by = "mode") %>% 
+      mutate(total_CO2_saved = CO2_saved * num) %>% 
+      exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include)   #Exclude items that are not selected in GUI
   })
   
   #================================#
@@ -364,10 +365,10 @@ server <-  function(input, output, session) {
   
   #================================#
   
-  #~Budget Distribution Specific Total CO2 avoided per year and total budget####
-  CO2_avoided_distrib <- reactive({
+  #~Budget Distribution Specific Total CO2 saved per year and total budget####
+  CO2_saved_distrib <- reactive({
     num_incentivized_distrib() %>% 
-      mutate(CO2_avoided = case_when(mode == "BEV" ~ num * BEV_CO2_saved(),
+      mutate(CO2_saved = case_when(mode == "BEV" ~ num * BEV_CO2_saved(),
                                      mode == "EBike" ~ num * EBike_CO2_saved(),
                                      mode == "PHEV" ~ num * PHEV_CO2_saved(),
                                      mode == "FCEV" ~ num * FCEV_CO2_saved(),
@@ -378,14 +379,14 @@ server <-  function(input, output, session) {
   #~~Pull specific points of interest####
   test_budget_points_w_CO2_distrib <- reactive({
     test_budget_points() %>% 
-      left_join(CO2_avoided_distrib() %>% select(mode, budget, CO2_avoided), by = c("mode", "budget")) %>% 
+      left_join(CO2_saved_distrib() %>% select(mode, budget, CO2_saved), by = c("mode", "budget")) %>% 
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
   #================================#
   #Plots####
   #================================#
-  #~Cost per kg CO2 avoided by mode####
+  #~Cost per kg CO2 saved by mode####
   output$g1 <- renderPlot({
     ggplot(costperkg(), aes(incentive, costperkg, color=mode)) +
       coord_cartesian(xlim = c(min(costperkg()$incentive), max(costperkg()$incentive)), ylim = c(0, 4)) +
@@ -403,14 +404,14 @@ server <-  function(input, output, session) {
       geom_segment(data = test_budget_points(), aes(x = min(num_incentivized()$budget), y = num, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points(), aes(x = budget, y = 0, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5)
   })
-  #~CO2 avoided####
+  #~CO2 saved####
   output$g3 <- renderPlot({
-    ggplot(CO2_avoided(), aes(budget, CO2_avoided, color = mode)) +
+    ggplot(CO2_saved(), aes(budget, CO2_saved, color = mode)) +
       geom_line(size = 1.5) +
       coord_cartesian(ylim = c(0, 1e7)) +
-      geom_point(data = test_budget_points_w_CO2(), aes(budget, CO2_avoided), size = 5) +
-      geom_segment(data = test_budget_points_w_CO2(), aes(x = min(num_incentivized()$budget), y = CO2_avoided, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5) +
-      geom_segment(data = test_budget_points_w_CO2(), aes(x = budget, y = 0, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5)
+      geom_point(data = test_budget_points_w_CO2(), aes(budget, total_CO2_saved), size = 5) +
+      geom_segment(data = test_budget_points_w_CO2(), aes(x = min(num_incentivized()$budget), y = total_CO2_saved, xend = budget, yend = total_CO2_saved, color = mode), linetype = "dashed", size = 1.5) +
+      geom_segment(data = test_budget_points_w_CO2(), aes(x = budget, y = 0, xend = budget, yend = total_CO2_saved, color = mode), linetype = "dashed", size = 1.5)
   })
   #~Budget distribution specific number incentivized####
   output$g4 <- renderPlot({
@@ -437,27 +438,27 @@ server <-  function(input, output, session) {
                    size = 1.5)
       )
   })
-  #~Budget distribution specific CO2 avoided####
+  #~Budget distribution specific CO2 saved####
   output$g5 <- renderPlot({
     #Don't update this plot until the update button is pressed
     input$in_update_budget_per
     
-    isolate(ggplot(CO2_avoided_distrib(), aes(budget, CO2_avoided, fill = mode)) +
+    isolate(ggplot(CO2_saved_distrib(), aes(budget, CO2_saved, fill = mode)) +
       geom_area() +
       coord_cartesian(ylim = c(0, 1e7)) +
       geom_point(data = test_budget_points_w_CO2_distrib(),
-                 aes(budget,sum(CO2_avoided)),
+                 aes(budget,sum(CO2_saved)),
                  size = 5) +
       geom_segment(data = test_budget_points_w_CO2_distrib(), #horizontal line
                    aes(x = min(num_incentivized()$budget),
-                       y = sum(CO2_avoided), xend = budget,
-                       yend = sum(CO2_avoided)),
+                       y = sum(CO2_saved), xend = budget,
+                       yend = sum(CO2_saved)),
                    linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points_w_CO2_distrib(), #vertical line
                    aes(x = budget,
                        y = 0,
                        xend = budget,
-                       yend = sum(CO2_avoided)),
+                       yend = sum(CO2_saved)),
                    linetype = "dashed", size = 1.5)
     )
   })

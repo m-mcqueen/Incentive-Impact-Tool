@@ -229,7 +229,7 @@ ui <- fluidPage(
     mainPanel(
       verticalLayout(
         verticalLayout(
-          h4("Cost per kg CO2 Avoided (1 year)"),
+          h4("Cost per kg CO2 saved (1 year)"),
           plotOutput("g1")
         ),
         splitLayout(
@@ -238,7 +238,7 @@ ui <- fluidPage(
             plotOutput("g2")
           ),
           verticalLayout(
-            h4("Total CO2 Avoided (1 year)"),
+            h4("Total CO2 saved (1 year)"),
             plotOutput("g3")
           )
         ),
@@ -248,7 +248,7 @@ ui <- fluidPage(
             plotOutput("g4")
           ),
           verticalLayout(
-            h4("Total CO2 Avoided (1 year), Budget Distribution Specific"),
+            h4("Total CO2 saved (1 year), Budget Distribution Specific"),
             plotOutput("g5")
           )
         )
