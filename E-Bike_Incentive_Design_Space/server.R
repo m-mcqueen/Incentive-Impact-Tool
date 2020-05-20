@@ -353,19 +353,19 @@ server <-  function(input, output, session) {
     BEV_budget_test_point <- tibble(mode = "BEV",
                                     budget = test_budget,
                                     budget_portion = (input$in_BEV_per_budget * .01) * test_budget,
-                                    num = round(budget_portion / BEV_incentive()))
+                                    num = budget_portion / BEV_incentive())
     EBike_budget_test_point <- tibble(mode = "EBike",
                                       budget = test_budget,
                                       budget_portion = (input$in_EBike_per_budget * .01) * test_budget,
-                                      num = round(budget_portion / EBike_incentive()))
+                                      num = budget_portion / EBike_incentive())
     PHEV_budget_test_point <- tibble(mode = "PHEV",
                                      budget = test_budget,
                                      budget_portion = (input$in_PHEV_per_budget * .01) * test_budget,
-                                     num = round(budget_portion / PHEV_incentive()))
+                                     num = budget_portion / PHEV_incentive())
     FCEV_budget_test_point <- tibble(mode = "FCEV",
                                      budget = test_budget,
                                      budget_portion = (input$in_FCEV_per_budget * .01) * test_budget,
-                                     num = round(budget_portion / FCEV_incentive()))
+                                     num = budget_portion / FCEV_incentive())
 
     EBike_budget_test_point %>% 
       bind_rows(BEV_budget_test_point, PHEV_budget_test_point, FCEV_budget_test_point) %>% 
