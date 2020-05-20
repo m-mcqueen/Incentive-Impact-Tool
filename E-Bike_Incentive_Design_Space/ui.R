@@ -17,6 +17,9 @@ ui <- fluidPage(
   # Application title
   titlePanel("Electric Vehicle Incentive Cost and Impact"),
   
+  #================================#
+  #Sidebar####
+  #================================#
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
@@ -219,6 +222,9 @@ ui <- fluidPage(
                   )
       )
     ),
+    #================================#
+    #Main Panel####
+    #================================#
     # Show a plot of the generated distribution
     mainPanel(
       verticalLayout(

@@ -36,9 +36,9 @@ exclude_items <- function(data, EBike, PHEV, BEV, FCEV) {
   return(data)
 }
 
-#================================
-#Load data tables
-#================================
+#================================#
+#Load data tables####
+#================================#
 #State Info
 Electricity_raw <- read.csv("www/Data Tables/State Info/Electricity.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
 Incentives_raw <- read.csv("www/Data Tables/State Info/Incentives.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
@@ -52,9 +52,9 @@ IC_raw <- read.csv("www/Data Tables/Vehicles/IC.csv", fileEncoding="UTF-8-BOM", 
 EBike_raw <- read.csv("www/Data Tables/Vehicles/EBike.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
 mix_raw <- read.csv("www/Data Tables/Vehicles/mix.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE) #Defines a specific combo of vehicle types
 
-#================================
-#Clean up tables to combine units with scalar values
-#================================
+#================================#
+#Clean up tables to combine units with scalar values####
+#================================#
 #State Info
 Electricity <- Electricity_raw %>% 
   mutate(CO2_Units = ifelse(CO2_Units == "lb/MWh", "pounds / megawatthour", CO2_Units), #lb/MWh is not in units database, but pounds / megawatthour is
@@ -125,9 +125,9 @@ mix <- mix_raw %>%
 #Remove unecessary tables
 rm(BEV_raw, PHEV_raw, FCEV_raw, EBike_raw, Electricity_raw, IC_raw, Incentives_raw, Trips_raw, mix_raw)
 
-#================================
-#Constants
-#================================
+#================================#
+#Define Conversion Constants####
+#================================#
 
 #Carbon emissions from gallon of gasoline
 #Check to see if it's already installed, if not, install:

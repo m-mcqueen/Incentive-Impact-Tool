@@ -16,10 +16,10 @@ library(stringr)
 # Define server logic required calculate and draw plots
 server <-  function(input, output, session) {
   
-  #================================
-  #Text input default value updaters
-  #================================
-  #Update Trips panel with preset
+  #================================#
+  #Text input value updaters####
+  #================================#
+  #~Update Trips panel with preset####
   observeEvent(input$apply_in_preset_Car_Trips_Daily_Avg, {
     updateNumericInput(session, inputId = "in_Car_Trips_Daily_Avg",
                        value = Trips %>%
@@ -33,7 +33,7 @@ server <-  function(input, output, session) {
                        )
     )
   })
-  #Update Power Generation panel with preset
+  #~Update Power Generation panel with preset####
   observeEvent(input$apply_in_preset_elec_gen_emissions, {
     updateNumericInput(session, inputId = "in_elec_gen_emissions",
                        value = drop_units(Electricity %>%
@@ -43,7 +43,7 @@ server <-  function(input, output, session) {
     )
   })
   
-  #Update IC panel with preset
+  #~Update IC panel with preset####
   observeEvent(input$apply_in_preset_IC_Fuel_Economy, {
     make_and_model = str_split(input$in_preset_IC_Fuel_Economy, " ")
     updateNumericInput(session, inputId = "in_IC_Fuel_Economy",
@@ -54,7 +54,7 @@ server <-  function(input, output, session) {
                        )
     )
   })
-  #Update E-Bike panel with preset
+  #~Update E-Bike panel with preset####
   observeEvent(input$apply_in_preset_EBike, {
     make_and_model = str_split(input$in_preset_EBike, " ")
     updateNumericInput(session, inputId = "in_EBike_Battery_Storage",
@@ -72,7 +72,7 @@ server <-  function(input, output, session) {
                        )
     )
   })
-  #Update BEV panel with preset
+  #~Update BEV panel with preset####
   observeEvent(input$apply_in_preset_BEV, {
     updateNumericInput(session, inputId = "in_BEV_econ",
                        value = round(as.numeric(mix %>% 
@@ -80,7 +80,7 @@ server <-  function(input, output, session) {
                                                          mix_name == input$in_preset_BEV) %>% 
                                                   pull(epa_econ_wm)), 2))
   })
-  #Update PHEV panel with preset
+  #~Update PHEV panel with preset####
   observeEvent(input$apply_in_preset_PHEV, {
     updateNumericInput(session, inputId = "in_PHEV_elec_econ",
                        value = round(as.numeric(mix %>% 
@@ -98,7 +98,7 @@ server <-  function(input, output, session) {
                                                          mix_name == input$in_preset_PHEV) %>% 
                                                   pull(epa_ic_econ_wm))))
   })
-  #Update FCEV panel with preset
+  #~Update FCEV panel with preset####
   observeEvent(input$apply_in_preset_FCEV, {
     updateNumericInput(session, inputId = "in_FCEV_econ",
                        value = round(as.numeric(mix %>% 
@@ -106,16 +106,16 @@ server <-  function(input, output, session) {
                                                          mix_name == input$in_preset_FCEV) %>% 
                                                   pull(epa_h2_econ_wm)), 2))
   })
-  #Update plots that use budget allotments
+  #~Update plots that use budget allotments####
   observeEvent(input$in_update_budget_per, {
     update
   })
   
-  #================================
-  #Calcs
-  #================================
+  #================================#
+  #Calcs####
+  #================================#
   
-  #IC
+  #~IC####
   mileage_day <- reactive({
     Car_Trips_Daily_Avg <- input$in_Car_Trips_Daily_Avg
     Car_Trip_Avg_Length <- set_units(input$in_Car_Trip_Avg_Length, "mi")
@@ -127,7 +127,7 @@ server <-  function(input, output, session) {
     IC_emissions_day * 365 #multiply to get year total
   })
   
-  #BEV
+  #~BEV####
   Elec_gen_emissions <- reactive({set_units(input$in_elec_gen_emissions, "pounds / megawatthour")})
   BEV_emissions_year <- reactive({
     BEV_Fuel_Economy <- set_units(input$in_BEV_econ, "kilowatthour / hectomi")
@@ -137,7 +137,7 @@ server <-  function(input, output, session) {
   BEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(BEV_emissions_year())})
   BEV_incentive <- reactive({round(input$in_BEV_incentive, -1)})
   
-  #PHEV
+  #~PHEV####
   PHEV_emissions_year <- reactive({
     PHEV_elec_econ <- set_units(input$in_PHEV_elec_econ, "kilowatthour / hectomi")
     PHEV_range_elec <- set_units(input$in_PHEV_range_elec, "mi")
@@ -159,7 +159,7 @@ server <-  function(input, output, session) {
   PHEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(PHEV_emissions_year())})
   PHEV_incentive <- reactive({round(input$in_PHEV_incentive, -1)})
   
-  #FCEV
+  #~FCEV####
   FCEV_emissions_year <- reactive({
     FCEV_H2_econ <- set_units(input$in_FCEV_econ, "mi / kg") #get H2 fuel economy
     FCEV_renew_energy_ratio <- input$in_renew_energy_ratio #get ratio of energy required for electrolysis that is 100% renewable (zero emissions)
@@ -172,7 +172,7 @@ server <-  function(input, output, session) {
   FCEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(FCEV_emissions_year())})
   FCEV_incentive <- reactive({round(input$in_FCEV_incentive, -1)})
   
-  #E-Bike
+  #~E-Bike#####
   VMT_r <- reactive({input$in_EBike_VMT_r}) #Ratio of car mileage replaced by e-bike
   EBike_emissions_year <- reactive({
     EBike_Battery_Storage <- set_units(input$in_EBike_Battery_Storage, "Watthour")
@@ -188,7 +188,7 @@ server <-  function(input, output, session) {
   })
   EBike_incentive <- reactive({round(input$in_EBike_incentive, -1)})
   
-  #Cost/kg CO2 saved
+  #~Cost/kg CO2 saved####
   costperkg <- reactive({
     incentive_range = seq(0, 5000, by = 1000) #Set the range of incentive dollar amounts
     
@@ -209,7 +209,7 @@ server <-  function(input, output, session) {
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
-  #Pull specific points of interest
+  #~~Pull specific points of interest####
   test_points <- reactive({
     #Grab e-bike test point
     EBike_incentive_test_point <- costperkg() %>%
@@ -230,14 +230,15 @@ server <-  function(input, output, session) {
       filter(incentive == FCEV_incentive(),
              mode == "FCEV")
     
-    EBike_incentive_test_point %>% #bind to single testpoints tibble
+    #bind to single testpoints tibble
+    EBike_incentive_test_point %>% 
       bind_rows(BEV_incentive_test_point, PHEV_incentive_test_point, FCEV_incentive_test_point) %>% 
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
-  #================================
+  #================================#
   
-  #Total vehicles incentivized and total budget
+  #~Total vehicles incentivized and total budget####
   num_incentivized <- reactive({
     total_budget_range = seq(1e6, 5e6, by = 1e6)
     BEV_num_incentivized = tibble(budget = total_budget_range, mode = "BEV", num = total_budget_range / BEV_incentive())
@@ -249,7 +250,7 @@ server <-  function(input, output, session) {
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
-  #Pull specific points of interest
+  #~~Pull specific points of interest####
   test_budget_points <- reactive({
     test_budget <- input$in_test_budget
     BEV_budget_test_point <- tibble(mode = "BEV",
@@ -277,9 +278,9 @@ server <-  function(input, output, session) {
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
-  #================================
+  #================================#
   
-  #Total CO2 avoided per year and total budget
+  #~Total CO2 avoided per year and total budget####
   CO2_avoided <- reactive({
     num_incentivized() %>% 
       mutate(CO2_avoided = case_when(mode == "BEV" ~ num * BEV_CO2_saved(),
@@ -290,16 +291,16 @@ server <-  function(input, output, session) {
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
-  #Pull specific points of interest
+  #~~Pull specific points of interest####
   test_budget_points_w_CO2 <- reactive({
     test_budget_points() %>% 
       left_join(CO2_avoided() %>% select(mode, budget, CO2_avoided), by = c("mode", "budget")) %>% 
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
-  #================================
+  #================================#
   
-  #Budget Distribution Specific Total vehicles incentivized and total budget
+  #~Budget Distribution Specific Total vehicles incentivized and total budget####
   num_incentivized_distrib <- reactive({
     total_budget_range = seq(1e6, 5e6, by = 1e6)
     BEV_num_incentivized = tibble(budget = total_budget_range, mode = "BEV", num = total_budget_range * (input$in_BEV_per_budget * .01) / BEV_incentive())
@@ -311,7 +312,7 @@ server <-  function(input, output, session) {
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
-  #Pull specific points of interest
+  #~~Pull specific points of interest####
   test_budget_points_distrib <- reactive({
     test_budget <- input$in_test_budget
     BEV_budget_test_point <- tibble(mode = "BEV",
@@ -339,9 +340,9 @@ server <-  function(input, output, session) {
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
-  #================================
+  #================================#
   
-  #Budget Distribution Specific Total CO2 avoided per year and total budget
+  #~Budget Distribution Specific Total CO2 avoided per year and total budget####
   CO2_avoided_distrib <- reactive({
     num_incentivized_distrib() %>% 
       mutate(CO2_avoided = case_when(mode == "BEV" ~ num * BEV_CO2_saved(),
@@ -352,17 +353,17 @@ server <-  function(input, output, session) {
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
-  #Pull specific points of interest
+  #~~Pull specific points of interest####
   test_budget_points_w_CO2_distrib <- reactive({
     test_budget_points() %>% 
       left_join(CO2_avoided_distrib() %>% select(mode, budget, CO2_avoided), by = c("mode", "budget")) %>% 
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
-  #================================
-  #Plots
-  #================================
-  #Cost per kg CO2 avoided by mode
+  #================================#
+  #Plots####
+  #================================#
+  #~Cost per kg CO2 avoided by mode####
   output$g1 <- renderPlot({
     ggplot(costperkg(), aes(incentive, costperkg, color=mode)) +
       coord_cartesian(xlim = c(min(costperkg()$incentive), max(costperkg()$incentive)), ylim = c(0, 4)) +
@@ -371,7 +372,7 @@ server <-  function(input, output, session) {
       geom_segment(data = test_points(), aes(x = 0, y = costperkg, xend = incentive, yend = costperkg, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_points(), aes(x = incentive, y = 0, xend = incentive, yend = costperkg, color = mode), linetype = "dashed", size = 1.5)
   })
-  #Number incentivized
+  #~Number incentivized####
   output$g2 <- renderPlot({
     ggplot(num_incentivized(), aes(budget, num, color = mode)) +
       geom_line(size = 1.5) + #plot mode lines
@@ -380,7 +381,7 @@ server <-  function(input, output, session) {
       geom_segment(data = test_budget_points(), aes(x = min(num_incentivized()$budget), y = num, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points(), aes(x = budget, y = 0, xend = budget, yend = num, color = mode), linetype = "dashed", size = 1.5)
   })
-  #CO2 avoided
+  #~CO2 avoided####
   output$g3 <- renderPlot({
     ggplot(CO2_avoided(), aes(budget, CO2_avoided, color = mode)) +
       geom_line(size = 1.5) +
@@ -389,7 +390,7 @@ server <-  function(input, output, session) {
       geom_segment(data = test_budget_points_w_CO2(), aes(x = min(num_incentivized()$budget), y = CO2_avoided, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5) +
       geom_segment(data = test_budget_points_w_CO2(), aes(x = budget, y = 0, xend = budget, yend = CO2_avoided, color = mode), linetype = "dashed", size = 1.5)
   })
-  #Budget distribution specific number incentivized
+  #~Budget distribution specific number incentivized####
   output$g4 <- renderPlot({
     #Don't update this plot until the update button is pressed
     input$in_update_budget_per
@@ -414,7 +415,7 @@ server <-  function(input, output, session) {
                    size = 1.5)
       )
   })
-  #Budget distribution specific CO2 avoided
+  #~Budget distribution specific CO2 avoided####
   output$g5 <- renderPlot({
     #Don't update this plot until the update button is pressed
     input$in_update_budget_per
@@ -438,7 +439,7 @@ server <-  function(input, output, session) {
                    linetype = "dashed", size = 1.5)
     )
   })
-  #Plot to show percentage of budget used
+  #~Plot to show percentage of budget used####
   output$g_budget_total <- renderPlot({
     total <-  sum(input$in_BEV_per_budget, input$in_EBike_per_budget, input$in_PHEV_per_budget, input$in_FCEV_per_budget)
     #Make it red if the total is more than 100
