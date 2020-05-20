@@ -122,23 +122,23 @@ server <-  function(input, output, session) {
     Car_Trips_Daily_Avg * Car_Trip_Avg_Length #calculate total mileage/day
   })
   IC_Fuel_Economy <- reactive({set_units(input$in_IC_Fuel_Economy, "mi / gal")})
-  IC_emissions_year <- reactive({
+  IC_emissions_year <- reactive({ #done
     IC_emissions_day <- set_units(drop_units(set_units(mileage_day() / IC_Fuel_Economy(), "kiloCO2_g")), "kg") #calculate emissions and convert to kg
     IC_emissions_day * 365 #multiply to get year total
   })
   
   #~BEV####
   Elec_gen_emissions <- reactive({set_units(input$in_elec_gen_emissions, "pounds / megawatthour")})
-  BEV_emissions_year <- reactive({
+  BEV_emissions_year <- reactive({ #done
     BEV_Fuel_Economy <- set_units(input$in_BEV_econ, "kilowatthour / hectomi")
     BEV_emissions_day <- set_units(Elec_gen_emissions() * mileage_day() * BEV_Fuel_Economy, "kg") #calculate emissions and convert to kg
     BEV_emissions_day * 365 #multiply to get year total
   })
-  BEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(BEV_emissions_year())})
+  BEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(BEV_emissions_year())}) #done
   BEV_incentive <- reactive({round(input$in_BEV_incentive, -1)})
   
   #~PHEV####
-  PHEV_emissions_year <- reactive({
+  PHEV_emissions_year <- reactive({ #done
     PHEV_elec_econ <- set_units(input$in_PHEV_elec_econ, "kilowatthour / hectomi")
     PHEV_range_elec <- set_units(input$in_PHEV_range_elec, "mi")
     PHEV_ic_econ <- set_units(input$in_PHEV_ic_econ, "mi / gal")
@@ -156,11 +156,11 @@ server <-  function(input, output, session) {
     PHEV_total_emissions_day <- PHEV_elec_emissions_day + PHEV_ic_emissions_day
     PHEV_total_emissions_day * 365
   })
-  PHEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(PHEV_emissions_year())})
+  PHEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(PHEV_emissions_year())}) #done
   PHEV_incentive <- reactive({round(input$in_PHEV_incentive, -1)})
   
   #~FCEV####
-  FCEV_emissions_year <- reactive({
+  FCEV_emissions_year <- reactive({ #done
     FCEV_H2_econ <- set_units(input$in_FCEV_econ, "mi / kg") #get H2 fuel economy
     FCEV_renew_energy_ratio <- input$in_renew_energy_ratio #get ratio of energy required for electrolysis that is 100% renewable (zero emissions)
     FCEV_H2_required_day <- mileage_day() / FCEV_H2_econ #get required H2 per day
@@ -169,19 +169,19 @@ server <-  function(input, output, session) {
     FCEV_emissions_day <- set_units(FCEV_nonrenew_elec_required_day * Elec_gen_emissions(), "kg") #calculate emissions from non-renewable electricity and convert to kg based on generation profile selected
     FCEV_emissions_day * 365 #multiply to get year total
   })
-  FCEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(FCEV_emissions_year())})
+  FCEV_CO2_saved <- reactive({drop_units(IC_emissions_year()) - drop_units(FCEV_emissions_year())}) #done
   FCEV_incentive <- reactive({round(input$in_FCEV_incentive, -1)})
   
   #~E-Bike#####
   VMT_r <- reactive({input$in_EBike_VMT_r}) #Ratio of car mileage replaced by e-bike
-  EBike_emissions_year <- reactive({
+  EBike_emissions_year <- reactive({ #done
     EBike_Battery_Storage <- set_units(input$in_EBike_Battery_Storage, "Watthour")
     EBike_Range <- set_units(input$in_EBike_Range, "mi")
     EBike_Fuel_Economy <- EBike_Range / EBike_Battery_Storage #calculate "fuel economy" based on range and battery storage
     EBike_emissions_day <- set_units(Elec_gen_emissions() * (mileage_day() * VMT_r()) / EBike_Fuel_Economy, "kg") #calculate emissions (taking into account portion of miles travelled by e-bike) and convert to kg
     EBike_emissions_day * 365 #multiply to get year total
   })
-  EBike_CO2_saved <- reactive({
+  EBike_CO2_saved <- reactive({ #done
     IC_remaining_emissions_day <- set_units(drop_units(set_units(mileage_day() * (1 - VMT_r()) / IC_Fuel_Economy(), "kiloCO2_g")), "kg") #Get the remaining emissions from the remaining IC mileage. Change to kg
     IC_remaining_emissions_year <- IC_remaining_emissions_day * 365 #multiply to get year total
     drop_units(IC_emissions_year()) - (drop_units(EBike_emissions_year()) + drop_units(IC_remaining_emissions_year))
@@ -189,7 +189,7 @@ server <-  function(input, output, session) {
   EBike_incentive <- reactive({round(input$in_EBike_incentive, -1)})
   
   #~Cost/kg CO2 saved####
-  costperkg <- reactive({
+  costperkg <- reactive({ #done
     incentive_range = seq(0, 5000, by = 1000) #Set the range of incentive dollar amounts
     
     BEV_CO2_saved_cost <- incentive_range / BEV_CO2_saved() #Calculate the cost per kg CO2 saved for BEV
@@ -212,9 +212,16 @@ server <-  function(input, output, session) {
   #~~Pull specific points of interest####
   test_points <- reactive({
     #Grab e-bike test point
-    EBike_incentive_test_point <- costperkg() %>%
-      filter(incentive == EBike_incentive(),
-             mode == "EBike")
+    #EBike_incentive_test_point <- costperkg() %>%
+      #filter(incentive == EBike_incentive(),
+             #mode == "EBike")
+    #print(EBike_incentive_test_point)
+    EBike_emissions_year <- calc_EBike_emissions_year(input$in_EBike_Battery_Storage, input$in_EBike_Range, Elec_gen_emissions(), mileage_day(), VMT_r())
+    EBike_CO2_saved <- calc_EBike_CO2_saved(mileage_day(), VMT_r(), IC_Fuel_Economy(), IC_emissions_year(), EBike_emissions_year)
+    EBike_costperkg <- calc_costperkg(incentive = EBike_incentive(), CO2_saved = EBike_CO2_saved)
+    EBike_incentive_test_point <- tibble(mode = "EBike", incentive = EBike_incentive(), costperkg = EBike_costperkg)
+    print(EBike_incentive_test_point)
+    
     #Grab BEV test point
     BEV_incentive_test_point <- costperkg() %>%
       filter(incentive == BEV_incentive(),
