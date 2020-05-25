@@ -217,7 +217,13 @@ ui <- fluidPage(
                              actionButton("apply_in_preset_FCEV",
                                           "Apply Preset")
                            )
-                  )
+                  ),
+                  tabPanel("Report",
+                           verticalLayout(
+                             titlePanel("Report"),
+                             downloadButton("report", "Generate report")
+                           )
+                           )
       )
     ),
     #================================#
