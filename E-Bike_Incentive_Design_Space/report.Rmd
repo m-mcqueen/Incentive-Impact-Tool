@@ -41,6 +41,18 @@ params:
   costperkg_x: costperkg_x
   costperkg_y: costperkg_y
   test_points: test_points
+  num_incentivized: num_incentivized
+  test_budget_points: test_budget_points
+  num_x: num_x
+  num_y: num_y
+  CO2_saved: CO2_saved
+  test_budget_points_w_CO2: test_budget_points_w_CO2
+  CO2_saved_x: CO2_saved_x
+  CO2_saved_y: CO2_saved_y
+  num_incentivized_distrib: num_incentivized_distrib
+  test_budget_points_distrib: test_budget_points_distrib
+  CO2_saved_distrib: CO2_saved_distrib
+  test_budget_points_w_CO2_distrib: test_budget_points_w_CO2_distrib
 ---
 
 ```{r setup, include=FALSE}
@@ -64,6 +76,10 @@ You can also embed plots, for example:
 ```{r pressure, echo=FALSE}
 print(params$costperkg)
 print(g1plot(params$costperkg, params$test_points, params$costperkg_x, params$costperkg_y))
+print(g2plot(params$num_incentivized, params$test_budget_points, params$num_x, params$num_y))
+print(g3plot(params$CO2_saved, params$test_budget_points_w_CO2, params$num_incentivized, params$CO2_saved_x, params$CO2_saved_y))
+print(g4plot(params$num_incentivized, params$num_incentivized_distrib, params$test_budget_points_distrib, params$num_x, params$num_y))
+print(g5plot(params$num_incentivized, params$CO2_saved_distrib, params$test_budget_points_w_CO2_distrib, params$CO2_saved_x, params$CO2_saved_y))
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -444,7 +444,19 @@ server <-  function(input, output, session) {
                                       costperkg = costperkg(),
                                       costperkg_x = costperkg_x,
                                       costperkg_y = costperkg_y,
-                                      test_points = test_points()
+                                      test_points = test_points(),
+                                      num_incentivized = num_incentivized(),
+                                      test_budget_points = test_budget_points(),
+                                      num_x = num_x,
+                                      num_y = num_y,
+                                      CO2_saved = CO2_saved(),
+                                      test_budget_points_w_CO2 = test_budget_points_w_CO2(),
+                                      CO2_saved_x = CO2_saved_x,
+                                      CO2_saved_y = CO2_saved_y,
+                                      num_incentivized_distrib = num_incentivized_distrib(),
+                                      test_budget_points_distrib = test_budget_points_distrib(),
+                                      CO2_saved_distrib = CO2_saved_distrib(),
+                                      test_budget_points_w_CO2_distrib = test_budget_points_w_CO2_distrib()
                                       ),
                         envir = new.env(parent = globalenv())
                         )
