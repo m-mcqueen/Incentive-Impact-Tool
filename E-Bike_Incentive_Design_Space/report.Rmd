@@ -74,11 +74,19 @@ summary(params)
 You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
-print(params$costperkg)
+#Cost per kg CO2 saved by mode
 print(g1plot(params$costperkg, params$test_points, params$costperkg_x, params$costperkg_y))
+
+#Number incentivized
 print(g2plot(params$num_incentivized, params$test_budget_points, params$num_x, params$num_y))
+
+#CO2 saved
 print(g3plot(params$CO2_saved, params$test_budget_points_w_CO2, params$num_incentivized, params$CO2_saved_x, params$CO2_saved_y))
+
+#Budget distribution specific number incentivized
 print(g4plot(params$num_incentivized, params$num_incentivized_distrib, params$test_budget_points_distrib, params$num_x, params$num_y))
+
+#Budget distribution specific CO2 saved
 print(g5plot(params$num_incentivized, params$CO2_saved_distrib, params$test_budget_points_w_CO2_distrib, params$CO2_saved_x, params$CO2_saved_y))
 ```
 
