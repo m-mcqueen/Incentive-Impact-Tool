@@ -1,0 +1,69 @@
+---
+title: "E-Vehicle Incentive Impact Tool Report"
+date: "`r format(Sys.Date(), '%m-%d-%y')`"
+output: html_document
+
+params: 
+  Car_Trip_Avg_Length: Car_Trip_Avg_Length
+  EBike_per_budget: EBike_per_budget
+  test_budget: test_budget
+  PHEV_incentive: PHEV_incentive
+  BEV_econ: BEV_econ
+  FCEV_incentive: FCEV_incentive
+  preset_FCEV: preset_FCEV
+  FCEV_include: FCEV_include
+  preset_EBike: preset_EBike
+  EBike_include: EBike_include
+  BEV_incentive: BEV_incentive
+  EBike_Battery_Storage: EBike_Battery_Storage
+  EBike_incentive: EBike_incentive
+  EBike_Range: EBike_Range
+  BEV_per_budget: BEV_per_budget
+  EBike_VMT_r: EBike_VMT_r
+  preset_Car_Trips_Daily_Avg: preset_Car_Trips_Daily_Avg
+  FCEV_econ: FCEV_econ
+  PHEV_elec_econ: PHEV_elec_econ
+  PHEV_range_elec: PHEV_range_elec
+  preset_PHEV: preset_PHEV
+  BEV_include: BEV_include
+  elec_gen_emissions: elec_gen_emissions
+  preset_elec_gen_emissions: preset_elec_gen_emissions
+  PHEV_per_budget: PHEV_per_budget
+  preset_BEV: preset_BEV
+  FCEV_per_budget: FCEV_per_budget
+  IC_Fuel_Economy: IC_Fuel_Economy
+  Car_Trips_Daily_Avg: Car_Trips_Daily_Avg
+  PHEV_ic_econ: PHEV_ic_econ
+  renew_energy_ratio: renew_energy_ratio
+  PHEV_include: PHEV_include
+  preset_IC_Fuel_Economy: preset_IC_Fuel_Economy
+  costperkg: costperkg
+  costperkg_x: costperkg_x
+  costperkg_y: costperkg_y
+  test_points: test_points
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(params)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+print(params$costperkg)
+print(g1plot(params$costperkg, params$test_points, params$costperkg_x, params$costperkg_y))
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
