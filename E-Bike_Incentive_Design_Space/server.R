@@ -2,6 +2,9 @@
 #Server
 #Mike McQueen
 
+#Source helper scripts
+source("util.R")
+
 #Load Packages
 library(shiny)
 library(tidyr)
@@ -360,97 +363,23 @@ server <-  function(input, output, session) {
   #================================#
   #~Cost per kg CO2 saved by mode####
   output$g1 <- renderPlot({
-    ggplot(costperkg(), aes(incentive, costperkg, color=mode)) +
-      coord_cartesian(xlim = costperkg_x, ylim = costperkg_y) +
-      geom_line(size = 1.5) + #plot mode lines
-      geom_point(data = test_points(),
-                 aes(incentive,
-                     costperkg,
-                     color = mode), size = 5) + #plot specific test points
-      geom_segment(data = test_points(),
-                   aes(x = 0, y = costperkg, xend = incentive, yend = costperkg, color = mode),
-                   linetype = "dashed",
-                   size = 1.5) +
-      geom_segment(data = test_points(),
-                   aes(x = incentive, y = 0, xend = incentive, yend = costperkg, color = mode),
-                   linetype = "dashed",
-                   size = 1.5)
+    g1plot(costperkg(), test_points(), costperkg_x, costperkg_y)
   })
   #~Number incentivized####
   output$g2 <- renderPlot({
-    ggplot(num_incentivized(), aes(budget, num, color = mode)) +
-      geom_line(size = 1.5) + #plot mode lines
-      coord_cartesian(ylim = num_y) +
-      geom_point(data = test_budget_points(),
-                 aes(budget, num, color = mode),
-                 size = 5) + #plot specific test points
-      geom_segment(data = test_budget_points(),
-                   aes(x = min(num_incentivized()$budget), y = num, xend = budget, yend = num, color = mode),
-                   linetype = "dashed",
-                   size = 1.5) +
-      geom_segment(data = test_budget_points(),
-                   aes(x = budget, y = 0, xend = budget, yend = num, color = mode),
-                   linetype = "dashed",
-                   size = 1.5)
+    g2plot(num_incentivized(), test_budget_points(), num_x, num_y)
   })
   #~CO2 saved####
   output$g3 <- renderPlot({
-    ggplot(CO2_saved(), aes(budget, CO2_saved, color = mode)) +
-      geom_line(size = 1.5) +
-      coord_cartesian(ylim = CO2_saved_y) +
-      geom_point(data = test_budget_points_w_CO2(),
-                 aes(budget, total_CO2_saved),
-                 size = 5) +
-      geom_segment(data = test_budget_points_w_CO2(),
-                   aes(x = min(num_incentivized()$budget), y = total_CO2_saved, xend = budget, yend = total_CO2_saved, color = mode),
-                   linetype = "dashed",
-                   size = 1.5) +
-      geom_segment(data = test_budget_points_w_CO2(),
-                   aes(x = budget, y = 0, xend = budget, yend = total_CO2_saved, color = mode),
-                   linetype = "dashed",
-                   size = 1.5)
+    g3plot(CO2_saved(), test_budget_points_w_CO2(), num_incentivized(), CO2_saved_x, CO2_saved_y)
   })
   #~Budget distribution specific number incentivized####
   output$g4 <- renderPlot({
-    ggplot(num_incentivized_distrib(), aes(budget, num, fill = mode)) +
-      geom_area() + 
-      coord_cartesian(ylim = num_y) +
-      geom_point(data = test_budget_points_distrib(),
-                 aes(budget, sum(num)),
-                 size = 5) + #plot specific test points
-      geom_segment(data = test_budget_points_distrib(), #horizontal line
-                   aes(x = min(num_incentivized()$budget),
-                       y = sum(num), xend = budget,
-                       yend = sum(num)),
-                   linetype = "dashed",
-                   size = 1.5) +
-      geom_segment(data = test_budget_points_distrib(), #vertical line
-                   aes(x = budget, y = 0,
-                       xend = budget,
-                       yend = sum(num)),
-                   linetype = "dashed",
-                   size = 1.5)
-      
+    g4plot(num_incentivized(), num_incentivized_distrib(), test_budget_points_distrib(), num_x, num_y)
   })
   #~Budget distribution specific CO2 saved####
   output$g5 <- renderPlot({
-    ggplot(CO2_saved_distrib(), aes(budget, CO2_saved, fill = mode)) +
-      geom_area() +
-      coord_cartesian(ylim = CO2_saved_y) +
-      geom_point(data = test_budget_points_w_CO2_distrib(),
-                 aes(budget,sum(total_CO2_saved)),
-                 size = 5) +
-      geom_segment(data = test_budget_points_w_CO2_distrib(), #horizontal line
-                   aes(x = min(num_incentivized()$budget),
-                       y = sum(total_CO2_saved), xend = budget,
-                       yend = sum(total_CO2_saved)),
-                   linetype = "dashed", size = 1.5) +
-      geom_segment(data = test_budget_points_w_CO2_distrib(), #vertical line
-                   aes(x = budget,
-                       y = 0,
-                       xend = budget,
-                       yend = sum(total_CO2_saved)),
-                   linetype = "dashed", size = 1.5)
+    g5plot(num_incentivized(), CO2_saved_distrib(), test_budget_points_w_CO2_distrib(), CO2_saved_x, CO2_saved_y)
   })
   #~Plot to show percentage of budget used####
   output$g_budget_total <- renderPlot({
@@ -464,4 +393,61 @@ server <-  function(input, output, session) {
     #Build plot
     barplot(total, ylim = c(0,120), main = paste(total, "% Used", sep = ""), col = color)
   })
+  #~Generate a downloadable report####
+  output$report <- downloadHandler(
+    filename = "report.html",
+    content = function(file) {
+      #copy report file to temporary directory before processing it
+      tempReport <- file.path(tempdir(), "report.Rmd")
+      file.copy("report.Rmd", tempReport, overwrite = TRUE)
+      
+      #Set up parameters to pass to Rmd document
+      params <- reactiveValuesToList(input)
+      
+      #Knit the document, passing in the 'params' list,
+      #and eval it in a child of the global environement
+      #(this isolates the codes in the document from the code in this app)
+      rmarkdown::render(tempReport, output_file = file,
+                        params = list(Car_Trip_Avg_Length = input$in_Car_Trip_Avg_Length,
+                                      EBike_per_budget = input$in_EBike_per_budget,
+                                      test_budget = input$in_test_budget,
+                                      PHEV_incentive = input$in_PHEV_incentive,
+                                      BEV_econ = input$in_BEV_econ,
+                                      FCEV_incentive = input$in_FCEV_incentive,
+                                      preset_FCEV = input$in_preset_FCEV,
+                                      FCEV_include = input$in_FCEV_include,
+                                      preset_EBike = input$in_preset_EBike,
+                                      EBike_include = input$in_EBike_include,
+                                      BEV_incentive = input$in_BEV_incentive,
+                                      EBike_Battery_Storage = input$in_EBike_Battery_Storage,
+                                      EBike_incentive = input$in_EBike_incentive,
+                                      EBike_Range = input$in_EBike_Range,
+                                      BEV_per_budget = input$in_BEV_per_budget,
+                                      EBike_VMT_r = input$in_EBike_VMT_r,
+                                      preset_Car_Trips_Daily_Avg = input$in_preset_Car_Trips_Daily_Avg,
+                                      FCEV_econ = input$in_FCEV_econ,
+                                      PHEV_elec_econ = input$in_PHEV_elec_econ,
+                                      PHEV_range_elec = input$in_PHEV_range_elec,
+                                      preset_PHEV = input$in_preset_PHEV,
+                                      BEV_include = input$in_BEV_include,
+                                      elec_gen_emissions = input$in_elec_gen_emissions,
+                                      preset_elec_gen_emissions = input$in_preset_elec_gen_emissions,
+                                      PHEV_per_budget = input$in_PHEV_per_budget,
+                                      preset_BEV = input$in_preset_BEV,
+                                      FCEV_per_budget = input$in_FCEV_per_budget,
+                                      IC_Fuel_Economy = input$in_IC_Fuel_Economy,
+                                      Car_Trips_Daily_Avg = input$in_Car_Trips_Daily_Avg,
+                                      PHEV_ic_econ = input$in_PHEV_ic_econ,
+                                      renew_energy_ratio = input$in_renew_energy_ratio,
+                                      PHEV_include = input$in_PHEV_include,
+                                      preset_IC_Fuel_Economy = input$in_preset_IC_Fuel_Economy,
+                                      costperkg = costperkg(),
+                                      costperkg_x = costperkg_x,
+                                      costperkg_y = costperkg_y,
+                                      test_points = test_points()
+                                      ),
+                        envir = new.env(parent = globalenv())
+                        )
+    }
+  )
 }

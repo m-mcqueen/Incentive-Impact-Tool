@@ -1,0 +1,220 @@
+#This file contains helper functions
+
+#================================#
+####Define Helper Functions####
+#================================#
+
+#~General Helper Functions####
+#Exclude Items that are not selected
+exclude_items <- function(data, EBike, PHEV, BEV, FCEV) {
+  if(!EBike) {
+    data <- data %>% 
+      filter(mode != "EBike")
+  }
+  if(!PHEV) {
+    data <- data %>% 
+      filter(mode != "PHEV")
+  }
+  if(!BEV) {
+    data <- data %>% 
+      filter(mode != "BEV")
+  }
+  if(!FCEV) {
+    data <- data %>% 
+      filter(mode != "FCEV")
+  }
+  return(data)
+}
+
+#Calculate cost per kg CO2 saved
+calc_costperkg <- function (incentive, CO2_saved) {
+  
+  #calculate cost per kg CO2 saved
+  result <- incentive / CO2_saved
+  
+  #return result
+  return(result)
+}
+
+#~IC Helper Functions####
+#Calculate CO2 emissions per year by IC
+calc_IC_emissions_year <- function(mileage_day, IC_Fuel_Economy) {
+  IC_emissions_day <- set_units(drop_units(set_units(mileage_day / IC_Fuel_Economy, "kiloCO2_g")), "kg") #calculate emissions and convert to kg
+  IC_emissions_year <- IC_emissions_day * 365 #multiply to get year total
+  return(IC_emissions_year)
+}
+
+#~BEV Helper Functions####
+#Calculate CO2 emissions per year by BEV
+calc_BEV_emissions_year <- function(in_BEV_econ, Elec_gen_emissions, mileage_day){
+  BEV_Fuel_Economy <- set_units(in_BEV_econ, "kilowatthour / hectomi")
+  BEV_emissions_day <- set_units(Elec_gen_emissions * mileage_day * BEV_Fuel_Economy, "kg") #calculate emissions and convert to kg
+  BEV_emissions_year <- BEV_emissions_day * 365 #multiply to get year total
+  return(BEV_emissions_year)
+}
+
+#Calculate CO2 saved by BEV
+calc_BEV_CO2_saved <- function(IC_emissions_year, BEV_emissions_year){
+  drop_units(IC_emissions_year) - drop_units(BEV_emissions_year)
+}
+
+#~PHEV Helper Functions####
+#Calculate CO2 emissions per year by PHEV
+calc_PHEV_emissions_year <- function(in_PHEV_elec_econ, in_PHEV_range_elec, in_PHEV_ic_econ, mileage_day, Elec_gen_emissions){
+  PHEV_elec_econ <- set_units(in_PHEV_elec_econ, "kilowatthour / hectomi")
+  PHEV_range_elec <- set_units(in_PHEV_range_elec, "mi")
+  PHEV_ic_econ <- set_units(in_PHEV_ic_econ, "mi / gal")
+  if(PHEV_range_elec > mileage_day) { 
+    elec_dist <- mileage_day #if the elec range is greater than the mileage_day, set elec_dist to mileage_day
+  } else {
+    elec_dist <- PHEV_range_elec #if the total distance was larger than the range, set the elec distance to the elec range
+  }
+  PHEV_elec_emissions_day <- set_units(Elec_gen_emissions * elec_dist * PHEV_elec_econ, "kg") #calculate emissions and convert to kg
+  PHEV_ic_emissions_day <- set_units(
+    if (mileage_day > PHEV_range_elec) {
+      drop_units(set_units((mileage_day - PHEV_range_elec) / PHEV_ic_econ, "kiloCO2_g"))
+    } else {0}
+    , "kg")
+  PHEV_total_emissions_day <- PHEV_elec_emissions_day + PHEV_ic_emissions_day
+  PHEV_total_emissions_year <- PHEV_total_emissions_day * 365
+  return(PHEV_total_emissions_year)
+}
+
+#Calculate CO2 saved by PHEV
+calc_PHEV_CO2_saved <- function(IC_emissions_year, PHEV_emissions_year){
+  return(drop_units(IC_emissions_year) - drop_units(PHEV_emissions_year))
+}
+
+#~FCEV Helper Functions####
+#Calculate CO2 emissions per year by FCEV
+calc_FCEV_emissions_year <- function(in_FCEV_econ, in_renew_energy_ratio, mileage_day, Elec_gen_emissions){
+  FCEV_H2_econ <- set_units(in_FCEV_econ, "mi / kg") #get H2 fuel economy
+  FCEV_renew_energy_ratio <- in_renew_energy_ratio #get ratio of energy required for electrolysis that is 100% renewable (zero emissions)
+  FCEV_H2_required_day <- mileage_day / FCEV_H2_econ #get required H2 per day
+  FCEV_elec_required_day <- set_units(set_units(drop_units(FCEV_H2_required_day), "H2_kg"), "kiloWatthour") #get electricity required for 1 day of average driving defined on trips tab
+  FCEV_nonrenew_elec_required_day <- FCEV_elec_required_day * (1 - FCEV_renew_energy_ratio) #get non-renewable electricity total that is required
+  FCEV_emissions_day <- set_units(FCEV_nonrenew_elec_required_day * Elec_gen_emissions, "kg") #calculate emissions from non-renewable electricity and convert to kg based on generation profile selected
+  FCEV_emissions_year <- FCEV_emissions_day * 365 #multiply to get year total
+  return(FCEV_emissions_year)
+}
+
+#Calculate CO2 saved by FCEV
+calc_FCEV_CO2_saved <- function(IC_emissions_year, FCEV_emissions_year){
+  return(drop_units(IC_emissions_year) - drop_units(FCEV_emissions_year))
+}
+
+#~E-Bike Helper Functions####
+#Calculate CO2 emissions per year by E-Bike
+calc_EBike_emissions_year <- function(in_EBike_Battery_Storage, in_EBike_Range, Elec_gen_emissions, mileage_day, VMT_r) {
+  EBike_Battery_Storage <- set_units(in_EBike_Battery_Storage, "Watthour")
+  EBike_Range <- set_units(in_EBike_Range, "mi")
+  EBike_Fuel_Economy <- EBike_Range / EBike_Battery_Storage #calculate "fuel economy" based on range and battery storage
+  EBike_emissions_day <- set_units(Elec_gen_emissions * (mileage_day * VMT_r) / EBike_Fuel_Economy, "kg") #calculate emissions (taking into account portion of miles travelled by e-bike) and convert to kg
+  EBike_emissions_year <- EBike_emissions_day * 365 #multiply to get year total
+  return(EBike_emissions_year)
+}
+#Calculate CO2 saved by E-Bike
+calc_EBike_CO2_saved <- function(mileage_day, VMT_r, IC_Fuel_Economy, IC_emissions_year, EBike_emissions_year) {
+  IC_remaining_emissions_day <- set_units(drop_units(set_units(mileage_day * (1 - VMT_r) / IC_Fuel_Economy, "kiloCO2_g")), "kg") #Get the remaining emissions from the remaining IC mileage. Change to kg
+  IC_remaining_emissions_year <- IC_remaining_emissions_day * 365 #multiply to get year total
+  EBike_CO2_saved <- drop_units(IC_emissions_year) - (drop_units(EBike_emissions_year) + drop_units(IC_remaining_emissions_year))
+  return(EBike_CO2_saved)
+}
+
+#~Plotting helper functions####
+#~~g1: Cost per kg CO2 saved by mode####
+g1plot <- function(costperkg, test_points, costperkg_x, costperkg_y) {
+  g1 <-  ggplot(costperkg, aes(incentive, costperkg, color=mode)) +
+    coord_cartesian(xlim = costperkg_x, ylim = costperkg_y) +
+    geom_line(size = 1.5) + #plot mode lines
+    geom_point(data = test_points,
+               aes(incentive,
+                   costperkg,
+                   color = mode), size = 5) + #plot specific test points
+    geom_segment(data = test_points,
+                 aes(x = 0, y = costperkg, xend = incentive, yend = costperkg, color = mode),
+                 linetype = "dashed",
+                 size = 1.5) +
+    geom_segment(data = test_points,
+                 aes(x = incentive, y = 0, xend = incentive, yend = costperkg, color = mode),
+                 linetype = "dashed",
+                 size = 1.5)
+  return(g1)
+}
+#~~g2: Number incentivized####
+g2plot <- function(num_incentivized, test_budget_points, num_x, num_y) {
+  ggplot(num_incentivized, aes(budget, num, color = mode)) +
+    geom_line(size = 1.5) + #plot mode lines
+    coord_cartesian(ylim = num_y) +
+    geom_point(data = test_budget_points,
+               aes(budget, num, color = mode),
+               size = 5) + #plot specific test points
+    geom_segment(data = test_budget_points,
+                 aes(x = min(num_incentivized$budget), y = num, xend = budget, yend = num, color = mode),
+                 linetype = "dashed",
+                 size = 1.5) +
+    geom_segment(data = test_budget_points,
+                 aes(x = budget, y = 0, xend = budget, yend = num, color = mode),
+                 linetype = "dashed",
+                 size = 1.5)
+}
+#~~g3: CO2 saved####
+g3plot <- function(CO2_saved, test_budget_points_w_CO2, num_incentivized, CO2_saved_x, CO2_saved_y) {
+  ggplot(CO2_saved, aes(budget, CO2_saved, color = mode)) +
+    geom_line(size = 1.5) +
+    coord_cartesian(ylim = CO2_saved_y) +
+    geom_point(data = test_budget_points_w_CO2,
+               aes(budget, total_CO2_saved),
+               size = 5) +
+    geom_segment(data = test_budget_points_w_CO2,
+                 aes(x = min(num_incentivized$budget), y = total_CO2_saved, xend = budget, yend = total_CO2_saved, color = mode),
+                 linetype = "dashed",
+                 size = 1.5) +
+    geom_segment(data = test_budget_points_w_CO2,
+                 aes(x = budget, y = 0, xend = budget, yend = total_CO2_saved, color = mode),
+                 linetype = "dashed",
+                 size = 1.5)
+}
+
+#~~g4: Budget distribution specific number incentivized####
+g4plot <- function(num_incentivized, num_incentivized_distrib, test_budget_points_distrib, num_x, num_y) {
+  ggplot(num_incentivized_distrib, aes(budget, num, fill = mode)) +
+    geom_area() + 
+    coord_cartesian(ylim = num_y) +
+    geom_point(data = test_budget_points_distrib,
+               aes(budget, sum(num)),
+               size = 5) + #plot specific test points
+    geom_segment(data = test_budget_points_distrib, #horizontal line
+                 aes(x = min(num_incentivized$budget),
+                     y = sum(num), xend = budget,
+                     yend = sum(num)),
+                 linetype = "dashed",
+                 size = 1.5) +
+    geom_segment(data = test_budget_points_distrib, #vertical line
+                 aes(x = budget, y = 0,
+                     xend = budget,
+                     yend = sum(num)),
+                 linetype = "dashed",
+                 size = 1.5)
+}
+
+#~~g5: Budget distribution specific CO2 saved####
+g5plot <- function(num_incentivized, CO2_saved_distrib, test_budget_points_w_CO2_distrib, CO2_saved_x, CO2_saved_y) {
+  ggplot(CO2_saved_distrib, aes(budget, CO2_saved, fill = mode)) +
+    geom_area() +
+    coord_cartesian(ylim = CO2_saved_y) +
+    geom_point(data = test_budget_points_w_CO2_distrib,
+               aes(budget,sum(total_CO2_saved)),
+               size = 5) +
+    geom_segment(data = test_budget_points_w_CO2_distrib, #horizontal line
+                 aes(x = min(num_incentivized$budget),
+                     y = sum(total_CO2_saved), xend = budget,
+                     yend = sum(total_CO2_saved)),
+                 linetype = "dashed", size = 1.5) +
+    geom_segment(data = test_budget_points_w_CO2_distrib, #vertical line
+                 aes(x = budget,
+                     y = 0,
+                     xend = budget,
+                     yend = sum(total_CO2_saved)),
+                 linetype = "dashed", size = 1.5)
+}
