@@ -13,6 +13,7 @@ library(ggplot2)
 library(units)
 library(measurements)
 library(stringr)
+library(viridis)
 
 
 
@@ -34,6 +35,20 @@ server <-  function(input, output, session) {
   #total CO2 saved
   CO2_saved_x <- c(0, 5e6)
   CO2_saved_y <- c(0, 1e7)
+  
+  #color palate
+  mode_scale_colors <- scale_color_manual(name = "mode",
+                                          values = c("EBike" = viridis(1, begin = 0),
+                                                     "BEV" = viridis(1, begin = .25),
+                                                     "PHEV" = viridis(1, begin = .50),
+                                                     "FCEV" = viridis(1, begin = .75)))
+  
+  #fill color palate
+  mode_scale_fill <- scale_fill_manual(name = "mode",
+                                       values = c("EBike" = viridis(1, begin = 0),
+                                                  "BEV" = viridis(1, begin = .25),
+                                                  "PHEV" = viridis(1, begin = .50),
+                                                  "FCEV" = viridis(1, begin = .75)))
   
   #================================#
   #Text input value updaters####
@@ -371,23 +386,23 @@ server <-  function(input, output, session) {
   #================================#
   #~Cost per kg CO2 saved by mode####
   output$g1 <- renderPlot({
-    g1plot(costperkg(), test_points(), costperkg_x, costperkg_y)
+    g1plot(costperkg(), test_points(), costperkg_x, costperkg_y, mode_scale_colors)
   })
   #~Number incentivized####
   output$g2 <- renderPlot({
-    g2plot(num_incentivized(), test_budget_points(), num_x, num_y)
+    g2plot(num_incentivized(), test_budget_points(), num_x, num_y, mode_scale_colors)
   })
   #~CO2 saved####
   output$g3 <- renderPlot({
-    g3plot(CO2_saved(), test_budget_points_w_CO2(), num_incentivized(), CO2_saved_x, CO2_saved_y)
+    g3plot(CO2_saved(), test_budget_points_w_CO2(), num_incentivized(), CO2_saved_x, CO2_saved_y, mode_scale_colors)
   })
   #~Budget distribution specific number incentivized####
   output$g4 <- renderPlot({
-    g4plot(num_incentivized(), num_incentivized_distrib(), test_budget_points_distrib(), num_x, num_y)
+    g4plot(num_incentivized(), num_incentivized_distrib(), test_budget_points_distrib(), num_x, num_y, mode_scale_colors, mode_scale_fill)
   })
   #~Budget distribution specific CO2 saved####
   output$g5 <- renderPlot({
-    g5plot(num_incentivized(), CO2_saved_distrib(), test_budget_points_w_CO2_distrib(), CO2_saved_x, CO2_saved_y)
+    g5plot(num_incentivized(), CO2_saved_distrib(), test_budget_points_w_CO2_distrib(), CO2_saved_x, CO2_saved_y, mode_scale_colors, mode_scale_fill)
   })
   #~Plot to show percentage of budget used####
   output$g_budget_total <- renderPlot({
@@ -469,7 +484,9 @@ server <-  function(input, output, session) {
                                       num_incentivized_distrib = num_incentivized_distrib(),
                                       test_budget_points_distrib = test_budget_points_distrib(),
                                       CO2_saved_distrib = CO2_saved_distrib(),
-                                      test_budget_points_w_CO2_distrib = test_budget_points_w_CO2_distrib()
+                                      test_budget_points_w_CO2_distrib = test_budget_points_w_CO2_distrib(),
+                                      mode_scale_colors = mode_scale_colors,
+                                      mode_scale_fill = mode_scale_fill
                                       ),
                         envir = new.env(parent = globalenv())
                         )

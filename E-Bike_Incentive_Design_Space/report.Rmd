@@ -53,6 +53,8 @@ params:
   test_budget_points_distrib: test_budget_points_distrib
   CO2_saved_distrib: CO2_saved_distrib
   test_budget_points_w_CO2_distrib: test_budget_points_w_CO2_distrib
+  mode_scale_colors: mode_scale_colors
+  mode_scale_fill: mode_scale_fill
 ---
 
 ```{r setup, include=FALSE}
@@ -259,7 +261,7 @@ The budget distribution table shows what percent of the total budget is allotted
 ## Results
 ```{r costperkg, echo=FALSE}
 #Cost per kg CO2 saved by mode
-print(g1plot(params$costperkg, params$test_points, params$costperkg_x, params$costperkg_y))
+print(g1plot(params$costperkg, params$test_points, params$costperkg_x, params$costperkg_y, params$mode_scale_colors))
 
 #update table such that its values are formatted correctly
 test_points <- params$test_points %>% 
@@ -281,7 +283,7 @@ The Cost per kg CO2 saved results show the dollar amount per kg of CO2 that was 
 
 ``` {r num_incentivized, echo=FALSE}
 #Number incentivized
-print(g2plot(params$num_incentivized, params$test_budget_points, params$num_x, params$num_y))
+print(g2plot(params$num_incentivized, params$test_budget_points, params$num_x, params$num_y, params$mode_scale_colors))
 
 #update table such that its values are formatted correctly
 test_budget_points <- params$test_budget_points %>% 
@@ -300,7 +302,7 @@ The number of vehicles incentivized results show the number of vehicles that the
 
 ``` {r CO2_saved, echo=FALSE}
 #CO2 saved
-print(g3plot(params$CO2_saved, params$test_budget_points_w_CO2, params$num_incentivized, params$CO2_saved_x, params$CO2_saved_y))
+print(g3plot(params$CO2_saved, params$test_budget_points_w_CO2, params$num_incentivized, params$CO2_saved_x, params$CO2_saved_y, params$mode_scale_colors))
 
 #Update table such that its values are formatted correctly
 test_budget_points_w_CO2 <- params$test_budget_points_w_CO2 %>% 
@@ -320,7 +322,7 @@ The CO2 saved results demonstrate the potential total kg CO2 saved given a speci
 
 ``` {r num_incentivized_distrib, echo=FALSE}
 #Budget distribution specific number incentivized
-print(g4plot(params$num_incentivized, params$num_incentivized_distrib, params$test_budget_points_distrib, params$num_x, params$num_y))
+print(g4plot(params$num_incentivized, params$num_incentivized_distrib, params$test_budget_points_distrib, params$num_x, params$num_y, params$mode_scale_colors, params$mode_scale_fill))
 
 #Update table such that its values are formatted correctly
 test_budget_points_distrib <- params$test_budget_points_distrib %>% 
@@ -341,7 +343,7 @@ The number incentivized, budget distribution specific results show the total num
 
 ``` {r CO2_saved_distrib, echo=FALSE}
 #Budget distribution specific CO2 saved
-print(g5plot(params$num_incentivized, params$CO2_saved_distrib, params$test_budget_points_w_CO2_distrib, params$CO2_saved_x, params$CO2_saved_y))
+print(g5plot(params$num_incentivized, params$CO2_saved_distrib, params$test_budget_points_w_CO2_distrib, params$CO2_saved_x, params$CO2_saved_y, params$mode_scale_colors, params$mode_scale_fill))
 
 #Update table such that its values are formatted correctly
 test_budget_points_w_CO2_distrib <- params$test_budget_points_w_CO2_distrib %>% 
