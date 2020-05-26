@@ -274,7 +274,7 @@ test_points <- params$test_points %>%
 #Table, Cost per kg CO2 saved by mode
 kable(test_points,
       digits = 2,
-      col.names = c("Mode", "Incentive Amount", "Cost per kg CO2 Saved", "CO2 saved per vehicle, per year"),
+      col.names = c("Mode", "Incentive Amount", "CO2 saved per vehicle, per year", "Cost per kg CO2 Saved"),
       align = rep('l', ncol(test_points)))  %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
