@@ -60,6 +60,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #Get packages
 library(knitr)
+library(scales)
+
+#Define millions formatting function
+print.million <- function(x, quote = FALSE) {
+  x <- paste0(round(x / 1e6, 1), "M")
+}
 
 ```
 
@@ -75,7 +81,8 @@ trips[1,] <- list("Average Trips per Day", params$Car_Trips_Daily_Avg, "Trips")
 trips[2,] <- list("Average Auto Trip Length", params$Car_Trip_Avg_Length, "mi")
 
 #Display the table
-kable(trips, caption = "Trips")
+kable(trips, caption = "Trips",
+      align = rep('l', ncol(trips)))
 
 ```
 
@@ -88,7 +95,8 @@ elec <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), str
 elec[1,] <- list("Electricity Carbon Emissions", params$elec_gen_emissions, "lb CO2 / MWh")
 
 #Display the table
-kable(elec, caption = "Electricity")
+kable(elec, caption = "Electricity",
+      align = rep('l', ncol(elec)))
 ```
 
 ```{r IC, echo = FALSE}
@@ -101,7 +109,8 @@ IC[1,] <- list("Average Fuel Economy", params$IC_Fuel_Economy, "mpg")
 IC[2,] <- list("Carbon Emissions from Gasoline", drop_units(set_units(set_units(1, "gal"), CO2_g)), "g CO2/gal")
 
 #Display the table
-kable(IC, caption = "IC")
+kable(IC, caption = "IC",
+      align = rep('l', ncol(IC)))
 
 ```
 
@@ -117,7 +126,8 @@ if (params$EBike_include) { #only include if "include" tickbox checked in GUI
   EBike[3,] <- list("Ratio, portion of car miles replaced by e-bike (maximum 1)", params$EBike_VMT_r, "")
   
   #Display the table
-  kable(EBike, caption = "E-Bike")
+  kable(EBike, caption = "E-Bike",
+      align = rep('l', ncol(EBike)))
 }
 
 ```
@@ -132,7 +142,8 @@ if (params$BEV_include) { #only include if "include" tickbox checked in GUI
   BEV[1,] <- list("Average Fuel Economy", params$BEV_econ, "kWh / 100 mi")
   
   #Display the table
-  kable(BEV, caption = "BEV")
+  kable(BEV, caption = "BEV",
+      align = rep('l', ncol(BEV)))
 }
 
 ```
@@ -149,7 +160,8 @@ if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
   PHEV[3,] <- list("Average IC Mode Fuel Economy", params$PHEV_ic_econ, "mpg")
   
   #Display the table
-  kable(PHEV, caption = "PHEV")
+  kable(PHEV, caption = "PHEV",
+      align = rep('l', ncol(PHEV)))
 }
 
 ```
@@ -157,32 +169,139 @@ if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
 ``` {r FCEV, echo = FALSE}
 if (params$FCEV_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
-  N = 2
+  N = 3
   FCEV <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), stringsAsFactors = F)
   
   #Build the table
   FCEV[1,] <- list("Average Fuel Economy", params$FCEV_econ, "mi / kg H2")
-  FCEV[2,] <- list("Ratio, Amount of energy produced by 100% renewable sources (maximum 1)", params$renew_energy_ratio, "")
+  FCEV[2,] <- list("Ratio, Amount of electricity for electrolysis produced by 100% renewable sources (maximum 1)", params$renew_energy_ratio, "")
+  FCEV[3,] <- list("Electricty required to electrolyze 1 kg H2", drop_units(set_units(set_units(1, "H2_kg"), kiloWatthour)), "kWh")
   
   #Display the table
-  kable(FCEV, caption = "FCEV")
+  kable(FCEV, caption = "FCEV",
+      align = rep('l', ncol(FCEV)))
 }
 ```
 
-## Plots
-```{r plots, echo=FALSE}
+```{r Incentives, echo = FALSE}
+#Pre allocate the table
+N = 5
+incentives_input <- data.frame(Name = rep("", N), Value = rep(NA, N), stringsAsFactors = F)
+
+#Build the table
+incentives_input[1,] <- list("Total E-Vehicle Budget", paste("$", format(print.million(params$test_budget), nsmall = 2L)))
+incentives_input[2,] <- list("E-Bike Incentive", paste("$", params$EBike_incentive))
+incentives_input[3,] <- list("BEV Incentive", paste("$", params$BEV_incentive))
+incentives_input[4,] <- list("PHEV Incentive", paste("$", params$PHEV_incentive))
+incentives_input[5,] <- list("FCEV Incentive", paste("$", params$FCEV_incentive))
+
+kable(incentives_input,
+      caption = "Total Budget and Incentive Amounts",
+      align = rep('l', ncol(incentives_input)))
+
+```
+
+``` {r Incentives Distribution, echo = FALSE}
+
+#Clean up the table
+inputs_num_incentivized_distrib <- params$num_incentivized_distrib %>% 
+  select(mode, in_per_budget) %>% #select just relevant columns
+  distinct(mode, .keep_all = T) %>%  #Filter for just one row of each mode
+  mutate(mode = recode(mode, `EBike` = "E-Bike"),
+         in_per_budget = percent(in_per_budget))
+  
+
+#Display the table
+kable(inputs_num_incentivized_distrib,
+      col.names = c("Mode", "Allotted Percent of Total Budget"),
+      caption = "Budget Distribution",
+      align = rep('l', ncol(inputs_num_incentivized_distrib)))
+```
+
+## Results
+```{r costperkg, echo=FALSE}
 #Cost per kg CO2 saved by mode
 print(g1plot(params$costperkg, params$test_points, params$costperkg_x, params$costperkg_y))
 
+#update table such that its values are formatted correctly
+test_points <- params$test_points %>% 
+  mutate(mode = recode(mode, `EBike` = "E-Bike")) %>% 
+  mutate(incentive = paste("$", format(round(incentive, 2L), nsmall = 2L))) %>% 
+  mutate(costperkg = paste("$", format(round(costperkg, 2L), nsmall = 2L))) %>% 
+  mutate(CO2_saved = paste(format(round(CO2_saved, 2L)), "kg")) %>% 
+  select(mode, incentive, CO2_saved, costperkg) #reorder the columns
+
+#Table, Cost per kg CO2 saved by mode
+kable(test_points,
+      digits = 2,
+      col.names = c("Mode", "Incentive Amount", "Cost per kg CO2 Saved", "CO2 saved per vehicle, per year"),
+      align = rep('l', ncol(test_points)))
+```
+
+``` {r num_incentivized, echo=FALSE}
 #Number incentivized
 print(g2plot(params$num_incentivized, params$test_budget_points, params$num_x, params$num_y))
 
+#update table such that its values are formatted correctly
+test_budget_points <- params$test_budget_points %>% 
+  mutate(mode = recode(mode, `EBike` = "E-Bike"),
+         budget = paste("$", format(print.million(budget), nsmall = 2L)),
+         num = floor(num))
+
+#Table, Number incentivized
+kable(test_budget_points,
+      col.names = c("Mode", "Total Budget", "Number of Incentives"),
+      align = rep('l', ncol(test_budget_points)))
+```
+
+``` {r CO2_saved, echo=FALSE}
 #CO2 saved
 print(g3plot(params$CO2_saved, params$test_budget_points_w_CO2, params$num_incentivized, params$CO2_saved_x, params$CO2_saved_y))
 
+#Update table such that its values are formatted correctly
+test_budget_points_w_CO2 <- params$test_budget_points_w_CO2 %>% 
+  mutate(mode = recode(mode, `EBike` = "E-Bike"),
+         budget = paste("$", format(print.million(budget), nsmall = 2L)),
+         total_CO2_saved = paste(format(print.million(total_CO2_saved), nsmall = 2L), "kg")) %>% 
+  select(mode, budget, total_CO2_saved)
+
+#Table, CO2 saved
+kable(test_budget_points_w_CO2,
+      col.names = c("Mode", "Total Budget", "Total CO2 Saved, per year"),
+      align = rep('l', ncol(test_budget_points_w_CO2)))
+```
+
+``` {r num_incentivized_distrib, echo=FALSE}
 #Budget distribution specific number incentivized
 print(g4plot(params$num_incentivized, params$num_incentivized_distrib, params$test_budget_points_distrib, params$num_x, params$num_y))
 
+#Update table such that its values are formatted correctly
+test_budget_points_distrib <- params$test_budget_points_distrib %>% 
+  mutate(mode = recode(mode, `EBike` = "E-Bike"),
+         budget = paste("$", format(print.million(budget), nsmall = 2L)),
+         budget_portion_perct = percent(budget_portion_perct),
+         budget_portion = paste("$", format(print.million(budget_portion), nsmall = 2L)),
+         num = floor(num))
+
+#Table, Budget distribution specific number incentivized
+kable(test_budget_points_distrib,
+      col.names = c("Mode", "Total Budget", "Allotted Percent of Total Budget", "Allotted Portion of Total Budget", "Number of Incentives"),
+      align = rep('l', ncol(test_budget_points_distrib)))
+```
+
+``` {r CO2_saved_distrib, echo=FALSE}
 #Budget distribution specific CO2 saved
 print(g5plot(params$num_incentivized, params$CO2_saved_distrib, params$test_budget_points_w_CO2_distrib, params$CO2_saved_x, params$CO2_saved_y))
+
+#Update table such that its values are formatted correctly
+test_budget_points_w_CO2_distrib <- params$test_budget_points_w_CO2_distrib %>% 
+  mutate(mode = recode(mode, `EBike` = "E-Bike"),
+         budget = paste("$", format(print.million(budget), nsmall = 2L)),
+         total_CO2_saved = paste(format(print.million(total_CO2_saved), nsmall = 2L), "kg")) %>% 
+  select(mode, budget, total_CO2_saved)
+
+#Table, Budget distribution specific CO2 saved
+kable(test_budget_points_w_CO2_distrib,
+      col.names = c("Mode", "Total Budget", "Total CO2 Saved by this mode"),
+      align = rep('l', ncol(test_budget_points_w_CO2_distrib)))
 ```

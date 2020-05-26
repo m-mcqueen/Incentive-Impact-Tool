@@ -297,15 +297,19 @@ server <-  function(input, output, session) {
     total_budget_range = num_x
     BEV_num_incentivized = tibble(budget = total_budget_range,
                                   mode = "BEV",
+                                  in_per_budget = input$in_BEV_per_budget * .01,
                                   num = total_budget_range * (input$in_BEV_per_budget * .01) / BEV_incentive())
     EBike_num_incentivized = tibble(budget = total_budget_range,
                                     mode = "EBike",
+                                    in_per_budget = input$in_EBike_per_budget * .01,
                                     num = total_budget_range * (input$in_EBike_per_budget * .01) / EBike_incentive())
     PHEV_num_incentivized = tibble(budget = total_budget_range,
                                    mode = "PHEV",
+                                   in_per_budget = input$in_PHEV_per_budget * .01,
                                    num = total_budget_range * (input$in_PHEV_per_budget * .01) / PHEV_incentive())
     FCEV_num_incentivized = tibble(budget = total_budget_range,
                                    mode = "FCEV",
+                                   in_per_budget = input$in_FCEV_per_budget * .01,
                                    num = total_budget_range * (input$in_FCEV_per_budget * .01) / FCEV_incentive())
     tibble() %>% 
       bind_rows(BEV_num_incentivized, EBike_num_incentivized, PHEV_num_incentivized, FCEV_num_incentivized) %>% 
@@ -317,18 +321,22 @@ server <-  function(input, output, session) {
     test_budget <- input$in_test_budget
     BEV_budget_test_point <- tibble(mode = "BEV",
                                     budget = test_budget,
+                                    budget_portion_perct = (input$in_BEV_per_budget * .01),
                                     budget_portion = (input$in_BEV_per_budget * .01) * test_budget,
                                     num = budget_portion / BEV_incentive())
     EBike_budget_test_point <- tibble(mode = "EBike",
                                       budget = test_budget,
+                                      budget_portion_perct = (input$in_EBike_per_budget * .01),
                                       budget_portion = (input$in_EBike_per_budget * .01) * test_budget,
                                       num = budget_portion / EBike_incentive())
     PHEV_budget_test_point <- tibble(mode = "PHEV",
                                      budget = test_budget,
+                                     budget_portion_perct = (input$in_PHEV_per_budget * .01),
                                      budget_portion = (input$in_PHEV_per_budget * .01) * test_budget,
                                      num = budget_portion / PHEV_incentive())
     FCEV_budget_test_point <- tibble(mode = "FCEV",
                                      budget = test_budget,
+                                     budget_portion_perct = (input$in_FCEV_per_budget * .01),
                                      budget_portion = (input$in_FCEV_per_budget * .01) * test_budget,
                                      num = budget_portion / FCEV_incentive())
 
@@ -393,6 +401,10 @@ server <-  function(input, output, session) {
     #Build plot
     barplot(total, ylim = c(0,120), main = paste(total, "% Used", sep = ""), col = color)
   })
+  
+  #================================#
+  #Report####
+  #================================#
   
   #~Generate a downloadable report####
   output$report <- downloadHandler(
