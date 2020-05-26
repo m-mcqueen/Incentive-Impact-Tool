@@ -70,8 +70,13 @@ print.million <- function(x, quote = FALSE) {
 
 ```
 
+## Introduction
+
+The E-Vehicle Incentive Impact Tool allows users to better understand the cost, carbon emissions reduction, and carbon emissions reduction cost efficiency given a specific e-vehicle incentive program and local emissions profiles. 
+
 ## Inputs
 
+In this section, the inputs that were provided to the tool are displayed.
 ```{r trips, echo = FALSE}
 #Pre allocate the table
 N = 2
@@ -88,6 +93,8 @@ kable(trips, caption = "Trips",
 
 ```
 
+The trips table shows the average number of automobile trips per household per day and the average number of automobile trip length in the region. Typically these values are obtained using from household travel surveys.
+
 ```{r electricity, echo = FALSE}
 #Pre allocate the table
 N = 1
@@ -101,6 +108,8 @@ kable(elec, caption = "Electricity",
       align = rep('l', ncol(elec))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
+
+The electricity table shows the average carbon intensity of electricity generation in the given region. This information can be obtained from the [US EPA's eGRID](https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid).
 
 ```{r IC, echo = FALSE}
 #Pre allocate the table
@@ -117,6 +126,8 @@ kable(IC, caption = "IC",
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 ```
+
+The IC (internal combustion engine) table shows the average fuel economy of an automobile. The carbon emissions from gasoline was obtained from the [US EPA](https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references).
 
 ```{r EBike, echo = FALSE}
 if (params$EBike_include) { #only include if "include" tickbox checked in GUI
@@ -137,6 +148,8 @@ if (params$EBike_include) { #only include if "include" tickbox checked in GUI
 
 ```
 
+`r if (params$EBike_include) {"The E-Bike table shows the average range and battery storage of e-bikes eligible for an e-bike incentive.These values can be obtained from e-bike manufacturers. Additionally, the ratio of automobile miles that are replaced by e-bike miles is specified. This value can be obtained from local e-bike use studies."}`
+
 ``` {r BEV, echo = FALSE}
 if (params$BEV_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
@@ -153,6 +166,8 @@ if (params$BEV_include) { #only include if "include" tickbox checked in GUI
 }
 
 ```
+
+`r if (params$BEV_include) {"The BEV (Battery Electric Vehicle) table shows the average fuel economy of BEVs eligible for an incentive. This value can be obtained from the fuel economy information provided by the [US EPA](https://www.fueleconomy.gov/)."}`
 
 ``` {r PHEV, echo = FALSE}
 if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
@@ -173,6 +188,8 @@ if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
 
 ```
 
+`r if (params$PHEV_include) {"The PHEV (Plug-in Hybrid Electric Vehicle) table shows the average fuel economies of PHEVs eligible for an incentive. The Average E-Mode Fuel Economy is used for the E-Mode range of the daily average miles traveled. Thereafter, the IC Mode Fuel Economy is used. The sum of emissions from both types of propulsion are used to calculate total emissions."}`
+
 ``` {r FCEV, echo = FALSE}
 if (params$FCEV_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
@@ -191,24 +208,33 @@ if (params$FCEV_include) { #only include if "include" tickbox checked in GUI
 }
 ```
 
+`r if (params$FCEV_include) {"The FCEV (Fuel Cell Electric Vehicle) table shows the average fuel economy of FCEVs eligible for an incentive. Additionally, it shows the ratio of electricity used for electrolysis that is provided by 100% renewable sources. Lastly, it specifies the electricity required to electrolyze H2, provided by [energy.gov](https://www.energy.gov/eere/fuelcells/doe-technical-targets-hydrogen-production-electrolysis)."}`
+
 ```{r Incentives, echo = FALSE}
 #Pre allocate the table
 N = 5
-incentives_input <- data.frame(Name = rep("", N), Value = rep(NA, N), stringsAsFactors = F)
+incentives_input <- data.frame(mode = rep("", N), Name = rep("", N), Value = rep(NA, N), stringsAsFactors = F)
 
 #Build the table
-incentives_input[1,] <- list("Total E-Vehicle Budget", paste("$", format(print.million(params$test_budget), nsmall = 2L)))
-incentives_input[2,] <- list("E-Bike Incentive", paste("$", params$EBike_incentive))
-incentives_input[3,] <- list("BEV Incentive", paste("$", params$BEV_incentive))
-incentives_input[4,] <- list("PHEV Incentive", paste("$", params$PHEV_incentive))
-incentives_input[5,] <- list("FCEV Incentive", paste("$", params$FCEV_incentive))
+incentives_input[1,] <- list("","Total E-Vehicle Budget", paste("$", format(print.million(params$test_budget), nsmall = 2L)))
+incentives_input[2,] <- list("EBike","E-Bike Incentive", paste("$", params$EBike_incentive))
+incentives_input[3,] <- list("BEV","BEV Incentive", paste("$", params$BEV_incentive))
+incentives_input[4,] <- list("PHEV","PHEV Incentive", paste("$", params$PHEV_incentive))
+incentives_input[5,] <- list("FCEV","FCEV Incentive", paste("$", params$FCEV_incentive))
 
+#Remove unecessary rows
+incentives_input <- exclude_items(incentives_input, params$EBike_include, params$PHEV_include, params$BEV_include, params$FCEV_include) %>% 
+  select(-mode)
+
+#Display the table
 kable(incentives_input,
       caption = "Total Budget and Incentive Amounts",
       align = rep('l', ncol(incentives_input))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 ```
+
+The Incentives table shows the total E-Vehicle incentive budget and the incentive provided to the consumer by e-vehicle type.
 
 ``` {r Incentives Distribution, echo = FALSE}
 
@@ -227,6 +253,8 @@ kable(inputs_num_incentivized_distrib,
       align = rep('l', ncol(inputs_num_incentivized_distrib))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
+
+The budget distribution table shows what percent of the total budget is allotted for which types of e-vehicle.
 
 ## Results
 ```{r costperkg, echo=FALSE}
@@ -249,6 +277,8 @@ kable(test_points,
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
+The Cost per kg CO2 saved results show the dollar amount per kg of CO2 that was avoided thanks to the incentive program. It is calculated by subtracting emissions of the e-vehicle from the average IC vehicle using the given average day travel behavior. In the case of e-bikes, the total CO2 remissions is the sum of the miles replaced by e-bike and the remaining unreplaced miles traveled by IC automobile. In this case, the test points assume that the entire budget is spent on that e-vehicle type. This is done in order to demonstrate the cost efficiency of each e-vehicle type.
+
 ``` {r num_incentivized, echo=FALSE}
 #Number incentivized
 print(g2plot(params$num_incentivized, params$test_budget_points, params$num_x, params$num_y))
@@ -265,6 +295,8 @@ kable(test_budget_points,
       align = rep('l', ncol(test_budget_points))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
+
+The number of vehicles incentivized results show the number of vehicles that the total budget is able to accomodate, assuming only one type of e-vehicle is incentivized at a time.
 
 ``` {r CO2_saved, echo=FALSE}
 #CO2 saved
@@ -283,6 +315,8 @@ kable(test_budget_points_w_CO2,
       align = rep('l', ncol(test_budget_points_w_CO2))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
+
+The CO2 saved results demonstrate the potential total kg CO2 saved given a specific budget and incentive amount. This assumes only one type of e-vehicle is incentivized at a time.
 
 ``` {r num_incentivized_distrib, echo=FALSE}
 #Budget distribution specific number incentivized
@@ -303,6 +337,8 @@ kable(test_budget_points_distrib,
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
+The number incentivized, budget distribution specific results show the total number of e-vehicles and total number of e-vehicles by type that can be incentivized given a specific budget and the portion of that budget alloted to each e-vehicle type.
+
 ``` {r CO2_saved_distrib, echo=FALSE}
 #Budget distribution specific CO2 saved
 print(g5plot(params$num_incentivized, params$CO2_saved_distrib, params$test_budget_points_w_CO2_distrib, params$CO2_saved_x, params$CO2_saved_y))
@@ -320,3 +356,5 @@ kable(test_budget_points_w_CO2_distrib,
       align = rep('l', ncol(test_budget_points_w_CO2_distrib))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
+
+The CO2 saved, budget distribution specific results show the total kg CO2 saved and and total kg CO2 saved by type given a specific budget and the portion of that budget alloted to each e-vehicle type.
