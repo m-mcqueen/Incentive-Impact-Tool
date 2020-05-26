@@ -61,6 +61,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #Get packages
 library(knitr)
 library(scales)
+library(kableExtra)
 
 #Define millions formatting function
 print.million <- function(x, quote = FALSE) {
@@ -82,7 +83,8 @@ trips[2,] <- list("Average Auto Trip Length", params$Car_Trip_Avg_Length, "mi")
 
 #Display the table
 kable(trips, caption = "Trips",
-      align = rep('l', ncol(trips)))
+      align = rep('l', ncol(trips))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 ```
 
@@ -96,7 +98,8 @@ elec[1,] <- list("Electricity Carbon Emissions", params$elec_gen_emissions, "lb 
 
 #Display the table
 kable(elec, caption = "Electricity",
-      align = rep('l', ncol(elec)))
+      align = rep('l', ncol(elec))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
 ```{r IC, echo = FALSE}
@@ -110,7 +113,8 @@ IC[2,] <- list("Carbon Emissions from Gasoline", drop_units(set_units(set_units(
 
 #Display the table
 kable(IC, caption = "IC",
-      align = rep('l', ncol(IC)))
+      align = rep('l', ncol(IC))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 ```
 
@@ -127,7 +131,8 @@ if (params$EBike_include) { #only include if "include" tickbox checked in GUI
   
   #Display the table
   kable(EBike, caption = "E-Bike",
-      align = rep('l', ncol(EBike)))
+      align = rep('l', ncol(EBike))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 }
 
 ```
@@ -143,7 +148,8 @@ if (params$BEV_include) { #only include if "include" tickbox checked in GUI
   
   #Display the table
   kable(BEV, caption = "BEV",
-      align = rep('l', ncol(BEV)))
+      align = rep('l', ncol(BEV))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 }
 
 ```
@@ -161,7 +167,8 @@ if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
   
   #Display the table
   kable(PHEV, caption = "PHEV",
-      align = rep('l', ncol(PHEV)))
+      align = rep('l', ncol(PHEV))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 }
 
 ```
@@ -179,7 +186,8 @@ if (params$FCEV_include) { #only include if "include" tickbox checked in GUI
   
   #Display the table
   kable(FCEV, caption = "FCEV",
-      align = rep('l', ncol(FCEV)))
+      align = rep('l', ncol(FCEV))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 }
 ```
 
@@ -197,7 +205,8 @@ incentives_input[5,] <- list("FCEV Incentive", paste("$", params$FCEV_incentive)
 
 kable(incentives_input,
       caption = "Total Budget and Incentive Amounts",
-      align = rep('l', ncol(incentives_input)))
+      align = rep('l', ncol(incentives_input))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 ```
 
@@ -215,7 +224,8 @@ inputs_num_incentivized_distrib <- params$num_incentivized_distrib %>%
 kable(inputs_num_incentivized_distrib,
       col.names = c("Mode", "Allotted Percent of Total Budget"),
       caption = "Budget Distribution",
-      align = rep('l', ncol(inputs_num_incentivized_distrib)))
+      align = rep('l', ncol(inputs_num_incentivized_distrib))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
 ## Results
@@ -235,7 +245,8 @@ test_points <- params$test_points %>%
 kable(test_points,
       digits = 2,
       col.names = c("Mode", "Incentive Amount", "Cost per kg CO2 Saved", "CO2 saved per vehicle, per year"),
-      align = rep('l', ncol(test_points)))
+      align = rep('l', ncol(test_points)))  %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
 ``` {r num_incentivized, echo=FALSE}
@@ -251,7 +262,8 @@ test_budget_points <- params$test_budget_points %>%
 #Table, Number incentivized
 kable(test_budget_points,
       col.names = c("Mode", "Total Budget", "Number of Incentives"),
-      align = rep('l', ncol(test_budget_points)))
+      align = rep('l', ncol(test_budget_points))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
 ``` {r CO2_saved, echo=FALSE}
@@ -268,7 +280,8 @@ test_budget_points_w_CO2 <- params$test_budget_points_w_CO2 %>%
 #Table, CO2 saved
 kable(test_budget_points_w_CO2,
       col.names = c("Mode", "Total Budget", "Total CO2 Saved, per year"),
-      align = rep('l', ncol(test_budget_points_w_CO2)))
+      align = rep('l', ncol(test_budget_points_w_CO2))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
 ``` {r num_incentivized_distrib, echo=FALSE}
@@ -286,7 +299,8 @@ test_budget_points_distrib <- params$test_budget_points_distrib %>%
 #Table, Budget distribution specific number incentivized
 kable(test_budget_points_distrib,
       col.names = c("Mode", "Total Budget", "Allotted Percent of Total Budget", "Allotted Portion of Total Budget", "Number of Incentives"),
-      align = rep('l', ncol(test_budget_points_distrib)))
+      align = rep('l', ncol(test_budget_points_distrib))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
 ``` {r CO2_saved_distrib, echo=FALSE}
@@ -303,5 +317,6 @@ test_budget_points_w_CO2_distrib <- params$test_budget_points_w_CO2_distrib %>%
 #Table, Budget distribution specific CO2 saved
 kable(test_budget_points_w_CO2_distrib,
       col.names = c("Mode", "Total Budget", "Total CO2 Saved by this mode"),
-      align = rep('l', ncol(test_budget_points_w_CO2_distrib)))
+      align = rep('l', ncol(test_budget_points_w_CO2_distrib))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
