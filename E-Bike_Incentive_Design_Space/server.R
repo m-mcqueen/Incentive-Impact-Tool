@@ -393,6 +393,7 @@ server <-  function(input, output, session) {
     #Build plot
     barplot(total, ylim = c(0,120), main = paste(total, "% Used", sep = ""), col = color)
   })
+  
   #~Generate a downloadable report####
   output$report <- downloadHandler(
     filename = "report.html",

@@ -125,6 +125,7 @@ calc_EBike_CO2_saved <- function(mileage_day, VMT_r, IC_Fuel_Economy, IC_emissio
 #~~g1: Cost per kg CO2 saved by mode####
 g1plot <- function(costperkg, test_points, costperkg_x, costperkg_y) {
   g1 <-  ggplot(costperkg, aes(incentive, costperkg, color=mode)) +
+    labs(title = "Cost per kg CO2 saved (1 year)") +
     coord_cartesian(xlim = costperkg_x, ylim = costperkg_y) +
     geom_line(size = 1.5) + #plot mode lines
     geom_point(data = test_points,
@@ -144,6 +145,7 @@ g1plot <- function(costperkg, test_points, costperkg_x, costperkg_y) {
 #~~g2: Number incentivized####
 g2plot <- function(num_incentivized, test_budget_points, num_x, num_y) {
   ggplot(num_incentivized, aes(budget, num, color = mode)) +
+    labs(title = "Number of Vehicles Incentivized") +
     geom_line(size = 1.5) + #plot mode lines
     coord_cartesian(ylim = num_y) +
     geom_point(data = test_budget_points,
@@ -161,6 +163,7 @@ g2plot <- function(num_incentivized, test_budget_points, num_x, num_y) {
 #~~g3: CO2 saved####
 g3plot <- function(CO2_saved, test_budget_points_w_CO2, num_incentivized, CO2_saved_x, CO2_saved_y) {
   ggplot(CO2_saved, aes(budget, CO2_saved, color = mode)) +
+    labs(title = "Total CO2 saved (1 year)") +
     geom_line(size = 1.5) +
     coord_cartesian(ylim = CO2_saved_y) +
     geom_point(data = test_budget_points_w_CO2,
@@ -179,6 +182,7 @@ g3plot <- function(CO2_saved, test_budget_points_w_CO2, num_incentivized, CO2_sa
 #~~g4: Budget distribution specific number incentivized####
 g4plot <- function(num_incentivized, num_incentivized_distrib, test_budget_points_distrib, num_x, num_y) {
   ggplot(num_incentivized_distrib, aes(budget, num, fill = mode)) +
+    labs(title = "Number of Vehicles Incentivized, Budget Distribution Specific") +
     geom_area() + 
     coord_cartesian(ylim = num_y) +
     geom_point(data = test_budget_points_distrib,
@@ -201,6 +205,7 @@ g4plot <- function(num_incentivized, num_incentivized_distrib, test_budget_point
 #~~g5: Budget distribution specific CO2 saved####
 g5plot <- function(num_incentivized, CO2_saved_distrib, test_budget_points_w_CO2_distrib, CO2_saved_x, CO2_saved_y) {
   ggplot(CO2_saved_distrib, aes(budget, CO2_saved, fill = mode)) +
+    labs(title = "Total CO2 saved (1 year), Budget Distribution Specific") +
     geom_area() +
     coord_cartesian(ylim = CO2_saved_y) +
     geom_point(data = test_budget_points_w_CO2_distrib,
