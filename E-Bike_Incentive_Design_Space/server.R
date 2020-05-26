@@ -37,14 +37,14 @@ server <-  function(input, output, session) {
   CO2_saved_y <- c(0, 1e7)
   
   #color palate
-  mode_scale_colors <- scale_color_manual(name = "mode",
+  mode_scale_colors <- scale_color_manual(name = "Mode",
                                           values = c("EBike" = viridis(1, begin = 0),
                                                      "BEV" = viridis(1, begin = .25),
                                                      "PHEV" = viridis(1, begin = .50),
                                                      "FCEV" = viridis(1, begin = .75)))
   
   #fill color palate
-  mode_scale_fill <- scale_fill_manual(name = "mode",
+  mode_scale_fill <- scale_fill_manual(name = "Mode",
                                        values = c("EBike" = viridis(1, begin = 0),
                                                   "BEV" = viridis(1, begin = .25),
                                                   "PHEV" = viridis(1, begin = .50),

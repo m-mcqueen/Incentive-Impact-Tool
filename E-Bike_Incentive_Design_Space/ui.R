@@ -74,7 +74,7 @@ ui <- fluidPage(
                                           value = 4500),
                              numericInput("in_EBike_incentive",
                                           "E-Bike incentive ($)",
-                                          value = 1000,
+                                          value = 500,
                                           step = 50),
                              numericInput("in_test_budget",
                                           "Total budget ($)",

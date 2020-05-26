@@ -125,8 +125,12 @@ calc_EBike_CO2_saved <- function(mileage_day, VMT_r, IC_Fuel_Economy, IC_emissio
 
 #~~g1: Cost per kg CO2 saved by mode####
 g1plot <- function(costperkg, test_points, costperkg_x, costperkg_y, mode_scale_colors) {
+  xlab <- seq(costperkg_x[1], costperkg_x[2], 1000) #Set axis breaks manually
+  
   g1 <-  ggplot(costperkg, aes(incentive, costperkg, color=mode)) +
-    labs(title = "Cost per kg CO2 saved (1 year)") +
+    labs(title = "Cost per kg CO2 saved (1 year)",
+         x = "Incentive Value ($)",
+         y = "Cost per CO2 saved ($/kg), one mode only") +
     coord_cartesian(xlim = costperkg_x, ylim = costperkg_y) +
     geom_line(size = 1.5) + #plot mode lines
     geom_point(data = test_points,
@@ -141,13 +145,20 @@ g1plot <- function(costperkg, test_points, costperkg_x, costperkg_y, mode_scale_
                  aes(x = incentive, y = 0, xend = incentive, yend = costperkg, color = mode),
                  linetype = "dashed",
                  size = 1.5) +
-    mode_scale_colors
+    mode_scale_colors +
+    scale_x_continuous(labels = paste0("$", xlab),
+                       breaks = xlab)
   return(g1)
 }
 #~~g2: Number incentivized####
 g2plot <- function(num_incentivized, test_budget_points, num_x, num_y, mode_scale_colors) {
+  xlab <- seq(num_x[1], num_x[2], 1e6) / 1e6 #Set axis breaks manually
+  ylab <- seq(num_y[1], num_y[2], 2000)
+  
   ggplot(num_incentivized, aes(budget, num, color = mode)) +
-    labs(title = "Number of Vehicles Incentivized") +
+    labs(title = "Number of Vehicles Incentivized",
+         x = "Total Budget ($)",
+         y = "Total incentives provided, one mode only") +
     geom_line(size = 1.5) + #plot mode lines
     coord_cartesian(ylim = num_y) +
     geom_point(data = test_budget_points,
@@ -161,12 +172,21 @@ g2plot <- function(num_incentivized, test_budget_points, num_x, num_y, mode_scal
                  aes(x = budget, y = 0, xend = budget, yend = num, color = mode),
                  linetype = "dashed",
                  size = 1.5) +
-    mode_scale_colors
+    mode_scale_colors +
+    scale_x_continuous(labels = paste0("$", xlab, "M"),
+                       breaks = xlab * 1e6) +
+    scale_y_continuous(labels = paste0("$", ylab),
+                       breaks = ylab)
 }
 #~~g3: CO2 saved####
 g3plot <- function(CO2_saved, test_budget_points_w_CO2, num_incentivized, CO2_saved_x, CO2_saved_y, mode_scale_colors) {
+  xlab <- seq(CO2_saved_x[1], CO2_saved_x[2], 1e6) / 1e6 #Set axis breaks manually
+  ylab <- seq(CO2_saved_y[1], CO2_saved_y[2], 2e6) / 1e6
+  
   ggplot(CO2_saved, aes(budget, CO2_saved, color = mode)) +
-    labs(title = "Total CO2 saved (1 year)") +
+    labs(title = "Total CO2 saved (1 year)",
+         x = "Total Budget ($)",
+         y = "Total CO2 saved (kg), one mode only") +
     geom_line(size = 1.5) +
     coord_cartesian(ylim = CO2_saved_y) +
     geom_point(data = test_budget_points_w_CO2,
@@ -180,13 +200,21 @@ g3plot <- function(CO2_saved, test_budget_points_w_CO2, num_incentivized, CO2_sa
                  aes(x = budget, y = 0, xend = budget, yend = total_CO2_saved, color = mode),
                  linetype = "dashed",
                  size = 1.5) +
-    mode_scale_colors
+    mode_scale_colors +
+    scale_x_continuous(labels = paste0("$", xlab, "M"),
+                       breaks = xlab * 1e6) +
+    scale_y_continuous(labels = paste0(ylab, "M"),
+                       breaks = ylab * 1e6)
 }
 
 #~~g4: Budget distribution specific number incentivized####
 g4plot <- function(num_incentivized, num_incentivized_distrib, test_budget_points_distrib, num_x, num_y, mode_scale_colors, mode_scale_fill) {
+  xlab <- seq(num_x[1], num_x[2], 1e6) / 1e6 #Set axis breaks manually
+  
   ggplot(num_incentivized_distrib, aes(budget, num, fill = mode)) +
-    labs(title = "Number of Vehicles Incentivized, Budget Distribution Specific") +
+    labs(title = "Number of Vehicles Incentivized, Budget Distribution Specific",
+         x = "Total Budget ($)",
+         y = "Total Number of Incentives Provided") +
     geom_area() + 
     coord_cartesian(ylim = num_y) +
     geom_point(data = test_budget_points_distrib,
@@ -206,13 +234,20 @@ g4plot <- function(num_incentivized, num_incentivized_distrib, test_budget_point
                  linetype = "dashed",
                  size = 1.5) +
     mode_scale_colors +
-    mode_scale_fill
+    mode_scale_fill +
+    scale_x_continuous(labels = paste0("$", xlab, "M"),
+                       breaks = xlab * 1e6)
 }
 
 #~~g5: Budget distribution specific CO2 saved####
 g5plot <- function(num_incentivized, CO2_saved_distrib, test_budget_points_w_CO2_distrib, CO2_saved_x, CO2_saved_y, mode_scale_colors, mode_scale_fill) {
+  xlab <- seq(CO2_saved_x[1], CO2_saved_x[2], 1e6) / 1e6 #Set axis breaks manually
+  ylab <- seq(CO2_saved_y[1], CO2_saved_y[2], 2e6) / 1e6
+  
   ggplot(CO2_saved_distrib, aes(budget, CO2_saved, fill = mode)) +
-    labs(title = "Total CO2 saved (1 year), Budget Distribution Specific") +
+    labs(title = "Total CO2 saved (1 year), Budget Distribution Specific",
+         x = "Total Budget ($)",
+         y = "Total CO2 Saved (kg)") +
     geom_area() +
     coord_cartesian(ylim = CO2_saved_y) +
     geom_point(data = test_budget_points_w_CO2_distrib,
@@ -233,5 +268,9 @@ g5plot <- function(num_incentivized, CO2_saved_distrib, test_budget_points_w_CO2
                  linetype = "dashed",
                  size = 1.5) +
     mode_scale_colors +
-    mode_scale_fill
+    mode_scale_fill +
+    scale_x_continuous(labels = paste0("$", xlab, "M"),
+                       breaks = xlab * 1e6) +
+    scale_y_continuous(labels = paste0(ylab, "M"),
+                       breaks = ylab * 1e6)
 }
