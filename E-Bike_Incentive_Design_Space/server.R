@@ -662,18 +662,6 @@ server <-  function(input, output, session) {
   output$g5 <- renderPlot({
     g5plot(num_incentivized(), CO2_saved_distrib(), test_budget_points_w_CO2_distrib(), CO2_saved_x, CO2_saved_y, mode_scale_colors, mode_scale_fill)
   })
-  #~Plot to show percentage of budget used####
-  output$g_budget_total <- renderPlot({
-    total <-  sum(input$in_BEV_per_budget, input$in_EBike_per_budget, input$in_PHEV_per_budget, input$in_FCEV_per_budget)
-    #Make it red if the total is more than 100
-    color <- if (total > 100) {
-      "red"
-    } else if (total == 100) {
-      "green"
-      } else ("blue")
-    #Build plot
-    barplot(total, ylim = c(0,120), main = paste(total, "% Used", sep = ""), col = color)
-  })
   
   #================================#
   #Report####
