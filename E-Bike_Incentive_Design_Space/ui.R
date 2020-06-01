@@ -10,23 +10,22 @@ library(ggplot2)
 library(units)
 library(measurements)
 library(stringr)
+library(shinydashboard)
 
 # Define UI for application
-ui <- fluidPage(
+ui <- dashboardPage(
   
   # Application title
-  titlePanel("Electric Vehicle Incentive Cost and Impact"),
+  dashboardHeader(title = "Electric Vehicle Incentive Cost and Impact",
+                  titleWidth = 450),
   
   #================================#
   #Sidebar####
   #================================#
   # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-      tabsetPanel(type = "tabs",
-                  tabPanel("Trips",
-                           verticalLayout(
-                             titlePanel("Trips"),
+  dashboardSidebar(
+    sidebarMenu(
+                  menuItem("Trips",
                              numericInput("in_Car_Trips_Daily_Avg",
                                           "Average Auto Trips per Day",
                                           value = 3.908,
@@ -41,11 +40,8 @@ ui <- fluidPage(
                                          selected = "CA"),
                              actionButton("apply_in_preset_Car_Trips_Daily_Avg",
                                           "Apply Preset")
-                           )
                   ),
-                  tabPanel("Electricity",
-                           verticalLayout(
-                             titlePanel("Electricity Generation"),
+                  menuItem("Electricity",
                              numericInput("in_elec_gen_emissions",
                                           "State CO2 emissions rate for electricity generation (lb/MWh)",
                                           value = 420.4,
@@ -56,11 +52,8 @@ ui <- fluidPage(
                                          selected = "CA"),
                              actionButton("apply_in_preset_elec_gen_emissions",
                                           "Apply Preset")
-                           )
                   ),
-                  tabPanel("Incentives",
-                           verticalLayout(
-                             titlePanel("Incentives"),
+                  menuItem("Incentives",
                              numericInput("in_BEV_incentive",
                                           "BEV incentive ($)",
                                           value = 2000,
@@ -109,11 +102,9 @@ ui <- fluidPage(
                                ),
                                plotOutput("g_budget_total")
                              )
-                           )
+                           
                   ),
-                  tabPanel("IC",
-                           verticalLayout(
-                             titlePanel("IC"),
+                  menuItem("IC",
                              numericInput("in_IC_Fuel_Economy",
                                           "Average Auto Fuel Economy (mpg)",
                                           value = 25.2,
@@ -124,11 +115,8 @@ ui <- fluidPage(
                                          selected = "CA_Average CA_Average"),
                              actionButton("apply_in_preset_IC_Fuel_Economy",
                                           "Apply Preset")
-                           )
                   ),
-                  tabPanel("E-Bike",
-                           verticalLayout(
-                             titlePanel("E-Bike"),
+                  menuItem("E-Bike",
                              checkboxInput("in_EBike_include",
                                            "Include",
                                            T),
@@ -150,11 +138,8 @@ ui <- fluidPage(
                                          selected = "Average Standard"),
                              actionButton("apply_in_preset_EBike",
                                           "Apply Preset")
-                           )
                   ),
-                  tabPanel("BEV", 
-                           verticalLayout(
-                             titlePanel("BEV"),
+                  menuItem("BEV", 
                              checkboxInput("in_BEV_include",
                                            "Include",
                                            T),
@@ -168,11 +153,8 @@ ui <- fluidPage(
                                          selected = "OR_Feb_20"),
                              actionButton("apply_in_preset_BEV",
                                           "Apply Preset")
-                           )
                   ),
-                  tabPanel("PHEV", 
-                           verticalLayout(
-                             titlePanel("PHEV"),
+                  menuItem("PHEV", 
                              checkboxInput("in_PHEV_include",
                                            "Include",
                                            F),
@@ -194,11 +176,8 @@ ui <- fluidPage(
                                          selected = "OR_Feb_20"),
                              actionButton("apply_in_preset_PHEV",
                                           "Apply Preset")
-                           )
                   ),
-                  tabPanel("FCEV", 
-                           verticalLayout(
-                             titlePanel("FCEV"),
+                  menuItem("FCEV", 
                              checkboxInput("in_FCEV_include",
                                            "Include",
                                            F),
@@ -216,42 +195,25 @@ ui <- fluidPage(
                                          selected = "FCEV_Equal_4"),
                              actionButton("apply_in_preset_FCEV",
                                           "Apply Preset")
-                           )
                   ),
-                  tabPanel("Report",
-                           verticalLayout(
-                             titlePanel("Report"),
-                             downloadButton("report", "Generate report")
-                           )
-                           )
-      )
-    ),
+                  downloadButton("report", "Generate report")
+    )
+  ),
     #================================#
     #Main Panel####
     #================================#
     # Show a plot of the generated distribution
-    mainPanel(
-      verticalLayout(
-        verticalLayout(
-          plotOutput("g1")
+    dashboardBody(
+      fluidRow(
+        box(plotOutput("g1"))
         ),
-        splitLayout(
-          verticalLayout(
-            plotOutput("g2")
-          ),
-          verticalLayout(
-            plotOutput("g3")
-          )
-        ),
-        splitLayout(
-          verticalLayout(
-            plotOutput("g4")
-          ),
-          verticalLayout(
-            plotOutput("g5")
-          )
-        )
+      fluidRow(
+        box(plotOutput("g2")),
+        box(plotOutput("g3"))
+      ),
+      fluidRow(
+        box(plotOutput("g4")),
+        box(plotOutput("g5"))
       )
     )
   )
-)
