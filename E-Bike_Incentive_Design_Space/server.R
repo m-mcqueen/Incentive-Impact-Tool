@@ -344,6 +344,62 @@ server <-  function(input, output, session) {
   })
   
   #================================#
+  #Limit the budget inputs to sum to 100 using observers####
+  #================================#
+  observeEvent(input$in_BEV_per_budget, {
+    #Check if the last slider action makes the slider sum to something above 100%
+    if(sum(input$in_BEV_per_budget,
+           input$in_EBike_per_budget,
+           input$in_PHEV_per_budget,
+           input$in_FCEV_per_budget) > 100) {
+      #If so, update the last slider so that everything sums to 100
+      updateSliderInput(session,
+                        inputId = "in_BEV_per_budget",
+                        value = 100 - (input$in_EBike_per_budget + input$in_PHEV_per_budget + input$in_FCEV_per_budget)
+      )
+    }
+  })
+  observeEvent(input$in_EBike_per_budget, {
+    #Check if the last slider action makes the slider sum to something above 100%
+    if(sum(input$in_BEV_per_budget,
+           input$in_EBike_per_budget,
+           input$in_PHEV_per_budget,
+           input$in_FCEV_per_budget) > 100) {
+      #If so, update the last slider so that everything sums to 100
+      updateSliderInput(session,
+                        inputId = "in_EBike_per_budget",
+                        value = 100 - (input$in_BEV_per_budget + input$in_PHEV_per_budget + input$in_FCEV_per_budget)
+      )
+    }   
+  })
+  observeEvent(input$in_PHEV_per_budget, {
+    #Check if the last slider action makes the slider sum to something above 100%
+    if(sum(input$in_BEV_per_budget,
+           input$in_EBike_per_budget,
+           input$in_PHEV_per_budget,
+           input$in_FCEV_per_budget) > 100) {
+      #If so, update the last slider so that everything sums to 100
+      updateSliderInput(session,
+                        inputId = "in_PHEV_per_budget",
+                        value = 100 - (input$in_BEV_per_budget + input$in_EBike_per_budget + input$in_FCEV_per_budget)
+      )
+    }  
+  })
+  observeEvent(input$in_FCEV_per_budget, {
+    #Check if the last slider action makes the slider sum to something above 100%
+    if(sum(input$in_BEV_per_budget,
+           input$in_EBike_per_budget,
+           input$in_PHEV_per_budget,
+           input$in_FCEV_per_budget) > 100) {
+      #If so, update the last slider so that everything sums to 100
+      updateSliderInput(session,
+                        inputId = "in_FCEV_per_budget",
+                        value = 100 - (input$in_BEV_per_budget + input$in_EBike_per_budget + input$in_PHEV_per_budget)
+      )
+    }  
+  })
+  
+  #================================#
   #Calcs####
   #================================#
   
