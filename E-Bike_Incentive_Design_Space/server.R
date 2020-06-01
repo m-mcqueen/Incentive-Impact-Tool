@@ -399,7 +399,7 @@ server <-  function(input, output, session) {
                              costperkg = calc_costperkg(incentive_range, FCEV_CO2_saved())) #Put these values in a tibble for plotting
     
     tibble() %>% #combined table for plotting
-      bind_rows(BEV_costperkg, EBike_costperkg, PHEV_costperkg, FCEV_costperkg) %>% 
+      bind_rows(EBike_costperkg, BEV_costperkg, PHEV_costperkg, FCEV_costperkg) %>% 
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
@@ -462,7 +462,7 @@ server <-  function(input, output, session) {
                                    mode = "FCEV",
                                    num = total_budget_range / FCEV_incentive())
     tibble() %>% 
-      bind_rows(BEV_num_incentivized, EBike_num_incentivized, PHEV_num_incentivized, FCEV_num_incentivized) %>% 
+      bind_rows(EBike_num_incentivized, BEV_num_incentivized, PHEV_num_incentivized, FCEV_num_incentivized) %>% 
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
@@ -529,7 +529,7 @@ server <-  function(input, output, session) {
                                    in_per_budget = input$in_FCEV_per_budget * .01,
                                    num = total_budget_range * (input$in_FCEV_per_budget * .01) / FCEV_incentive())
     tibble() %>% 
-      bind_rows(BEV_num_incentivized, EBike_num_incentivized, PHEV_num_incentivized, FCEV_num_incentivized) %>% 
+      bind_rows(EBike_num_incentivized, BEV_num_incentivized, PHEV_num_incentivized, FCEV_num_incentivized) %>% 
       exclude_items(input$in_EBike_include, input$in_PHEV_include, input$in_BEV_include, input$in_FCEV_include) #Exclude items that are not selected in GUI
   })
   
