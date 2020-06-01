@@ -207,7 +207,7 @@ server <-  function(input, output, session) {
                            state_in_FCEV_econ = 0,
                            flag_in_preset_FCEV = F
                            )
-  
+  #================================#
   #~Trips panel preset flag####
   #If a preset has been applied, change the flag to T
   observeEvent(input$apply_in_preset_Car_Trips_Daily_Avg, {
@@ -228,7 +228,7 @@ server <-  function(input, output, session) {
       states$flag_preset_Car_Trips_Daily_Avg <- F
     }
   })
-  
+  #================================#
   #~Power Generation panel preset flag####
   #If a preset has been applied, change the flag to T
   observeEvent(input$apply_in_preset_elec_gen_emissions, {
@@ -246,7 +246,7 @@ server <-  function(input, output, session) {
       states$flag_preset_elec_gen_emissions <- F
     }
     })
-  
+  #================================#
   #~IC panel preset flag####
   #If a preset has been applied, change the flag to T
   observeEvent(input$apply_in_preset_IC_Fuel_Economy, {
@@ -264,7 +264,7 @@ server <-  function(input, output, session) {
       states$flag_in_preset_IC_Fuel_Economy <- F
     }
   })
-  
+  #================================#
   #~E-Bike panel preset panel####
   #If a preset has been applied, change the flag to T
   observeEvent(input$apply_in_preset_EBike, {
@@ -284,7 +284,7 @@ server <-  function(input, output, session) {
       states$flag_in_preset_EBike <- F
     }
   })
-  
+  #================================#
   #~BEV panel preset flag####
   #If a preset has been applied, change the flag to T
   observeEvent(input$apply_in_preset_BEV, {
@@ -302,7 +302,7 @@ server <-  function(input, output, session) {
       states$flag_in_preset_BEV <- F
     }
   })
-  
+  #================================#
   #~PHEV panel preset flag####
   #If a preset has been applied, change the flag to T
   observeEvent(input$apply_in_preset_PHEV, {
@@ -324,7 +324,7 @@ server <-  function(input, output, session) {
       states$flag_in_preset_PHEV <- F
     }
   })
-
+  #================================#
   #~FCEV panel preset flag####
   #If a preset has been applied, change the flag to T
   observeEvent(input$apply_in_preset_FCEV, {
@@ -635,7 +635,7 @@ server <-  function(input, output, session) {
       params <- reactiveValuesToList(input)
       
       #Knit the document, passing in the 'params' list,
-      #and eval it in a child of the global environement
+      #and eval it in a child of the global environment
       #(this isolates the codes in the document from the code in this app)
       rmarkdown::render(tempReport, output_file = file,
                         params = list(Car_Trip_Avg_Length = input$in_Car_Trip_Avg_Length,
@@ -688,7 +688,21 @@ server <-  function(input, output, session) {
                                       CO2_saved_distrib = CO2_saved_distrib(),
                                       test_budget_points_w_CO2_distrib = test_budget_points_w_CO2_distrib(),
                                       mode_scale_colors = mode_scale_colors,
-                                      mode_scale_fill = mode_scale_fill
+                                      mode_scale_fill = mode_scale_fill,
+                                      in_preset_Car_Trips_Daily_Avg = input$in_preset_Car_Trips_Daily_Avg,
+                                      flag_preset_Car_Trips_Daily_Avg = states$flag_preset_Car_Trips_Daily_Avg,
+                                      in_preset_elec_gen_emissions = input$in_preset_elec_gen_emissions,
+                                      flag_preset_elec_gen_emissions = states$flag_preset_elec_gen_emissions,
+                                      in_preset_IC_Fuel_Economy = input$in_preset_IC_Fuel_Economy,
+                                      flag_in_preset_IC_Fuel_Economy = states$flag_in_preset_IC_Fuel_Economy,
+                                      in_preset_EBike = input$in_preset_EBike,
+                                      flag_in_preset_EBike = states$flag_in_preset_EBike,
+                                      in_preset_BEV = input$in_preset_BEV,
+                                      flag_in_preset_BEV = states$flag_in_preset_BEV,
+                                      in_preset_PHEV = input$in_preset_PHEV,
+                                      flag_in_preset_PHEV = states$flag_in_preset_PHEV,
+                                      in_preset_FCEV = input$in_preset_FCEV,
+                                      flag_in_preset_FCEV = states$flag_in_preset_FCEV
                                       ),
                         envir = new.env(parent = globalenv())
                         )
