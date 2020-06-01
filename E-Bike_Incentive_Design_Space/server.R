@@ -55,90 +55,292 @@ server <-  function(input, output, session) {
   #================================#
   #~Update Trips panel with preset####
   observeEvent(input$apply_in_preset_Car_Trips_Daily_Avg, {
+    #Get preset val
+    in_Car_Trips_Daily_Avg_preset_val <- Trips %>%
+      filter(State == input$in_preset_Car_Trips_Daily_Avg) %>%
+      pull(Car_Trips_Daily_Avg)
+    #Get preset val
+    in_Car_Trip_Avg_Length_preset_val <- drop_units(Trips %>%
+                                                      filter(State == input$in_preset_Car_Trips_Daily_Avg) %>%
+                                                      pull(Car_Trip_Avg_Length))
+    #update vals
     updateNumericInput(session, inputId = "in_Car_Trips_Daily_Avg",
-                       value = Trips %>%
-                         filter(State == input$in_preset_Car_Trips_Daily_Avg) %>%
-                         pull(Car_Trips_Daily_Avg)
+                       value = in_Car_Trips_Daily_Avg_preset_val
     )
     updateNumericInput(session, inputId = "in_Car_Trip_Avg_Length",
-                       value = drop_units(Trips %>%
-                                            filter(State == input$in_preset_Car_Trips_Daily_Avg) %>%
-                                            pull(Car_Trip_Avg_Length)
+                       value = in_Car_Trip_Avg_Length_preset_val
                        )
-    )
+    #Save the preset vals as current state of the inputs
+    states$state_in_Car_Trips_Daily_Avg <- in_Car_Trips_Daily_Avg_preset_val
+    states$state_in_Car_Trip_Avg_Length <- in_Car_Trip_Avg_Length_preset_val
   })
   #~Update Power Generation panel with preset####
   observeEvent(input$apply_in_preset_elec_gen_emissions, {
+    #get preset val
+    in_preset_elec_gen_emissions_val <- drop_units(Electricity %>%
+                                                     filter(State == input$in_preset_elec_gen_emissions) %>%
+                                                     pull(CO2))
+    #update val
     updateNumericInput(session, inputId = "in_elec_gen_emissions",
-                       value = drop_units(Electricity %>%
-                                            filter(State == input$in_preset_elec_gen_emissions) %>%
-                                            pull(CO2)
+                       value = in_preset_elec_gen_emissions_val
                        )
-    )
+    #Save the preset val as current state of the inputs
+    states$state_in_preset_elec_gen_emissions <- in_preset_elec_gen_emissions_val
   })
   
   #~Update IC panel with preset####
   observeEvent(input$apply_in_preset_IC_Fuel_Economy, {
     make_and_model = str_split(input$in_preset_IC_Fuel_Economy, " ")
-    updateNumericInput(session, inputId = "in_IC_Fuel_Economy",
-                       value = drop_units(IC %>%
-                                            filter(Make == make_and_model[[1]][1],
-                                                   Model == make_and_model[[1]][2]) %>%
-                                            pull(Fuel_Economy)
-                       )
+    #get preset val
+    in_preset_IC_Fuel_Economy_val <- drop_units(IC %>%
+                                                  filter(Make == make_and_model[[1]][1],
+                                                         Model == make_and_model[[1]][2]) %>%
+                                                  pull(Fuel_Economy)
     )
+    #update val
+    updateNumericInput(session, inputId = "in_IC_Fuel_Economy",
+                       value = in_preset_IC_Fuel_Economy_val
+    )
+    #Save the preset val as current state of the input
+    states$state_in_preset_IC_Fuel_Economy_val <- in_preset_IC_Fuel_Economy_val
+    
   })
   #~Update E-Bike panel with preset####
   observeEvent(input$apply_in_preset_EBike, {
     make_and_model = str_split(input$in_preset_EBike, " ")
+    #get preset vals
+    in_preset_EBike_Battery_Storage_val <- as.numeric(EBike %>%
+                                        filter(Make == make_and_model[[1]][1],
+                                               Model == make_and_model[[1]][2]) %>%
+                                        pull(Battery_Storage)
+    )
+    in_preset_EBike_Range_val <- as.numeric(EBike %>%
+                                              filter(Make == make_and_model[[1]][1],
+                                                     Model == make_and_model[[1]][2]) %>%
+                                              pull(Range)
+    )
+    #update vals
     updateNumericInput(session, inputId = "in_EBike_Battery_Storage",
-                       value = as.numeric(EBike %>%
-                                            filter(Make == make_and_model[[1]][1],
-                                                   Model == make_and_model[[1]][2]) %>%
-                                            pull(Battery_Storage)
-                       )
+                       value = in_preset_EBike_Battery_Storage_val
     )
     updateNumericInput(session, inputId = "in_EBike_Range",
-                       value = as.numeric(EBike %>%
-                                            filter(Make == make_and_model[[1]][1],
-                                                   Model == make_and_model[[1]][2]) %>%
-                                            pull(Range)
-                       )
+                       value = in_preset_EBike_Range_val
     )
+    #Save the preset vals as current states of the inputs
+    states$state_in_EBike_Battery_Storage <- in_preset_EBike_Battery_Storage_val
+    states$state_in_EBike_Range <- in_preset_EBike_Range_val
   })
   #~Update BEV panel with preset####
   observeEvent(input$apply_in_preset_BEV, {
+    #get preset val
+    in_preset_BEV_econ_val <- round(as.numeric(mix %>% 
+                       filter(mix_type == "BEV",
+                              mix_name == input$in_preset_BEV) %>% 
+                       pull(epa_econ_wm)), 2)
+    #update val
     updateNumericInput(session, inputId = "in_BEV_econ",
-                       value = round(as.numeric(mix %>% 
-                                                  filter(mix_type == "BEV",
-                                                         mix_name == input$in_preset_BEV) %>% 
-                                                  pull(epa_econ_wm)), 2))
+                       value = in_preset_BEV_econ_val)
+    #Save the preset val as current state of the input
+    states$state_in_BEV_econ <- in_preset_BEV_econ_val
   })
   #~Update PHEV panel with preset####
   observeEvent(input$apply_in_preset_PHEV, {
+    #get preset vals
+    in_preset_PHEV_elec_econ <- round(as.numeric(mix %>% 
+                                                   filter(mix_type == "PHEV",
+                                                          mix_name == input$in_preset_PHEV) %>% 
+                                                   pull(epa_elec_econ_wm)))
+    in_preset_PHEV_range_elec <- round(as.numeric(mix %>% 
+                                                    filter(mix_type == "PHEV",
+                                                           mix_name == input$in_preset_PHEV) %>% 
+                                                    pull(range_elec_wm)))
+    in_preset_PHEV_ic_econ <- round(as.numeric(mix %>%
+                                                 filter(mix_type == "PHEV",
+                                                        mix_name == input$in_preset_PHEV) %>% 
+                                                 pull(epa_ic_econ_wm)))
+    #update vals
     updateNumericInput(session, inputId = "in_PHEV_elec_econ",
-                       value = round(as.numeric(mix %>% 
-                                                  filter(mix_type == "PHEV",
-                                                         mix_name == input$in_preset_PHEV) %>% 
-                                                  pull(epa_elec_econ_wm))))
+                       value = in_preset_PHEV_elec_econ)
     updateNumericInput(session, inputId = "in_PHEV_range_elec",
-                       value = round(as.numeric(mix %>% 
-                                                  filter(mix_type == "PHEV",
-                                                         mix_name == input$in_preset_PHEV) %>% 
-                                                  pull(range_elec_wm))))
+                       value = in_preset_PHEV_range_elec)
     updateNumericInput(session, inputId = "in_PHEV_ic_econ",
-                       value = round(as.numeric(mix %>%
-                                                  filter(mix_type == "PHEV",
-                                                         mix_name == input$in_preset_PHEV) %>% 
-                                                  pull(epa_ic_econ_wm))))
+                       value = in_preset_PHEV_ic_econ)
+    #Save the preset vals as current states of the inputs
+    states$state_in_PHEV_elec_econ <- in_preset_PHEV_elec_econ
+    states$state_in_PHEV_range_elec <- in_preset_PHEV_range_elec
+    states$state_in_PHEV_ic_econ <- in_preset_PHEV_ic_econ
   })
   #~Update FCEV panel with preset####
   observeEvent(input$apply_in_preset_FCEV, {
+    #get preset val
+    in_preset_FCEV_econ = round(as.numeric(mix %>% 
+                                             filter(mix_type == "FCEV",
+                                                    mix_name == input$in_preset_FCEV) %>% 
+                                             pull(epa_h2_econ_wm)), 2)
+    #update val
+  
     updateNumericInput(session, inputId = "in_FCEV_econ",
-                       value = round(as.numeric(mix %>% 
-                                                  filter(mix_type == "FCEV",
-                                                         mix_name == input$in_preset_FCEV) %>% 
-                                                  pull(epa_h2_econ_wm)), 2))
+                       value = in_preset_FCEV_econ)
+    #Save the preset val as current state of the input
+    states$state_in_FCEV_econ <- in_preset_FCEV_econ
+  })
+  #================================#
+  #Flags to know if a preset was applied####
+  #================================#
+  #Initialize global reactive values (flags and states)
+  states <- reactiveValues(state_in_Car_Trips_Daily_Avg = 0,
+                           state_in_Car_Trip_Avg_Length = 0,
+                           flag_preset_Car_Trips_Daily_Avg = F,
+                           state_in_preset_elec_gen_emissions = 0,
+                           flag_preset_elec_gen_emissions = F,
+                           state_in_IC_Fuel_Economy = 0,
+                           flag_in_preset_IC_Fuel_Economy = F,
+                           state_in_EBike_Battery_Storage = 0,
+                           state_in_EBike_Range = 0,
+                           flag_in_preset_EBike = F,
+                           state_in_BEV_econ = 0,
+                           flag_in_preset_BEV = F,
+                           state_in_PHEV_elec_econ = 0,
+                           state_in_PHEV_range_elec = 0,
+                           state_in_PHEV_ic_econ = 0,
+                           flag_in_preset_PHEV = F,
+                           state_in_FCEV_econ = 0,
+                           flag_in_preset_FCEV = F
+                           )
+  
+  #~Trips panel preset flag####
+  #If a preset has been applied, change the flag to T
+  observeEvent(input$apply_in_preset_Car_Trips_Daily_Avg, {
+    
+    #Change flag to T
+    states$flag_preset_Car_Trips_Daily_Avg <- T
+    })
+  
+  #If the values in the panel are changed at all, the flag reverts to F
+  observeEvent({
+    input$in_Car_Trips_Daily_Avg
+    input$in_Car_Trip_Avg_Length
+    }, {
+    
+    #If the input values no longer match the prest "states" (redefined in the numeric updaters above)
+    if(states$flag_preset_Car_Trips_Daily_Avg & input$in_Car_Trips_Daily_Avg != states$state_in_Car_Trips_Daily_Avg | states$flag_preset_Car_Trips_Daily_Avg & input$in_Car_Trip_Avg_Length != states$state_in_Car_Trip_Avg_Length) {
+      #Change flag to F
+      states$flag_preset_Car_Trips_Daily_Avg <- F
+    }
+  })
+  
+  #~Power Generation panel preset flag####
+  #If a preset has been applied, change the flag to T
+  observeEvent(input$apply_in_preset_elec_gen_emissions, {
+    #Change flag to T
+    states$flag_preset_elec_gen_emissions <- T
+  })
+  #If the values in the panel are changed at all, the flag reverts to F
+  observeEvent({ #watch for changes in input values
+    input$in_elec_gen_emissions
+  }, {
+    
+    #If the input values no longer match the prest "states" (redefined in the numeric updaters above)
+    if(states$flag_preset_elec_gen_emissions & input$in_elec_gen_emissions != states$state_in_preset_elec_gen_emissions) {
+      #Change flag to F
+      states$flag_preset_elec_gen_emissions <- F
+    }
+    })
+  
+  #~IC panel preset flag####
+  #If a preset has been applied, change the flag to T
+  observeEvent(input$apply_in_preset_IC_Fuel_Economy, {
+    #Change flag to T
+    states$flag_in_preset_IC_Fuel_Economy <- T
+  })
+  #If the values in the panel are changed at all, the flag reverts to F
+  observeEvent({ #watch for changes in input values
+    input$in_IC_Fuel_Economy
+  }, {
+    
+    #If the input values no longer match the prest "states" (redefined in the numeric updaters above)
+    if(states$flag_in_preset_IC_Fuel_Economy & input$in_IC_Fuel_Economy != states$state_in_IC_Fuel_Economy) {
+      #Change flag to F
+      states$flag_in_preset_IC_Fuel_Economy <- F
+    }
+  })
+  
+  #~E-Bike panel preset panel####
+  #If a preset has been applied, change the flag to T
+  observeEvent(input$apply_in_preset_EBike, {
+    #Change flag to T
+    states$flag_in_preset_EBike <- T
+  })
+  #If the values in the panel are changed at all, the flag reverts to F
+  observeEvent({ #watch for changes in input values
+    input$in_EBike_Battery_Storage
+    input$in_EBike_Range
+  }, {
+    
+    #If the input values no longer match the prest "states" (redefined in the numeric updaters above)
+    if(states$flag_in_preset_EBike & input$in_EBike_Battery_Storage != states$state_in_EBike_Battery_Storage |
+       states$flag_in_preset_EBike & input$in_EBike_Range != states$state_in_EBike_Range) {
+      #Change flag to F
+      states$flag_in_preset_EBike <- F
+    }
+  })
+  
+  #~BEV panel preset flag####
+  #If a preset has been applied, change the flag to T
+  observeEvent(input$apply_in_preset_BEV, {
+    #Change flag to T
+    states$flag_in_preset_BEV <- T
+  })
+  #If the values in the panel are changed at all, the flag reverts to F
+  observeEvent({ #watch for changes in input values
+    input$in_BEV_econ
+  }, {
+    
+    #If the input values no longer match the prest "states" (redefined in the numeric updaters above)
+    if(states$flag_in_preset_BEV & input$in_BEV_econ != states$state_in_BEV_econ) {
+      #Change flag to F
+      states$flag_in_preset_BEV <- F
+    }
+  })
+  
+  #~PHEV panel preset flag####
+  #If a preset has been applied, change the flag to T
+  observeEvent(input$apply_in_preset_PHEV, {
+    #Change flag to T
+    states$flag_in_preset_PHEV <- T
+  })
+  #If the values in the panel are changed at all, the flag reverts to F
+  observeEvent({ #watch for changes in input values
+    input$in_PHEV_elec_econ
+    input$in_PHEV_range_elec
+    input$in_PHEV_ic_econ
+  }, {
+    
+    #If the input values no longer match the prest "states" (redefined in the numeric updaters above)
+    if(states$flag_in_preset_PHEV & input$in_PHEV_elec_econ != states$state_in_PHEV_elec_econ |
+       states$flag_in_preset_PHEV & input$in_PHEV_range_elec != states$state_in_PHEV_range_elec |
+       states$flag_in_preset_PHEV & input$in_PHEV_ic_econ != states$state_in_PHEV_ic_econ) {
+      #Change flag to F
+      states$flag_in_preset_PHEV <- F
+    }
+  })
+
+  #~FCEV panel preset flag####
+  #If a preset has been applied, change the flag to T
+  observeEvent(input$apply_in_preset_FCEV, {
+    #Change flag to T
+    states$flag_in_preset_FCEV <- T
+  })
+  #If the values in the panel are changed at all, the flag reverts to F
+  observeEvent({ #watch for changes in input values
+    input$in_FCEV_econ
+  }, {
+    
+    #If the input values no longer match the prest "states" (redefined in the numeric updaters above)
+    if(states$flag_in_preset_FCEV & input$in_FCEV_econ != states$state_in_FCEV_econ) {
+      #Change flag to F
+      states$flag_in_preset_FCEV <- F
+    }
   })
   
   #================================#
