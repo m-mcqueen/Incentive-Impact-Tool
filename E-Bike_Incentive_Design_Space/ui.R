@@ -13,11 +13,19 @@ library(stringr)
 library(shinydashboard)
 
 # Define UI for application
-ui <- dashboardPage(
+ui <- dashboardPage(skin = "green",
   
-  # Application title
+  # Application header
   dashboardHeader(title = "Electric Vehicle Incentive Cost and Impact",
-                  titleWidth = 450),
+                  titleWidth = 450,
+                  #some magic I found on the internet to add the logo to the upper right hand corner
+                  tags$li(a(href = 'http://trec.pdx.edu',
+                         img(src='TREC_horiz4c_narrow_tag.png',
+                             title = "TREC",
+                             height = '30px'),
+                         style = "padding-top:10px; padding-bottom:10px;"),
+                         class = "dropdown")
+                  ),
   
   #================================#
   #Sidebar####
@@ -190,7 +198,11 @@ ui <- dashboardPage(
                              actionButton("apply_in_preset_FCEV",
                                           "Apply Preset")
                   ),
-                  downloadButton("report", "Generate report")
+                  fluidRow(
+                    column(width = 10, align = "center",
+                           downloadButton("report", "Download report", class = "butt"),
+                           tags$head(tags$style(".butt{background-color: SteelBlue;} .butt{color: white;}")))
+                  )
     )
   ),
     #================================#
