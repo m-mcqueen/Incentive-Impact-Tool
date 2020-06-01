@@ -90,6 +90,109 @@ print.million <- function(x, quote = FALSE) {
 
 The E-Vehicle Incentive Impact Tool allows users to better understand the cost, carbon emissions reduction, and carbon emissions reduction cost efficiency given a specific e-vehicle incentive program and local emissions profiles. 
 
+## Results
+```{r costperkg, echo=FALSE}
+#Cost per kg CO2 saved by mode
+print(g1plot(params$costperkg, params$test_points, params$costperkg_x, params$costperkg_y, params$mode_scale_colors))
+
+#update table such that its values are formatted correctly
+test_points <- params$test_points %>% 
+  mutate(mode = recode(mode, `EBike` = "E-Bike")) %>% 
+  mutate(incentive = paste("$", format(round(incentive, 2L), nsmall = 2L))) %>% 
+  mutate(costperkg = paste("$", format(round(costperkg, 2L), nsmall = 2L))) %>% 
+  mutate(CO2_saved = paste(format(round(CO2_saved, 2L)), "kg")) %>% 
+  select(mode, incentive, CO2_saved, costperkg) #reorder the columns
+
+#Table, Cost per kg CO2 saved by mode
+kable(test_points,
+      digits = 2,
+      col.names = c("Mode", "Incentive Amount", "CO2 saved per vehicle, per year", "Cost per kg CO2 Saved"),
+      align = rep('l', ncol(test_points)))  %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+The Cost per kg CO2 saved results show the dollar amount per kg of CO2 that was avoided thanks to the incentive program. It is calculated by subtracting emissions of the e-vehicle from the average IC vehicle using the given average day travel behavior. In the case of e-bikes, the total CO2 remissions is the sum of the miles replaced by e-bike and the remaining unreplaced miles traveled by IC automobile. In this case, the test points assume that the entire budget is spent on that e-vehicle type. This is done in order to demonstrate the cost efficiency of each e-vehicle type.
+
+``` {r num_incentivized, echo=FALSE}
+#Number incentivized
+print(g2plot(params$num_incentivized, params$test_budget_points, params$num_x, params$num_y, params$mode_scale_colors))
+
+#update table such that its values are formatted correctly
+test_budget_points <- params$test_budget_points %>% 
+  mutate(mode = recode(mode, `EBike` = "E-Bike"),
+         budget = paste("$", format(print.million(budget), nsmall = 2L)),
+         num = floor(num))
+
+#Table, Number incentivized
+kable(test_budget_points,
+      col.names = c("Mode", "Total Budget", "Number of Incentives"),
+      align = rep('l', ncol(test_budget_points))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+The number of vehicles incentivized results show the number of vehicles that the total budget is able to accomodate, assuming only one type of e-vehicle is incentivized at a time.
+
+``` {r CO2_saved, echo=FALSE}
+#CO2 saved
+print(g3plot(params$CO2_saved, params$test_budget_points_w_CO2, params$num_incentivized, params$CO2_saved_x, params$CO2_saved_y, params$mode_scale_colors))
+
+#Update table such that its values are formatted correctly
+test_budget_points_w_CO2 <- params$test_budget_points_w_CO2 %>% 
+  mutate(mode = recode(mode, `EBike` = "E-Bike"),
+         budget = paste("$", format(print.million(budget), nsmall = 2L)),
+         total_CO2_saved = paste(format(print.million(total_CO2_saved), nsmall = 2L), "kg")) %>% 
+  select(mode, budget, total_CO2_saved)
+
+#Table, CO2 saved
+kable(test_budget_points_w_CO2,
+      col.names = c("Mode", "Total Budget", "Total CO2 Saved, per year"),
+      align = rep('l', ncol(test_budget_points_w_CO2))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+The CO2 saved results demonstrate the potential total kg CO2 saved given a specific budget and incentive amount. This assumes only one type of e-vehicle is incentivized at a time.
+
+``` {r num_incentivized_distrib, echo=FALSE}
+#Budget distribution specific number incentivized
+print(g4plot(params$num_incentivized, params$num_incentivized_distrib, params$test_budget_points_distrib, params$num_x, params$num_y, params$mode_scale_colors, params$mode_scale_fill))
+
+#Update table such that its values are formatted correctly
+test_budget_points_distrib <- params$test_budget_points_distrib %>% 
+  mutate(mode = recode(mode, `EBike` = "E-Bike"),
+         budget = paste("$", format(print.million(budget), nsmall = 2L)),
+         budget_portion_perct = percent(budget_portion_perct),
+         budget_portion = paste("$", format(print.million(budget_portion), nsmall = 2L)),
+         num = floor(num))
+
+#Table, Budget distribution specific number incentivized
+kable(test_budget_points_distrib,
+      col.names = c("Mode", "Total Budget", "Allotted Percent of Total Budget", "Allotted Portion of Total Budget", "Number of Incentives"),
+      align = rep('l', ncol(test_budget_points_distrib))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+The number incentivized, budget distribution specific results show the total number of e-vehicles and total number of e-vehicles by type that can be incentivized given a specific budget and the portion of that budget alloted to each e-vehicle type.
+
+``` {r CO2_saved_distrib, echo=FALSE}
+#Budget distribution specific CO2 saved
+print(g5plot(params$num_incentivized, params$CO2_saved_distrib, params$test_budget_points_w_CO2_distrib, params$CO2_saved_x, params$CO2_saved_y, params$mode_scale_colors, params$mode_scale_fill))
+
+#Update table such that its values are formatted correctly
+test_budget_points_w_CO2_distrib <- params$test_budget_points_w_CO2_distrib %>% 
+  mutate(mode = recode(mode, `EBike` = "E-Bike"),
+         budget = paste("$", format(print.million(budget), nsmall = 2L)),
+         total_CO2_saved = paste(format(print.million(total_CO2_saved), nsmall = 2L), "kg")) %>% 
+  select(mode, budget, total_CO2_saved)
+
+#Table, Budget distribution specific CO2 saved
+kable(test_budget_points_w_CO2_distrib,
+      col.names = c("Mode", "Total Budget", "Total CO2 Saved by this mode"),
+      align = rep('l', ncol(test_budget_points_w_CO2_distrib))) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+The CO2 saved, budget distribution specific results show the total kg CO2 saved and and total kg CO2 saved by type given a specific budget and the portion of that budget alloted to each e-vehicle type.
+
 ## Inputs
 
 In this section, the inputs that were provided to the tool are displayed.
@@ -306,106 +409,3 @@ kable(inputs_num_incentivized_distrib,
 ```
 
 The budget distribution table shows what percent of the total budget is allotted for which types of e-vehicle.
-
-## Results
-```{r costperkg, echo=FALSE}
-#Cost per kg CO2 saved by mode
-print(g1plot(params$costperkg, params$test_points, params$costperkg_x, params$costperkg_y, params$mode_scale_colors))
-
-#update table such that its values are formatted correctly
-test_points <- params$test_points %>% 
-  mutate(mode = recode(mode, `EBike` = "E-Bike")) %>% 
-  mutate(incentive = paste("$", format(round(incentive, 2L), nsmall = 2L))) %>% 
-  mutate(costperkg = paste("$", format(round(costperkg, 2L), nsmall = 2L))) %>% 
-  mutate(CO2_saved = paste(format(round(CO2_saved, 2L)), "kg")) %>% 
-  select(mode, incentive, CO2_saved, costperkg) #reorder the columns
-
-#Table, Cost per kg CO2 saved by mode
-kable(test_points,
-      digits = 2,
-      col.names = c("Mode", "Incentive Amount", "CO2 saved per vehicle, per year", "Cost per kg CO2 Saved"),
-      align = rep('l', ncol(test_points)))  %>% 
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-```
-
-The Cost per kg CO2 saved results show the dollar amount per kg of CO2 that was avoided thanks to the incentive program. It is calculated by subtracting emissions of the e-vehicle from the average IC vehicle using the given average day travel behavior. In the case of e-bikes, the total CO2 remissions is the sum of the miles replaced by e-bike and the remaining unreplaced miles traveled by IC automobile. In this case, the test points assume that the entire budget is spent on that e-vehicle type. This is done in order to demonstrate the cost efficiency of each e-vehicle type.
-
-``` {r num_incentivized, echo=FALSE}
-#Number incentivized
-print(g2plot(params$num_incentivized, params$test_budget_points, params$num_x, params$num_y, params$mode_scale_colors))
-
-#update table such that its values are formatted correctly
-test_budget_points <- params$test_budget_points %>% 
-  mutate(mode = recode(mode, `EBike` = "E-Bike"),
-         budget = paste("$", format(print.million(budget), nsmall = 2L)),
-         num = floor(num))
-
-#Table, Number incentivized
-kable(test_budget_points,
-      col.names = c("Mode", "Total Budget", "Number of Incentives"),
-      align = rep('l', ncol(test_budget_points))) %>% 
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-```
-
-The number of vehicles incentivized results show the number of vehicles that the total budget is able to accomodate, assuming only one type of e-vehicle is incentivized at a time.
-
-``` {r CO2_saved, echo=FALSE}
-#CO2 saved
-print(g3plot(params$CO2_saved, params$test_budget_points_w_CO2, params$num_incentivized, params$CO2_saved_x, params$CO2_saved_y, params$mode_scale_colors))
-
-#Update table such that its values are formatted correctly
-test_budget_points_w_CO2 <- params$test_budget_points_w_CO2 %>% 
-  mutate(mode = recode(mode, `EBike` = "E-Bike"),
-         budget = paste("$", format(print.million(budget), nsmall = 2L)),
-         total_CO2_saved = paste(format(print.million(total_CO2_saved), nsmall = 2L), "kg")) %>% 
-  select(mode, budget, total_CO2_saved)
-
-#Table, CO2 saved
-kable(test_budget_points_w_CO2,
-      col.names = c("Mode", "Total Budget", "Total CO2 Saved, per year"),
-      align = rep('l', ncol(test_budget_points_w_CO2))) %>% 
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-```
-
-The CO2 saved results demonstrate the potential total kg CO2 saved given a specific budget and incentive amount. This assumes only one type of e-vehicle is incentivized at a time.
-
-``` {r num_incentivized_distrib, echo=FALSE}
-#Budget distribution specific number incentivized
-print(g4plot(params$num_incentivized, params$num_incentivized_distrib, params$test_budget_points_distrib, params$num_x, params$num_y, params$mode_scale_colors, params$mode_scale_fill))
-
-#Update table such that its values are formatted correctly
-test_budget_points_distrib <- params$test_budget_points_distrib %>% 
-  mutate(mode = recode(mode, `EBike` = "E-Bike"),
-         budget = paste("$", format(print.million(budget), nsmall = 2L)),
-         budget_portion_perct = percent(budget_portion_perct),
-         budget_portion = paste("$", format(print.million(budget_portion), nsmall = 2L)),
-         num = floor(num))
-
-#Table, Budget distribution specific number incentivized
-kable(test_budget_points_distrib,
-      col.names = c("Mode", "Total Budget", "Allotted Percent of Total Budget", "Allotted Portion of Total Budget", "Number of Incentives"),
-      align = rep('l', ncol(test_budget_points_distrib))) %>% 
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-```
-
-The number incentivized, budget distribution specific results show the total number of e-vehicles and total number of e-vehicles by type that can be incentivized given a specific budget and the portion of that budget alloted to each e-vehicle type.
-
-``` {r CO2_saved_distrib, echo=FALSE}
-#Budget distribution specific CO2 saved
-print(g5plot(params$num_incentivized, params$CO2_saved_distrib, params$test_budget_points_w_CO2_distrib, params$CO2_saved_x, params$CO2_saved_y, params$mode_scale_colors, params$mode_scale_fill))
-
-#Update table such that its values are formatted correctly
-test_budget_points_w_CO2_distrib <- params$test_budget_points_w_CO2_distrib %>% 
-  mutate(mode = recode(mode, `EBike` = "E-Bike"),
-         budget = paste("$", format(print.million(budget), nsmall = 2L)),
-         total_CO2_saved = paste(format(print.million(total_CO2_saved), nsmall = 2L), "kg")) %>% 
-  select(mode, budget, total_CO2_saved)
-
-#Table, Budget distribution specific CO2 saved
-kable(test_budget_points_w_CO2_distrib,
-      col.names = c("Mode", "Total Budget", "Total CO2 Saved by this mode"),
-      align = rep('l', ncol(test_budget_points_w_CO2_distrib))) %>% 
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
-```
-
-The CO2 saved, budget distribution specific results show the total kg CO2 saved and and total kg CO2 saved by type given a specific budget and the portion of that budget alloted to each e-vehicle type.
