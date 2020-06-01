@@ -175,7 +175,7 @@ g2plot <- function(num_incentivized, test_budget_points, num_x, num_y, mode_scal
     mode_scale_colors +
     scale_x_continuous(labels = paste0("$", xlab, "M"),
                        breaks = xlab * 1e6) +
-    scale_y_continuous(labels = paste0("$", ylab),
+    scale_y_continuous(labels = ylab,
                        breaks = ylab)
 }
 #~~g3: CO2 saved####
