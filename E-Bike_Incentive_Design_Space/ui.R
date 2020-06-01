@@ -43,11 +43,11 @@ ui <- fluidPage(
                                           "Apply Preset")
                            )
                   ),
-                  tabPanel("Power",
+                  tabPanel("Electricity",
                            verticalLayout(
-                             titlePanel("Power Generation"),
+                             titlePanel("Electricity Generation"),
                              numericInput("in_elec_gen_emissions",
-                                          "State CO2 emissions rate for power generation (lb/MWh)",
+                                          "State CO2 emissions rate for electricity generation (lb/MWh)",
                                           value = 420.4,
                                           step = 10),
                              selectInput("in_preset_elec_gen_emissions",
