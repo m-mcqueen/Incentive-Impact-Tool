@@ -38,17 +38,17 @@ server <-  function(input, output, session) {
   
   #color palate
   mode_scale_colors <- scale_color_manual(name = "Mode",
-                                          values = c("EBike" = viridis(1, begin = 0),
+                                          values = c("FCEV" = viridis(1, begin = 0),
                                                      "BEV" = viridis(1, begin = .25),
                                                      "PHEV" = viridis(1, begin = .50),
-                                                     "FCEV" = viridis(1, begin = .75)))
+                                                     "EBike" = viridis(1, begin = .75)))
   
   #fill color palate
   mode_scale_fill <- scale_fill_manual(name = "Mode",
-                                       values = c("EBike" = viridis(1, begin = 0),
+                                       values = c("FCEV" = viridis(1, begin = 0),
                                                   "BEV" = viridis(1, begin = .25),
                                                   "PHEV" = viridis(1, begin = .50),
-                                                  "FCEV" = viridis(1, begin = .75)))
+                                                  "EBike" = viridis(1, begin = .75)))
   
   #================================#
   #Text input value updaters####
