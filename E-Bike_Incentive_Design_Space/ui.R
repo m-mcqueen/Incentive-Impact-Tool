@@ -211,7 +211,11 @@ ui <- dashboardPage(skin = "green",
     # Show a plot of the generated distribution
     dashboardBody(
       fluidRow(
-        box(plotOutput("g1"))
+        column(width = 12,
+               offset = 3,
+               align = "center",
+               box(plotOutput("g1"))
+        )
         ),
       fluidRow(
         box(plotOutput("g2")),
