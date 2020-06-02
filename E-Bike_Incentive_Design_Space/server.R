@@ -192,24 +192,25 @@ server <-  function(input, output, session) {
   #Flags to know if a preset was applied####
   #================================#
   #Initialize global reactive values (flags and states)
+  #Flags initially set to T because the CA preset values are loaded in by default
   states <- reactiveValues(state_in_Car_Trips_Daily_Avg = 0,
                            state_in_Car_Trip_Avg_Length = 0,
-                           flag_preset_Car_Trips_Daily_Avg = F,
+                           flag_preset_Car_Trips_Daily_Avg = T,
                            state_in_preset_elec_gen_emissions = 0,
-                           flag_preset_elec_gen_emissions = F,
+                           flag_preset_elec_gen_emissions = T,
                            state_in_IC_Fuel_Economy = 0,
-                           flag_in_preset_IC_Fuel_Economy = F,
+                           flag_in_preset_IC_Fuel_Economy = T,
                            state_in_EBike_Battery_Storage = 0,
                            state_in_EBike_Range = 0,
-                           flag_in_preset_EBike = F,
+                           flag_in_preset_EBike = T,
                            state_in_BEV_econ = 0,
-                           flag_in_preset_BEV = F,
+                           flag_in_preset_BEV = T,
                            state_in_PHEV_elec_econ = 0,
                            state_in_PHEV_range_elec = 0,
                            state_in_PHEV_ic_econ = 0,
-                           flag_in_preset_PHEV = F,
+                           flag_in_preset_PHEV = T,
                            state_in_FCEV_econ = 0,
-                           flag_in_preset_FCEV = F
+                           flag_in_preset_FCEV = T
                            )
   #================================#
   #~Trips panel preset flag####
@@ -231,7 +232,8 @@ server <-  function(input, output, session) {
       #Change flag to F
       states$flag_preset_Car_Trips_Daily_Avg <- F
     }
-  })
+  },
+  ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
   #================================#
   #~Power Generation panel preset flag####
   #If a preset has been applied, change the flag to T
@@ -249,7 +251,8 @@ server <-  function(input, output, session) {
       #Change flag to F
       states$flag_preset_elec_gen_emissions <- F
     }
-    })
+    },
+  ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
   #================================#
   #~IC panel preset flag####
   #If a preset has been applied, change the flag to T
@@ -267,7 +270,8 @@ server <-  function(input, output, session) {
       #Change flag to F
       states$flag_in_preset_IC_Fuel_Economy <- F
     }
-  })
+  },
+  ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
   #================================#
   #~E-Bike panel preset panel####
   #If a preset has been applied, change the flag to T
@@ -287,7 +291,8 @@ server <-  function(input, output, session) {
       #Change flag to F
       states$flag_in_preset_EBike <- F
     }
-  })
+  },
+  ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
   #================================#
   #~BEV panel preset flag####
   #If a preset has been applied, change the flag to T
@@ -305,7 +310,8 @@ server <-  function(input, output, session) {
       #Change flag to F
       states$flag_in_preset_BEV <- F
     }
-  })
+  },
+  ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
   #================================#
   #~PHEV panel preset flag####
   #If a preset has been applied, change the flag to T
@@ -327,7 +333,8 @@ server <-  function(input, output, session) {
       #Change flag to F
       states$flag_in_preset_PHEV <- F
     }
-  })
+  },
+  ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
   #================================#
   #~FCEV panel preset flag####
   #If a preset has been applied, change the flag to T
@@ -345,7 +352,8 @@ server <-  function(input, output, session) {
       #Change flag to F
       states$flag_in_preset_FCEV <- F
     }
-  })
+  },
+  ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
   
   #================================#
   #Limit the budget inputs to sum to 100 using observers####
