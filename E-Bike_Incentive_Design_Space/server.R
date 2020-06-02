@@ -22,7 +22,6 @@ server <-  function(input, output, session) {
   
   #================================#
   #Plot Dimensions####
-  #(These should be defined in UI)
   #================================#
   #cost per kg CO2 saved
   costperkg_x <- reactive(input$g1_x)
@@ -35,6 +34,11 @@ server <-  function(input, output, session) {
   #total CO2 saved
   CO2_saved_x <- reactive(input$g3_g5_x)
   CO2_saved_y <- reactive(input$g3_g5_y)
+  
+  #================================#
+  #Plot Colors####
+  #colorblind accessible
+  #================================#
   
   #color palate
   mode_scale_colors <- scale_color_manual(name = "Mode",
@@ -51,7 +55,7 @@ server <-  function(input, output, session) {
                                                   "EBike" = viridis(1, begin = .75)))
   
   #================================#
-  #Text input value updaters####
+  #Text input preset value updaters####
   #================================#
   #~Update Trips panel with preset####
   observeEvent(input$apply_in_preset_Car_Trips_Daily_Avg, {
