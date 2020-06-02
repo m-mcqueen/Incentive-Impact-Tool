@@ -371,7 +371,7 @@ if (params$FCEV_include) { #only include if "include" tickbox checked in GUI
   #Build the table
   FCEV[1,] <- list("Average Fuel Economy", params$FCEV_econ, "mi / kg H2", FCEV_preset)
   FCEV[2,] <- list("Ratio, Amount of electricity for electrolysis produced by 100% renewable sources (maximum 1)", params$renew_energy_ratio, "", "User Defined")
-  FCEV[3,] <- list("Electricty required to electrolyze 1 kg H2", drop_units(set_units(set_units(1, "H2_kg"), kiloWatthour)), "kWh", "(Constant)")
+  FCEV[3,] <- list("Electricity required to electrolyze 1 kg H2", drop_units(set_units(set_units(1, "H2_kg"), kiloWatthour)), "kWh", "(Constant)")
   
   #Display the table
   kable(FCEV, caption = "FCEV",
