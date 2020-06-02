@@ -119,7 +119,9 @@ kable(test_points,
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
-The Cost per kg CO2 saved results show the dollar amount per kg of CO2 that was avoided thanks to the incentive program. It is calculated by subtracting emissions of the e-vehicle from the average IC vehicle using the given average day travel behavior. In the case of e-bikes, the total CO2 remissions is the sum of the miles replaced by e-bike and the remaining unreplaced miles traveled by IC automobile. In this case, the test points assume that the entire budget is spent on that e-vehicle type. This is done in order to demonstrate the cost efficiency of each e-vehicle type.
+The Cost per kg CO2 saved results show the dollar amount per kg of CO2 that was avoided thanks to the incentive program. It is calculated by subtracting emissions of the e-vehicle from the average IC vehicle using the given average travel day behavior. In the case of e-bikes, the total CO2 remissions is the sum of the miles replaced by e-bike and the remaining unreplaced miles traveled by IC automobile. In this case, the test points assume that the entire budget is spent on that e-vehicle type. This is done in order to demonstrate the cost efficiency of each e-vehicle type.
+
+For this plot, **lower is better**.
 
 ``` {r num_incentivized, echo=FALSE}
 #Number incentivized
@@ -140,6 +142,8 @@ kable(test_budget_points,
 
 The number of vehicles incentivized results show the number of vehicles that the total budget is able to accomodate, assuming only one type of e-vehicle is incentivized at a time.
 
+For this plot, **higher is better**.
+
 ``` {r CO2_saved, echo=FALSE}
 #CO2 saved
 print(g3plot(params$CO2_saved, params$test_budget_points_w_CO2, params$num_incentivized, params$CO2_saved_x, params$CO2_saved_y, params$mode_scale_colors))
@@ -159,6 +163,8 @@ kable(test_budget_points_w_CO2,
 ```
 
 The CO2 saved results demonstrate the potential total kg CO2 saved given a specific budget and incentive amount. This assumes only one type of e-vehicle is incentivized at a time.
+
+For this plot, **higher is better**.
 
 ``` {r num_incentivized_distrib, echo=FALSE}
 #Budget distribution specific number incentivized
@@ -181,6 +187,8 @@ kable(test_budget_points_distrib,
 
 The number incentivized, budget distribution specific results show the total number of e-vehicles and total number of e-vehicles by type that can be incentivized given a specific budget and the portion of that budget alloted to each e-vehicle type.
 
+For this plot, **higher is better**.
+
 ``` {r CO2_saved_distrib, echo=FALSE}
 #Budget distribution specific CO2 saved
 print(g5plot(params$num_incentivized, params$CO2_saved_distrib, params$test_budget_points_w_CO2_distrib, params$CO2_saved_x, params$CO2_saved_y, params$mode_scale_colors, params$mode_scale_fill))
@@ -200,6 +208,8 @@ kable(test_budget_points_w_CO2_distrib,
 ```
 
 The CO2 saved, budget distribution specific results show the total kg CO2 saved and and total kg CO2 saved by type given a specific budget and the portion of that budget alloted to each e-vehicle type.
+
+For this plot, **higher is better**.
 
 ## Inputs
 
