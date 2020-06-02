@@ -20,7 +20,7 @@ ui <- dashboardPage(skin = "green",
                   titleWidth = 450,
                   #some magic I found on the internet to add the logo to the upper right hand corner
                   tags$li(a(href = 'http://trec.pdx.edu',
-                         img(src='TREC_horiz4c_narrow_tag.png',
+                         img(src='TREC_white_horiz.png',
                              title = "TREC",
                              height = '30px'),
                          style = "padding-top:10px; padding-bottom:10px;"),
