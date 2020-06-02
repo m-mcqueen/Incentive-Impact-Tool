@@ -672,11 +672,14 @@ server <-  function(input, output, session) {
     filename = "report.html",
     content = function(file) {
       #copy report file to temporary directory before processing it
-      tempReport <- file.path(tempdir(), "report.Rmd")
+      tempdir1 <- tempdir()
+      tempReport <- file.path(tempdir1, "report.Rmd")
+      tempLogo <- file.path(tempdir1, "logo.png")
       file.copy("report.Rmd", tempReport, overwrite = TRUE)
+      file.copy("www/TREC_horiz4c_narrow_tag.png", tempLogo, overwrite = TRUE)
       
       #Set up parameters to pass to Rmd document
-      params <- reactiveValuesToList(input)
+      #params <- reactiveValuesToList(input)
       
       #Knit the document, passing in the 'params' list,
       #and eval it in a child of the global environment

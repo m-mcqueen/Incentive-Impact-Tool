@@ -78,12 +78,20 @@ knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
 library(scales)
 library(kableExtra)
+library(htmltools)
 
 #Define millions formatting function
 print.million <- function(x, quote = FALSE) {
   x <- paste0(round(x / 1e6, 1), "M")
 }
 
+```
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri("logo.png"), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:10px;',
+               height = '100px')
 ```
 
 ## Introduction
