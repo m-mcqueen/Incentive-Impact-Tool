@@ -160,12 +160,13 @@ g2plot <- function(num_incentivized, test_budget_points, num_x, num_y, mode_scal
          x = "Total Budget ($)",
          y = "Total incentives provided, one mode only") +
     geom_line(size = 1.5) + #plot mode lines
-    coord_cartesian(ylim = num_y) +
+    coord_cartesian(xlim = num_x,
+                    ylim = num_y) +
     geom_point(data = test_budget_points,
                aes(budget, num, color = mode),
                size = 5) + #plot specific test points
     geom_segment(data = test_budget_points,
-                 aes(x = min(num_incentivized$budget), y = num, xend = budget, yend = num, color = mode),
+                 aes(x = 0, y = num, xend = budget, yend = num, color = mode),
                  linetype = "dashed",
                  size = 1.5) +
     geom_segment(data = test_budget_points,
@@ -188,12 +189,13 @@ g3plot <- function(CO2_saved, test_budget_points_w_CO2, num_incentivized, CO2_sa
          x = "Total Budget ($)",
          y = "Total CO2 saved (kg), one mode only") +
     geom_line(size = 1.5) +
-    coord_cartesian(ylim = CO2_saved_y) +
+    coord_cartesian(xlim = CO2_saved_x,
+                    ylim = CO2_saved_y) +
     geom_point(data = test_budget_points_w_CO2,
                aes(budget, total_CO2_saved),
                size = 5) +
     geom_segment(data = test_budget_points_w_CO2,
-                 aes(x = min(num_incentivized$budget), y = total_CO2_saved, xend = budget, yend = total_CO2_saved, color = mode),
+                 aes(x = 0, y = total_CO2_saved, xend = budget, yend = total_CO2_saved, color = mode),
                  linetype = "dashed",
                  size = 1.5) +
     geom_segment(data = test_budget_points_w_CO2,
@@ -216,12 +218,13 @@ g4plot <- function(num_incentivized, num_incentivized_distrib, test_budget_point
          x = "Total Budget ($)",
          y = "Total Number of Incentives Provided") +
     geom_area() + 
-    coord_cartesian(ylim = num_y) +
+    coord_cartesian(xlim = num_x,
+                    ylim = num_y) +
     geom_point(data = test_budget_points_distrib,
                aes(budget, sum(num)),
                size = 5) + #plot specific test points
     geom_segment(data = test_budget_points_distrib, #horizontal line
-                 aes(x = min(num_incentivized$budget),
+                 aes(x = 0,
                      y = sum(num),
                      xend = budget,
                      yend = sum(num)),
@@ -249,12 +252,13 @@ g5plot <- function(num_incentivized, CO2_saved_distrib, test_budget_points_w_CO2
          x = "Total Budget ($)",
          y = "Total CO2 Saved (kg)") +
     geom_area() +
-    coord_cartesian(ylim = CO2_saved_y) +
+    coord_cartesian(xlim = CO2_saved_x,
+                    ylim = CO2_saved_y) +
     geom_point(data = test_budget_points_w_CO2_distrib,
                aes(budget,sum(total_CO2_saved)),
                size = 5) +
     geom_segment(data = test_budget_points_w_CO2_distrib, #horizontal line
-                 aes(x = min(num_incentivized$budget),
+                 aes(x = 0,
                      y = sum(total_CO2_saved),
                      xend = budget,
                      yend = sum(total_CO2_saved)),

@@ -214,16 +214,50 @@ ui <- dashboardPage(skin = "green",
         column(width = 12,
                offset = 3,
                align = "center",
-               box(plotOutput("g1"))
+               box(plotOutput("g1"),
+                   sliderInput("g1_x",
+                               label = "X Axis Range",
+                               min = 0,
+                               max = 10000,
+                               value = c(0, 5000),
+                               step = 500),
+                   sliderInput("g1_y",
+                               label = "Y Axis Range",
+                               min = 0,
+                               max = 15,
+                               value = c(0, 4),
+                               step = .25))
         )
         ),
       fluidRow(
-        box(plotOutput("g2")),
-        box(plotOutput("g3"))
-      ),
-      fluidRow(
-        box(plotOutput("g4")),
-        box(plotOutput("g5"))
+        box(plotOutput("g2"),
+            plotOutput("g4"),
+            sliderInput("g2_g4_x",
+                        label = "X Axis Range",
+                        min = 0,
+                        max = 10e6,
+                        value = c(0, 5e6),
+                        step = 10000),
+            sliderInput("g2_g4_y",
+                        label = "Y Axis Range",
+                        min = 0,
+                        max = 100000,
+                        value = c(0, 10000),
+                        step = 1000)),
+        box(plotOutput("g3"),
+            plotOutput("g5"),
+            sliderInput("g3_g5_x",
+                        label = "X Axis Range",
+                        min = 0,
+                        max = 10e6,
+                        value = c(0, 5e6),
+                        step = 10000),
+            sliderInput("g3_g5_y",
+                        label = "Y Axis Range",
+                        min = 0,
+                        max = 30e6,
+                        value = c(0, 15e6),
+                        step = 5e5))
       )
     )
   )

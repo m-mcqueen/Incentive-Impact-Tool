@@ -25,16 +25,16 @@ server <-  function(input, output, session) {
   #(These should be defined in UI)
   #================================#
   #cost per kg CO2 saved
-  costperkg_x <- c(0, 5000)
-  costperkg_y <- c(0, 4)
+  costperkg_x <- reactive(input$g1_x)
+  costperkg_y <- reactive(input$g1_y)
   
   #number of vehicles incentivized
-  num_x <- c(0, 5e6)
-  num_y <- c(0, 10000)
+  num_x <- reactive(input$g2_g4_x)
+  num_y <- reactive(input$g2_g4_y)
   
   #total CO2 saved
-  CO2_saved_x <- c(0, 5e6)
-  CO2_saved_y <- c(0, 1e7)
+  CO2_saved_x <- reactive(input$g3_g5_x)
+  CO2_saved_y <- reactive(input$g3_g5_y)
   
   #color palate
   mode_scale_colors <- scale_color_manual(name = "Mode",
@@ -398,6 +398,7 @@ server <-  function(input, output, session) {
       )
     }  
   })
+
   
   #================================#
   #Calcs####
@@ -440,7 +441,7 @@ server <-  function(input, output, session) {
   
   #~Cost/kg CO2 saved####
   costperkg <- reactive({ #done
-    incentive_range = costperkg_x #Set the range of incentive dollar amounts
+    incentive_range = costperkg_x() #Set the range of incentive dollar amounts
     BEV_costperkg <- tibble(mode = "BEV",
                             incentive = incentive_range,
                             costperkg = calc_costperkg(incentive_range, BEV_CO2_saved())) #Put these values in a tibble for plotting
@@ -504,7 +505,7 @@ server <-  function(input, output, session) {
   
   #~Total vehicles incentivized and total budget####
   num_incentivized <- reactive({
-    total_budget_range = num_x
+    total_budget_range = c(min(num_x()[1], CO2_saved_x()[1]), max(num_x()[2], CO2_saved_x()[2])) #This ensures that the full frame is filled even if the x axes sliders are different on the two graph sets
     BEV_num_incentivized = tibble(budget = total_budget_range,
                                   mode = "BEV",
                                   num = total_budget_range / BEV_incentive())
@@ -567,7 +568,7 @@ server <-  function(input, output, session) {
   
   #~Budget Distribution Specific Total vehicles incentivized and total budget####
   num_incentivized_distrib <- reactive({
-    total_budget_range = num_x
+    total_budget_range = c(min(num_x()[1], CO2_saved_x()[1]), max(num_x()[2], CO2_saved_x()[2])) #This ensures that the full frame is filled even if the x axes sliders are different on the two graph sets
     BEV_num_incentivized = tibble(budget = total_budget_range,
                                   mode = "BEV",
                                   in_per_budget = input$in_BEV_per_budget * .01,
@@ -644,23 +645,23 @@ server <-  function(input, output, session) {
   #================================#
   #~Cost per kg CO2 saved by mode####
   output$g1 <- renderPlot({
-    g1plot(costperkg(), test_points(), costperkg_x, costperkg_y, mode_scale_colors)
+    g1plot(costperkg(), test_points(), costperkg_x(), costperkg_y(), mode_scale_colors)
   })
   #~Number incentivized####
   output$g2 <- renderPlot({
-    g2plot(num_incentivized(), test_budget_points(), num_x, num_y, mode_scale_colors)
+    g2plot(num_incentivized(), test_budget_points(), num_x(), num_y(), mode_scale_colors)
   })
   #~CO2 saved####
   output$g3 <- renderPlot({
-    g3plot(CO2_saved(), test_budget_points_w_CO2(), num_incentivized(), CO2_saved_x, CO2_saved_y, mode_scale_colors)
+    g3plot(CO2_saved(), test_budget_points_w_CO2(), num_incentivized(), CO2_saved_x(), CO2_saved_y(), mode_scale_colors)
   })
   #~Budget distribution specific number incentivized####
   output$g4 <- renderPlot({
-    g4plot(num_incentivized(), num_incentivized_distrib(), test_budget_points_distrib(), num_x, num_y, mode_scale_colors, mode_scale_fill)
+    g4plot(num_incentivized(), num_incentivized_distrib(), test_budget_points_distrib(), num_x(), num_y(), mode_scale_colors, mode_scale_fill)
   })
   #~Budget distribution specific CO2 saved####
   output$g5 <- renderPlot({
-    g5plot(num_incentivized(), CO2_saved_distrib(), test_budget_points_w_CO2_distrib(), CO2_saved_x, CO2_saved_y, mode_scale_colors, mode_scale_fill)
+    g5plot(num_incentivized(), CO2_saved_distrib(), test_budget_points_w_CO2_distrib(), CO2_saved_x(), CO2_saved_y(), mode_scale_colors, mode_scale_fill)
   })
   
   #================================#
@@ -719,17 +720,17 @@ server <-  function(input, output, session) {
                                       PHEV_include = input$in_PHEV_include,
                                       preset_IC_Fuel_Economy = input$in_preset_IC_Fuel_Economy,
                                       costperkg = costperkg(),
-                                      costperkg_x = costperkg_x,
-                                      costperkg_y = costperkg_y,
+                                      costperkg_x = costperkg_x(),
+                                      costperkg_y = costperkg_y(),
                                       test_points = test_points(),
                                       num_incentivized = num_incentivized(),
                                       test_budget_points = test_budget_points(),
-                                      num_x = num_x,
-                                      num_y = num_y,
+                                      num_x = num_x(),
+                                      num_y = num_y(),
                                       CO2_saved = CO2_saved(),
                                       test_budget_points_w_CO2 = test_budget_points_w_CO2(),
-                                      CO2_saved_x = CO2_saved_x,
-                                      CO2_saved_y = CO2_saved_y,
+                                      CO2_saved_x = CO2_saved_x(),
+                                      CO2_saved_y = CO2_saved_y(),
                                       num_incentivized_distrib = num_incentivized_distrib(),
                                       test_budget_points_distrib = test_budget_points_distrib(),
                                       CO2_saved_distrib = CO2_saved_distrib(),
