@@ -309,7 +309,7 @@ if (params$EBike_include) { #only include if "include" tickbox checked in GUI
 
 ```
 
-`r if (params$EBike_include) {"The E-Bike table shows the average fuel economy of e-bikes eligible for an e-bike incentive.This value can be obtained from e-bike manufacturers. Data used for presets was obtained from a report published by [Efficiency Vermont](https://www.efficiencyvermont.com/Media/Default/docs/white-papers/efficiency-vermont-electric-bike-white-paper.pdf) Additionally, the ratio of automobile miles that are replaced by e-bike miles is specified. This value can be obtained from local e-bike use studies."}`
+`r if (params$EBike_include) {"The E-Bike table shows the average fuel economy of e-bikes eligible for an e-bike incentive.This value can be obtained from e-bike manufacturers. Data used for presets was obtained from a report published by [Efficiency Vermont](https://www.efficiencyvermont.com/Media/Default/docs/white-papers/efficiency-vermont-electric-bike-white-paper.pdf). Additionally, the ratio of automobile miles that are replaced by e-bike miles is specified by the user. This value can be obtained from local e-bike use studies."}`
 
 ``` {r BEV, echo = FALSE}
 if (params$BEV_include) { #only include if "include" tickbox checked in GUI
