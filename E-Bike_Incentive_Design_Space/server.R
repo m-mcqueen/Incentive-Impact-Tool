@@ -94,11 +94,9 @@ server <-  function(input, output, session) {
   
   #~Update ICE panel with preset####
   observeEvent(input$apply_in_preset_ICE_Fuel_Economy, {
-    make_and_model = str_split(input$in_preset_ICE_Fuel_Economy, " ")
     #get preset val
     in_preset_ICE_Fuel_Economy_val <- drop_units(ICE %>%
-                                                  filter(Make == make_and_model[[1]][1],
-                                                         Model == make_and_model[[1]][2]) %>%
+                                                  filter(Name == input$in_preset_ICE_Fuel_Economy) %>%
                                                   pull(Fuel_Economy)
     )
     #update val
