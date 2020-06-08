@@ -1,5 +1,10 @@
-﻿Make,Model,Battery_Storage,Battery_Storage_Units,Range,Range_Units,Ride_Type
-Average,Standard,422,Wh,26,mi,"Assist 3, Normal Pedaling, 20 mph"
-Average,Extended,614,Wh,38,mi,"Assist 3, Normal Pedaling, 20 mph"
-Average,SuperExtended,673,Wh,39,mi,"Assist 3, Normal Pedaling, 20 mph"
-Average,HyperExtended,995,Wh,57,mi,"Assist 3, Normal Pedaling, 20 mph"
+﻿Make,Model,min_econ,max_econ,econ_unit
+Dillenger,Bafang,1.7,0.9,kWh/100 mi
+Dillenger,Samsung,1.2,0.8,kWh/100 mi
+Electra,Townie,2,0.4,kWh/100 mi
+Evelo,Aurora,1.8,0.9,kWh/100 mi
+Juiced,Cross current,2,1,kWh/100 mi
+Rad Power,Radwagon,2.8,1.4,kWh/100 mi
+Rad Power,Rover,2.8,1.4,kWh/100 mi
+Sondors,Original,1.6,0.6,kWh/100 mi
+Yuba,Spicy Curry,1.3,0.7,kWh/100 mi

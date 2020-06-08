@@ -92,47 +92,40 @@ server <-  function(input, output, session) {
     states$state_in_preset_elec_gen_emissions <- in_preset_elec_gen_emissions_val
   })
   
-  #~Update IC panel with preset####
-  observeEvent(input$apply_in_preset_IC_Fuel_Economy, {
-    make_and_model = str_split(input$in_preset_IC_Fuel_Economy, " ")
+  #~Update ICE panel with preset####
+  observeEvent(input$apply_in_preset_ICE_Fuel_Economy, {
+    make_and_model = str_split(input$in_preset_ICE_Fuel_Economy, " ")
     #get preset val
-    in_preset_IC_Fuel_Economy_val <- drop_units(IC %>%
+    in_preset_ICE_Fuel_Economy_val <- drop_units(ICE %>%
                                                   filter(Make == make_and_model[[1]][1],
                                                          Model == make_and_model[[1]][2]) %>%
                                                   pull(Fuel_Economy)
     )
     #update val
-    updateNumericInput(session, inputId = "in_IC_Fuel_Economy",
-                       value = in_preset_IC_Fuel_Economy_val
+    updateNumericInput(session, inputId = "in_ICE_Fuel_Economy",
+                       value = in_preset_ICE_Fuel_Economy_val
     )
     #Save the preset val as current state of the input
-    states$state_in_preset_IC_Fuel_Economy_val <- in_preset_IC_Fuel_Economy_val
+    states$state_in_preset_ICE_Fuel_Economy_val <- in_preset_ICE_Fuel_Economy_val
     
   })
   #~Update E-Bike panel with preset####
   observeEvent(input$apply_in_preset_EBike, {
-    make_and_model = str_split(input$in_preset_EBike, " ")
+    #make_and_model = str_split(input$in_preset_EBike, " ")
+    econ_val_col <- case_when(
+      input$in_preset_EBike_2 == "Low" ~ "EBike_min_econ",
+      input$in_preset_EBike_2 == "High" ~ "EBike_max_econ")
     #get preset vals
-    in_preset_EBike_Battery_Storage_val <- as.numeric(EBike %>%
-                                        filter(Make == make_and_model[[1]][1],
-                                               Model == make_and_model[[1]][2]) %>%
-                                        pull(Battery_Storage)
-    )
-    in_preset_EBike_Range_val <- as.numeric(EBike %>%
-                                              filter(Make == make_and_model[[1]][1],
-                                                     Model == make_and_model[[1]][2]) %>%
-                                              pull(Range)
-    )
+    in_preset_EBike_econ <- round(as.numeric(mix %>% 
+                                         filter(mix_type == "EBike",
+                                                mix_name == input$in_preset_EBike) %>% 
+                                         pull(econ_val_col)), 2)
     #update vals
-    updateNumericInput(session, inputId = "in_EBike_Battery_Storage",
-                       value = in_preset_EBike_Battery_Storage_val
-    )
-    updateNumericInput(session, inputId = "in_EBike_Range",
-                       value = in_preset_EBike_Range_val
+    updateNumericInput(session, inputId = "in_EBike_econ",
+                       value = in_preset_EBike_econ
     )
     #Save the preset vals as current states of the inputs
-    states$state_in_EBike_Battery_Storage <- in_preset_EBike_Battery_Storage_val
-    states$state_in_EBike_Range <- in_preset_EBike_Range_val
+    states$state_in_EBike_econ <- in_preset_EBike_econ
   })
   #~Update BEV panel with preset####
   observeEvent(input$apply_in_preset_BEV, {
@@ -158,21 +151,21 @@ server <-  function(input, output, session) {
                                                     filter(mix_type == "PHEV",
                                                            mix_name == input$in_preset_PHEV) %>% 
                                                     pull(range_elec_wm)))
-    in_preset_PHEV_ic_econ <- round(as.numeric(mix %>%
+    in_preset_PHEV_ICE_econ <- round(as.numeric(mix %>%
                                                  filter(mix_type == "PHEV",
                                                         mix_name == input$in_preset_PHEV) %>% 
-                                                 pull(epa_ic_econ_wm)))
+                                                 pull(epa_ICE_econ_wm)))
     #update vals
     updateNumericInput(session, inputId = "in_PHEV_elec_econ",
                        value = in_preset_PHEV_elec_econ)
     updateNumericInput(session, inputId = "in_PHEV_range_elec",
                        value = in_preset_PHEV_range_elec)
-    updateNumericInput(session, inputId = "in_PHEV_ic_econ",
-                       value = in_preset_PHEV_ic_econ)
+    updateNumericInput(session, inputId = "in_PHEV_ICE_econ",
+                       value = in_preset_PHEV_ICE_econ)
     #Save the preset vals as current states of the inputs
     states$state_in_PHEV_elec_econ <- in_preset_PHEV_elec_econ
     states$state_in_PHEV_range_elec <- in_preset_PHEV_range_elec
-    states$state_in_PHEV_ic_econ <- in_preset_PHEV_ic_econ
+    states$state_in_PHEV_ICE_econ <- in_preset_PHEV_ICE_econ
   })
   #~Update FCEV panel with preset####
   observeEvent(input$apply_in_preset_FCEV, {
@@ -198,16 +191,15 @@ server <-  function(input, output, session) {
                            flag_preset_Car_Trips_Daily_Avg = T,
                            state_in_preset_elec_gen_emissions = 0,
                            flag_preset_elec_gen_emissions = T,
-                           state_in_IC_Fuel_Economy = 0,
-                           flag_in_preset_IC_Fuel_Economy = T,
-                           state_in_EBike_Battery_Storage = 0,
-                           state_in_EBike_Range = 0,
+                           state_in_ICE_Fuel_Economy = 0,
+                           flag_in_preset_ICE_Fuel_Economy = T,
+                           state_in_EBike_econ = 0,
                            flag_in_preset_EBike = T,
                            state_in_BEV_econ = 0,
                            flag_in_preset_BEV = T,
                            state_in_PHEV_elec_econ = 0,
                            state_in_PHEV_range_elec = 0,
-                           state_in_PHEV_ic_econ = 0,
+                           state_in_PHEV_ICE_econ = 0,
                            flag_in_preset_PHEV = T,
                            state_in_FCEV_econ = 0,
                            flag_in_preset_FCEV = T
@@ -254,21 +246,21 @@ server <-  function(input, output, session) {
     },
   ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
   #================================#
-  #~IC panel preset flag####
+  #~ICE panel preset flag####
   #If a preset has been applied, change the flag to T
-  observeEvent(input$apply_in_preset_IC_Fuel_Economy, {
+  observeEvent(input$apply_in_preset_ICE_Fuel_Economy, {
     #Change flag to T
-    states$flag_in_preset_IC_Fuel_Economy <- T
+    states$flag_in_preset_ICE_Fuel_Economy <- T
   })
   #If the values in the panel are changed at all, the flag reverts to F
   observeEvent({ #watch for changes in input values
-    input$in_IC_Fuel_Economy
+    input$in_ICE_Fuel_Economy
   }, {
     
     #If the input values no longer match the prest "states" (redefined in the numeric updaters above)
-    if(states$flag_in_preset_IC_Fuel_Economy & input$in_IC_Fuel_Economy != states$state_in_IC_Fuel_Economy) {
+    if(states$flag_in_preset_ICE_Fuel_Economy & input$in_ICE_Fuel_Economy != states$state_in_ICE_Fuel_Economy) {
       #Change flag to F
-      states$flag_in_preset_IC_Fuel_Economy <- F
+      states$flag_in_preset_ICE_Fuel_Economy <- F
     }
   },
   ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
@@ -281,13 +273,11 @@ server <-  function(input, output, session) {
   })
   #If the values in the panel are changed at all, the flag reverts to F
   observeEvent({ #watch for changes in input values
-    input$in_EBike_Battery_Storage
-    input$in_EBike_Range
+    input$in_EBike_econ
   }, {
     
     #If the input values no longer match the prest "states" (redefined in the numeric updaters above)
-    if(states$flag_in_preset_EBike & input$in_EBike_Battery_Storage != states$state_in_EBike_Battery_Storage |
-       states$flag_in_preset_EBike & input$in_EBike_Range != states$state_in_EBike_Range) {
+    if(states$flag_in_preset_EBike & input$in_EBike_econ != states$state_in_EBike_econ) {
       #Change flag to F
       states$flag_in_preset_EBike <- F
     }
@@ -323,13 +313,13 @@ server <-  function(input, output, session) {
   observeEvent({ #watch for changes in input values
     input$in_PHEV_elec_econ
     input$in_PHEV_range_elec
-    input$in_PHEV_ic_econ
+    input$in_PHEV_ICE_econ
   }, {
     
     #If the input values no longer match the prest "states" (redefined in the numeric updaters above)
     if(states$flag_in_preset_PHEV & input$in_PHEV_elec_econ != states$state_in_PHEV_elec_econ |
        states$flag_in_preset_PHEV & input$in_PHEV_range_elec != states$state_in_PHEV_range_elec |
-       states$flag_in_preset_PHEV & input$in_PHEV_ic_econ != states$state_in_PHEV_ic_econ) {
+       states$flag_in_preset_PHEV & input$in_PHEV_ICE_econ != states$state_in_PHEV_ICE_econ) {
       #Change flag to F
       states$flag_in_preset_PHEV <- F
     }
@@ -416,38 +406,38 @@ server <-  function(input, output, session) {
   #Calcs####
   #================================#
   
-  #~IC####
+  #~ICE####
   mileage_day <- reactive({
     Car_Trips_Daily_Avg <- input$in_Car_Trips_Daily_Avg
     Car_Trip_Avg_Length <- set_units(input$in_Car_Trip_Avg_Length, "mi")
     Car_Trips_Daily_Avg * Car_Trip_Avg_Length #calculate total mileage/day
   })
-  IC_Fuel_Economy <- reactive({set_units(input$in_IC_Fuel_Economy, "mi / gal")})
-  IC_emissions_year <- reactive({calc_IC_emissions_year(mileage_day(), IC_Fuel_Economy())}) #Calculate IC year emissions using helper function
+  ICE_Fuel_Economy <- reactive({set_units(input$in_ICE_Fuel_Economy, "mi / gal")})
+  ICE_emissions_year <- reactive({calc_ICE_emissions_year(mileage_day(), ICE_Fuel_Economy())}) #Calculate ICE year emissions using helper function
   
   #~BEV####
   Elec_gen_emissions <- reactive({set_units(input$in_elec_gen_emissions, "pounds / megawatthour")})
   BEV_emissions_year <- reactive({calc_BEV_emissions_year(input$in_BEV_econ, Elec_gen_emissions(), mileage_day())}) #calculate BEV year emissions using helper function
-  BEV_CO2_saved <- reactive({calc_BEV_CO2_saved(IC_emissions_year(), BEV_emissions_year())}) #Calculate BEV CO2 saved using helper function
+  BEV_CO2_saved <- reactive({calc_BEV_CO2_saved(ICE_emissions_year(), BEV_emissions_year())}) #Calculate BEV CO2 saved using helper function
   BEV_incentive <- reactive({input$in_BEV_incentive})
   
   #~PHEV####
-  PHEV_emissions_year <- reactive({calc_PHEV_emissions_year(input$in_PHEV_elec_econ, input$in_PHEV_range_elec, input$in_PHEV_ic_econ, mileage_day(), Elec_gen_emissions())})
+  PHEV_emissions_year <- reactive({calc_PHEV_emissions_year(input$in_PHEV_elec_econ, input$in_PHEV_range_elec, input$in_PHEV_ICE_econ, mileage_day(), Elec_gen_emissions())})
     #calculate PHEV year emissions using helper function
-  PHEV_CO2_saved <- reactive({calc_PHEV_CO2_saved(IC_emissions_year(), PHEV_emissions_year())}) #calculate PHEV CO2 saved using helper function
+  PHEV_CO2_saved <- reactive({calc_PHEV_CO2_saved(ICE_emissions_year(), PHEV_emissions_year())}) #calculate PHEV CO2 saved using helper function
   PHEV_incentive <- reactive({input$in_PHEV_incentive})
   
   #~FCEV####
   FCEV_emissions_year <- reactive({calc_FCEV_emissions_year(input$in_FCEV_econ, input$in_renew_energy_ratio, mileage_day(), Elec_gen_emissions())})
     #calculate FCEV year emissions using helper function
-  FCEV_CO2_saved <- reactive({calc_FCEV_CO2_saved(IC_emissions_year(), FCEV_emissions_year())}) #calculate FCEV CO2 saved using helper function
+  FCEV_CO2_saved <- reactive({calc_FCEV_CO2_saved(ICE_emissions_year(), FCEV_emissions_year())}) #calculate FCEV CO2 saved using helper function
   FCEV_incentive <- reactive({input$in_FCEV_incentive})
   
   #~E-Bike#####
   VMT_r <- reactive({input$in_EBike_VMT_r}) #Ratio of car mileage replaced by e-bike
-  EBike_emissions_year <- reactive({calc_EBike_emissions_year(input$in_EBike_Battery_Storage, input$in_EBike_Range, Elec_gen_emissions(), mileage_day(), VMT_r())})
+  EBike_emissions_year <- reactive({calc_EBike_emissions_year(input$in_EBike_econ, Elec_gen_emissions(), mileage_day(), VMT_r())})
     #calculate E-Bike year emissions using helper function
-  EBike_CO2_saved <- reactive({calc_EBike_CO2_saved(mileage_day(), VMT_r(), IC_Fuel_Economy(), IC_emissions_year(), EBike_emissions_year())})
+  EBike_CO2_saved <- reactive({calc_EBike_CO2_saved(mileage_day(), VMT_r(), ICE_Fuel_Economy(), ICE_emissions_year(), EBike_emissions_year())})
     #calculate E-Bike CO2 saved using helper function
   EBike_incentive <- reactive({input$in_EBike_incentive})
   
@@ -709,9 +699,8 @@ server <-  function(input, output, session) {
                                       preset_EBike = input$in_preset_EBike,
                                       EBike_include = input$in_EBike_include,
                                       BEV_incentive = input$in_BEV_incentive,
-                                      EBike_Battery_Storage = input$in_EBike_Battery_Storage,
+                                      EBike_econ = input$in_EBike_econ,
                                       EBike_incentive = input$in_EBike_incentive,
-                                      EBike_Range = input$in_EBike_Range,
                                       BEV_per_budget = input$in_BEV_per_budget,
                                       EBike_VMT_r = input$in_EBike_VMT_r,
                                       preset_Car_Trips_Daily_Avg = input$in_preset_Car_Trips_Daily_Avg,
@@ -725,12 +714,12 @@ server <-  function(input, output, session) {
                                       PHEV_per_budget = input$in_PHEV_per_budget,
                                       preset_BEV = input$in_preset_BEV,
                                       FCEV_per_budget = input$in_FCEV_per_budget,
-                                      IC_Fuel_Economy = input$in_IC_Fuel_Economy,
+                                      ICE_Fuel_Economy = input$in_ICE_Fuel_Economy,
                                       Car_Trips_Daily_Avg = input$in_Car_Trips_Daily_Avg,
-                                      PHEV_ic_econ = input$in_PHEV_ic_econ,
+                                      PHEV_ICE_econ = input$in_PHEV_ICE_econ,
                                       renew_energy_ratio = input$in_renew_energy_ratio,
                                       PHEV_include = input$in_PHEV_include,
-                                      preset_IC_Fuel_Economy = input$in_preset_IC_Fuel_Economy,
+                                      preset_ICE_Fuel_Economy = input$in_preset_ICE_Fuel_Economy,
                                       costperkg = costperkg(),
                                       costperkg_x = costperkg_x(),
                                       costperkg_y = costperkg_y(),
@@ -753,9 +742,10 @@ server <-  function(input, output, session) {
                                       flag_preset_Car_Trips_Daily_Avg = states$flag_preset_Car_Trips_Daily_Avg,
                                       in_preset_elec_gen_emissions = input$in_preset_elec_gen_emissions,
                                       flag_preset_elec_gen_emissions = states$flag_preset_elec_gen_emissions,
-                                      in_preset_IC_Fuel_Economy = input$in_preset_IC_Fuel_Economy,
-                                      flag_in_preset_IC_Fuel_Economy = states$flag_in_preset_IC_Fuel_Economy,
+                                      in_preset_ICE_Fuel_Economy = input$in_preset_ICE_Fuel_Economy,
+                                      flag_in_preset_ICE_Fuel_Economy = states$flag_in_preset_ICE_Fuel_Economy,
                                       in_preset_EBike = input$in_preset_EBike,
+                                      in_preset_EBike_2 = input$in_preset_EBike_2,
                                       flag_in_preset_EBike = states$flag_in_preset_EBike,
                                       in_preset_BEV = input$in_preset_BEV,
                                       flag_in_preset_BEV = states$flag_in_preset_BEV,

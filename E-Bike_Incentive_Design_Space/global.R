@@ -23,7 +23,7 @@ Trips_raw <- read.csv("www/Data Tables/State Info/Trips.csv", fileEncoding="UTF-
 BEV_raw <- read.csv("www/Data Tables/Vehicles/BEV.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
 PHEV_raw <- read.csv("www/Data Tables/Vehicles/PHEV.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
 FCEV_raw <- read.csv("www/Data Tables/Vehicles/FCEV.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
-IC_raw <- read.csv("www/Data Tables/Vehicles/IC.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
+ICE_raw <- read.csv("www/Data Tables/Vehicles/ICE.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
 EBike_raw <- read.csv("www/Data Tables/Vehicles/EBike.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
 mix_raw <- read.csv("www/Data Tables/Vehicles/mix.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE) #Defines a specific combo of vehicle types
 
@@ -48,29 +48,29 @@ BEV <- BEV_raw %>%
   mutate(epa_econ_unit = ifelse(epa_econ_unit == "kWh/100 mi", "kilowatthour / hectomi", epa_econ_unit), #kWh/100 mi is not in units database, but kilowatthour / hectomi is
          epa_econ = mixed_units(epa_econ, epa_econ_unit)) %>% #Add units
   select(-epa_econ_unit) #Cleanup unecessary units columns
-IC <- IC_raw %>% 
+ICE <- ICE_raw %>% 
   mutate(Fuel_Economy_Units = ifelse(Fuel_Economy_Units == "mpg", "mi / gal", Fuel_Economy_Units), #mpg is not in units database, but watthour is
          Fuel_Economy = mixed_units(Fuel_Economy, Fuel_Economy_Units)) %>% #Add units
   select(-Fuel_Economy_Units) #Clean up unecessary units columns
 PHEV <- PHEV_raw %>% 
   mutate(epa_elec_econ_unit = ifelse(epa_elec_econ_unit == "kWh/100 mi", "kilowatthour / hectomi", epa_elec_econ_unit), #kWh/100 mi is not in units database, but kilowatthour / hectomi is
          epa_elec_econ = mixed_units(epa_elec_econ, epa_elec_econ_unit)) %>% #Add units
-  mutate(epa_ic_econ_unit = ifelse(epa_ic_econ_unit == "mpg", "mi / gal", epa_ic_econ_unit),
-         epa_ic_econ = mixed_units(epa_ic_econ, epa_ic_econ_unit)) %>% #Add units
+  mutate(epa_ICE_econ_unit = ifelse(epa_ICE_econ_unit == "mpg", "mi / gal", epa_ICE_econ_unit),
+         epa_ICE_econ = mixed_units(epa_ICE_econ, epa_ICE_econ_unit)) %>% #Add units
   mutate(range_elec = mixed_units(range_elec, range_unit),
-         range_ic = mixed_units(range_ic, range_unit)) %>% #Add units
-  select(-epa_elec_econ_unit, -epa_ic_econ_unit, -range_unit) #Cleanup unecessary units columns
+         range_ICE = mixed_units(range_ICE, range_unit)) %>% #Add units
+  select(-epa_elec_econ_unit, -epa_ICE_econ_unit, -range_unit) #Cleanup unecessary units columns
 FCEV <- FCEV_raw %>% 
   mutate(epa_econ = mixed_units(epa_h2_econ, epa_h2_econ_unit)) %>% #add units
   select(-epa_h2_econ_unit)
 EBike <- EBike_raw %>% 
-  mutate(Battery_Storage_Units = ifelse(Battery_Storage_Units == "Wh", "watthour", Battery_Storage_Unit), #Wh is not in units database, but watthour is
-         Battery_Storage = mixed_units(Battery_Storage, Battery_Storage_Units), #Add Units
-         Range = mixed_units(Range,Range_Units)) %>%  #Add Units
-  select(-Battery_Storage_Units, -Range_Units)
+  mutate(EBike_econ_unit = ifelse(econ_unit == "kWh/100 mi", "kilowatthour / hectomi", econ_unit), #kWh/100 is not in units database, but kilowatthour / hectomi is
+         EBike_min_econ = mixed_units(min_econ, EBike_econ_unit), #Add Units
+         EBike_max_econ = mixed_units(max_econ, EBike_econ_unit)) %>% 
+  select(-EBike_econ_unit)
 mix <- mix_raw %>%
   left_join(BEV_raw %>% select(Make, Model, epa_econ), by = c("make" = "Make", "model" = "Model")) %>% #join BEV fuel economy info
-  left_join(PHEV_raw %>% select(Make, Model, epa_elec_econ, range_elec, epa_ic_econ), by = c("make" = "Make", "model" = "Model")) %>% 
+  left_join(PHEV_raw %>% select(Make, Model, epa_elec_econ, range_elec, epa_ICE_econ), by = c("make" = "Make", "model" = "Model")) %>% 
   left_join(FCEV_raw %>% select(Make, Model, epa_h2_econ), by = c("make" = "Make", "model" = "Model")) %>% 
   group_by(mix_type, mix_name, make, model) %>%   #group by vehicle type (BEV, PHEV, etc.) and mix name (ex: OR_Feb_20)
   #this next mutate is to fix the case where agencies provide make info but not model info for their counts. In this case, the data tables have "na" for model.
@@ -82,10 +82,12 @@ mix <- mix_raw %>%
                                    T ~ as.double(epa_elec_econ)),
          range_elec = case_when(mix_type == "PHEV" & is.na(range_elec) ~ mean(PHEV_raw %>% filter(Make == make) %>% pull(range_elec), na.rm = T),
                                 T ~ as.double(range_elec)),
-         epa_ic_econ = case_when(mix_type == "PHEV" & is.na(epa_ic_econ) ~ mean(PHEV_raw %>% filter(Make == make) %>% pull(epa_ic_econ), na.rm = T),
-                                 T ~ as.double(epa_ic_econ)),
+         epa_ICE_econ = case_when(mix_type == "PHEV" & is.na(epa_ICE_econ) ~ mean(PHEV_raw %>% filter(Make == make) %>% pull(epa_ICE_econ), na.rm = T),
+                                 T ~ as.double(epa_ICE_econ)),
          epa_h2_econ = case_when(mix_type == "FCEV" & is.na(epa_h2_econ) ~ mean(FCEV_raw %>% filter(Make == make) %>% pull(epa_h2_econ), na.rm = T),
-                                 T ~ as.double(epa_h2_econ))
+                                 T ~ as.double(epa_h2_econ)),
+         EBike_min_econ = case_when(mix_type == "EBike" ~ mean(EBike_raw %>% filter(Make == make, Model == model) %>% pull(min_econ))),
+         EBike_max_econ = case_when(mix_type == "EBike" ~ mean(EBike_raw %>% filter(Make == make, Model == model) %>% pull(max_econ)))
   ) %>% 
   ungroup() %>% #Things get borked if you don't ungroup at this point
   group_by(mix_name, mix_type) %>% 
@@ -94,11 +96,13 @@ mix <- mix_raw %>%
   summarize(epa_econ_wm = weighted.mean(epa_econ, count, na.rm = T),
             epa_elec_econ_wm = weighted.mean(epa_elec_econ, count, na.rm = T),
             range_elec_wm = weighted.mean(range_elec, count, na.rm = T),
-            epa_ic_econ_wm = weighted.mean(epa_ic_econ, count, na.rm = T),
-            epa_h2_econ_wm = weighted.mean(epa_h2_econ, count, na.rm = T)) 
+            epa_ICE_econ_wm = weighted.mean(epa_ICE_econ, count, na.rm = T),
+            epa_h2_econ_wm = weighted.mean(epa_h2_econ, count, na.rm = T),
+            EBike_min_econ = weighted.mean(EBike_min_econ, count, na.rm = T),
+            EBike_max_econ = weighted.mean(EBike_max_econ, count, na.rm = T))
 
 #Remove unecessary tables
-rm(BEV_raw, PHEV_raw, FCEV_raw, EBike_raw, Electricity_raw, IC_raw, Incentives_raw, Trips_raw, mix_raw)
+rm(BEV_raw, PHEV_raw, FCEV_raw, EBike_raw, Electricity_raw, ICE_raw, Incentives_raw, Trips_raw, mix_raw)
 
 #================================#
 #Define Conversion Constants####

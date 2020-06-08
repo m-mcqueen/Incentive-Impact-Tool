@@ -108,3 +108,12 @@ CA_Feb_20,PHEV,756,Mitsubishi,na
 CA_Feb_20,PHEV,266,Subaru,na
 CA_Feb_20,PHEV,33579,Toyota,na
 CA_Feb_20,PHEV,509,Volvo,na
+VT_mix,EBike,1,Dillenger,Bafang
+VT_mix,EBike,1,Dillenger,Samsung
+VT_mix,EBike,1,Electra,Townie
+VT_mix,EBike,1,Evelo,Aurora
+VT_mix,EBike,1,Juiced,Cross current
+VT_mix,EBike,1,Rad Power,Radwagon
+VT_mix,EBike,1,Rad Power,Rover
+VT_mix,EBike,1,Sondors,Original
+VT_mix,EBike,1,Yuba,Spicy Curry

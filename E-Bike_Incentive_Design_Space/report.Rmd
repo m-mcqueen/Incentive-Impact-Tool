@@ -15,9 +15,9 @@ params:
   preset_EBike: preset_EBike
   EBike_include: EBike_include
   BEV_incentive: BEV_incentive
+  EBike_econ: EBike_econ
   EBike_Battery_Storage: EBike_Battery_Storage
   EBike_incentive: EBike_incentive
-  EBike_Range: EBike_Range
   BEV_per_budget: BEV_per_budget
   EBike_VMT_r: EBike_VMT_r
   preset_Car_Trips_Daily_Avg: preset_Car_Trips_Daily_Avg
@@ -31,12 +31,12 @@ params:
   PHEV_per_budget: PHEV_per_budget
   preset_BEV: preset_BEV
   FCEV_per_budget: FCEV_per_budget
-  IC_Fuel_Economy: IC_Fuel_Economy
+  ICE_Fuel_Economy: ICE_Fuel_Economy
   Car_Trips_Daily_Avg: Car_Trips_Daily_Avg
-  PHEV_ic_econ: PHEV_ic_econ
+  PHEV_ICE_econ: PHEV_ICE_econ
   renew_energy_ratio: renew_energy_ratio
   PHEV_include: PHEV_include
-  preset_IC_Fuel_Economy: preset_IC_Fuel_Economy
+  preset_ICE_Fuel_Economy: preset_ICE_Fuel_Economy
   costperkg: costperkg
   costperkg_x: costperkg_x
   costperkg_y: costperkg_y
@@ -59,9 +59,10 @@ params:
   flag_preset_Car_Trips_Daily_Avg: flag_preset_Car_Trips_Daily_Avg
   in_preset_elec_gen_emissions: in_preset_elec_gen_emissions
   flag_preset_elec_gen_emissions: flag_preset_elec_gen_emissions
-  in_preset_IC_Fuel_Economy: in_preset_IC_Fuel_Economy
-  flag_in_preset_IC_Fuel_Economy: flag_in_preset_IC_Fuel_Economy
+  in_preset_ICE_Fuel_Economy: in_preset_ICE_Fuel_Economy
+  flag_in_preset_ICE_Fuel_Economy: flag_in_preset_ICE_Fuel_Economy
   in_preset_EBike: in_preset_EBike
+  in_preset_EBike_2: in_preset_EBike_2
   flag_in_preset_EBike: flag_in_preset_EBike
   in_preset_BEV: in_preset_BEV
   flag_in_preset_BEV: flag_in_preset_BEV
@@ -119,7 +120,7 @@ kable(test_points,
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
-The Cost per kg CO2 saved results show the dollar amount per kg of CO2 that was avoided thanks to the incentive program. It is calculated by subtracting emissions of the e-vehicle from the average IC vehicle using the given average travel day behavior. In the case of e-bikes, the total CO2 remissions is the sum of the miles replaced by e-bike and the remaining unreplaced miles traveled by IC automobile. In this case, the test points assume that the entire budget is spent on that e-vehicle type. This is done in order to demonstrate the cost efficiency of each e-vehicle type.
+The Cost per kg CO2 saved results show the dollar amount per kg of CO2 that was avoided thanks to the incentive program. It is calculated by subtracting emissions of the e-vehicle from the average ICE vehicle using the given average travel day behavior. In the case of e-bikes, the total CO2 remissions is the sum of the miles replaced by e-bike and the remaining unreplaced miles traveled by ICE automobile. In this case, the test points assume that the entire budget is spent on that e-vehicle type. This is done in order to demonstrate the cost efficiency of each e-vehicle type.
 
 For this plot, **lower is better**.
 
@@ -258,44 +259,47 @@ kable(elec, caption = "Electricity",
 
 The electricity table shows the average carbon intensity of electricity generation in the given region. This information can be obtained from the [US EPA's eGRID](https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid).
 
-```{r IC, echo = FALSE}
+```{r ICE, echo = FALSE}
 #Pre allocate the table
 N = 2
-IC <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), stringsAsFactors = F)
+ICE <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), stringsAsFactors = F)
 
 #Learn if a preset was used or not
-if (params$flag_in_preset_IC_Fuel_Economy) {
-  IC_preset = params$in_preset_IC_Fuel_Economy
-} else {IC_preset = "User Defined"}
+if (params$flag_in_preset_ICE_Fuel_Economy) {
+  ICE_preset = params$in_preset_ICE_Fuel_Economy
+} else {ICE_preset = "User Defined"}
 
 #Build the table
-IC[1,] <- list("Average Fuel Economy", params$IC_Fuel_Economy, "mpg", IC_preset)
-IC[2,] <- list("Carbon Emissions from Gasoline", drop_units(set_units(set_units(1, "gal"), CO2_g)), "g CO2/gal", "(Constant)")
+ICE[1,] <- list("Average Fuel Economy", params$ICE_Fuel_Economy, "mpg", ICE_preset)
+ICE[2,] <- list("Carbon Emissions from Gasoline", drop_units(set_units(set_units(1, "gal"), CO2_g)), "g CO2/gal", "(Constant)")
 
 #Display the table
-kable(IC, caption = "IC",
-      align = rep('l', ncol(IC))) %>% 
+kable(ICE, caption = "ICE",
+      align = rep('l', ncol(ICE))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 ```
 
-The IC (internal combustion engine) table shows the average fuel economy of an automobile. The carbon emissions from gasoline was obtained from the [US EPA](https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references).
+The ICE (internal combustion engine) table shows the average fuel economy of an automobile. The carbon emissions from gasoline was obtained from the [US EPA](https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references).
 
 ```{r EBike, echo = FALSE}
 if (params$EBike_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
-  N = 3
+  N = 2
   EBike <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), stringsAsFactors = F)
   
   #Learn if a preset was used or not
   if (params$flag_in_preset_EBike) {
     EBike_preset = params$in_preset_EBike
-  } else {EBike_preset = "User Defined"}
+    EBike_preset_2 = paste(params$in_preset_EBike_2, "Efficiency")
+  } else {
+    EBike_preset = "User Defined"
+    EBike_preset_2 = NULL
+  }
   
   #Build the table
-  EBike[1,] <- list("Average Range", params$EBike_Range, "mi", EBike_preset)
-  EBike[2,] <- list("Average Battery Storage", params$EBike_Battery_Storage, "kWh", EBike_preset)
-  EBike[3,] <- list("Ratio, portion of car miles replaced by e-bike (maximum 1)", params$EBike_VMT_r, "", "User Defined")
+  EBike[1,] <- list("Average Economy", params$EBike_econ, "kWh/100 mi", paste(EBike_preset, EBike_preset_2))
+  EBike[2,] <- list("Ratio, portion of car miles replaced by e-bike (maximum 1)", params$EBike_VMT_r, "", "User Defined")
   
   #Display the table
   kable(EBike, caption = "E-Bike",
@@ -305,7 +309,7 @@ if (params$EBike_include) { #only include if "include" tickbox checked in GUI
 
 ```
 
-`r if (params$EBike_include) {"The E-Bike table shows the average range and battery storage of e-bikes eligible for an e-bike incentive.These values can be obtained from e-bike manufacturers. Additionally, the ratio of automobile miles that are replaced by e-bike miles is specified. This value can be obtained from local e-bike use studies."}`
+`r if (params$EBike_include) {"The E-Bike table shows the average fuel economy of e-bikes eligible for an e-bike incentive.This value can be obtained from e-bike manufacturers. Data used for presets was obtained from a report published by [Efficiency Vermont](https://www.efficiencyvermont.com/Media/Default/docs/white-papers/efficiency-vermont-electric-bike-white-paper.pdf) Additionally, the ratio of automobile miles that are replaced by e-bike miles is specified. This value can be obtained from local e-bike use studies."}`
 
 ``` {r BEV, echo = FALSE}
 if (params$BEV_include) { #only include if "include" tickbox checked in GUI
@@ -345,7 +349,7 @@ if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
   #Build the table
   PHEV[1,] <- list("Average E-Mode Fuel Economy", params$PHEV_elec_econ, "kWh / 100 mi", PHEV_preset)
   PHEV[2,] <- list("Average E-Mode Range", params$PHEV_range_elec, "mi", PHEV_preset)
-  PHEV[3,] <- list("Average IC Mode Fuel Economy", params$PHEV_ic_econ, "mpg", PHEV_preset)
+  PHEV[3,] <- list("Average ICE Mode Fuel Economy", params$PHEV_ICE_econ, "mpg", PHEV_preset)
   
   #Display the table
   kable(PHEV, caption = "PHEV",
@@ -355,7 +359,7 @@ if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
 
 ```
 
-`r if (params$PHEV_include) {"The PHEV (Plug-in Hybrid Electric Vehicle) table shows the average fuel economies of PHEVs eligible for an incentive. The Average E-Mode Fuel Economy is used for the E-Mode range of the daily average miles traveled. Thereafter, the IC Mode Fuel Economy is used. The sum of emissions from both types of propulsion are used to calculate total emissions."}`
+`r if (params$PHEV_include) {"The PHEV (Plug-in Hybrid Electric Vehicle) table shows the average fuel economies of PHEVs eligible for an incentive. The Average E-Mode Fuel Economy is used for the E-Mode range of the daily average miles traveled. Thereafter, the ICE Mode Fuel Economy is used. The sum of emissions from both types of propulsion are used to calculate total emissions."}`
 
 ``` {r FCEV, echo = FALSE}
 if (params$FCEV_include) { #only include if "include" tickbox checked in GUI
