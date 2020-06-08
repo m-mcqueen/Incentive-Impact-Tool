@@ -1,4 +1,4 @@
-﻿Make,Model,epa_elec_econ,epa_elec_econ_unit,range_elec,epa_ic_econ,epa_ic_econ_unit,range_ic,range_unit
+﻿Make,Model,epa_elec_econ,epa_elec_econ_unit,range_elec,epa_ICE_econ,epa_ICE_econ_unit,range_ICE,range_unit
 Audi,A3 Sportback e-tron,41,kWh/100 mi,16,36,mpg,384,mi
 Audi,Q5,52,kWh/100 mi,20,27,mpg,370,mi
 BMW,3 Series,47,kWh/100 mi,14,31,mpg,336,mi
