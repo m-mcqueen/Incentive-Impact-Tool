@@ -60,13 +60,13 @@ server <-  function(input, output, session) {
   #~Update Trips panel with preset####
   observeEvent(input$apply_in_preset_Car_Trips_Daily_Avg, {
     #Get preset val
-    in_Car_Trips_Daily_Avg_preset_val <- Trips %>%
+    in_Car_Trips_Daily_Avg_preset_val <- round(Trips %>%
       filter(State == input$in_preset_Car_Trips_Daily_Avg) %>%
-      pull(Car_Trips_Daily_Avg)
+      pull(Car_Trips_Daily_Avg), 2)
     #Get preset val
-    in_Car_Trip_Avg_Length_preset_val <- drop_units(Trips %>%
+    in_Car_Trip_Avg_Length_preset_val <- round(drop_units(Trips %>%
                                                       filter(State == input$in_preset_Car_Trips_Daily_Avg) %>%
-                                                      pull(Car_Trip_Avg_Length))
+                                                      pull(Car_Trip_Avg_Length)), 2)
     #update vals
     updateNumericInput(session, inputId = "in_Car_Trips_Daily_Avg",
                        value = in_Car_Trips_Daily_Avg_preset_val
