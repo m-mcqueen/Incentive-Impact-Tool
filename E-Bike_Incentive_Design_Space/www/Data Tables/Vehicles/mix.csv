@@ -1,119 +1,119 @@
-﻿mix_name,mix_type,count,make,model
-OR_Feb_20,BEV,118,Audi,e-tron
-OR_Feb_20,BEV,261,BMW,i3
-OR_Feb_20,BEV,1838,Chevrolet,Bolt EV
-OR_Feb_20,BEV,757,Chevrolet,Spark EV
-OR_Feb_20,BEV,509,FIAT,500e
-OR_Feb_20,BEV,219,Ford,Focus
-OR_Feb_20,BEV,2,Ford,Ranger
-OR_Feb_20,BEV,106,Ford,TH!NK
-OR_Feb_20,BEV,2,Ford,Transit Connect Electric
-OR_Feb_20,BEV,165,Honda,Clarity Electric
-OR_Feb_20,BEV,27,Honda,Fit EV
-OR_Feb_20,BEV,42,Hyundai,Ioniq Electric
-OR_Feb_20,BEV,170,Hyundai,Kona EV
-OR_Feb_20,BEV,31,Jaguar,I-PACE
-OR_Feb_20,BEV,120,Kia,Niro EV
-OR_Feb_20,BEV,267,Kia,Soul EV
-OR_Feb_20,BEV,85,Mercedes-Benz,B-Class
-OR_Feb_20,BEV,49,Mitsubishi,i-MiEV
-OR_Feb_20,BEV,4764,Nissan,LEAF
-OR_Feb_20,BEV,1,Porsche,Taycan
-OR_Feb_20,BEV,14,Smart,EQ fortwo
-OR_Feb_20,BEV,233,Smart,fortwo electric drive
-OR_Feb_20,BEV,4935,Tesla,Model 3
-OR_Feb_20,BEV,2260,Tesla,Model S
-OR_Feb_20,BEV,1281,Tesla,Model X
-OR_Feb_20,BEV,13,Tesla,Roadster
-OR_Feb_20,BEV,28,Toyota,RAV4 EV
-OR_Feb_20,BEV,927,Volkswagen,e-Golf
-OR_Feb_20,PHEV,270,Audi,A3 Sportback e-tron
-OR_Feb_20,PHEV,2,Audi,Q5
-OR_Feb_20,PHEV,97,BMW,3 Series
-OR_Feb_20,PHEV,154,BMW,5 Series
-OR_Feb_20,PHEV,17,BMW,7 Series
-OR_Feb_20,PHEV,72,BMW,i8
-OR_Feb_20,PHEV,323,BMW,X5
-OR_Feb_20,PHEV,6,Cadillac,CT6 PLUG-IN Hybrid
-OR_Feb_20,PHEV,25,Cadillac,ELR
-OR_Feb_20,PHEV,2759,Chevrolet,Volt
-OR_Feb_20,PHEV,428,Chrysler,Pacifica Hybrid
-OR_Feb_20,PHEV,6,Fisker,Karma
-OR_Feb_20,PHEV,1127,Ford,C-MAX Energi
-OR_Feb_20,PHEV,1104,Ford,Fusion Energi
-OR_Feb_20,PHEV,2,Honda,Accord Plug-In
-OR_Feb_20,PHEV,428,Honda,Clarity Plug-In Hybrid
-OR_Feb_20,PHEV,141,Hyundai,Ioniq Plug-in Hybrid
-OR_Feb_20,PHEV,134,Hyundai,Sonata Plug-in Hybrid
-OR_Feb_20,PHEV,2,Karma,Revero
-OR_Feb_20,PHEV,230,Kia,Niro Plug-In Hybrid
-OR_Feb_20,PHEV,45,Kia,Optima Plug-In Hybrid
-OR_Feb_20,PHEV,2,Land Rover,Range Rover Sport
-OR_Feb_20,PHEV,1,McLaren,P1
-OR_Feb_20,PHEV,14,Mercedes-Benz,C-Class
-OR_Feb_20,PHEV,110,Mercedes-Benz,GLC
-OR_Feb_20,PHEV,26,Mercedes-Benz,GLE
-OR_Feb_20,PHEV,10,Mercedes-Benz,S-Class
-OR_Feb_20,PHEV,62,MINI,Countryman Plug-in Hybrid
-OR_Feb_20,PHEV,141,Mitsubishi,Outlander PHEV
-OR_Feb_20,PHEV,4,Porsche,918 Spyder
-OR_Feb_20,PHEV,88,Porsche,Cayenne
-OR_Feb_20,PHEV,41,Porsche,Panamera
-OR_Feb_20,PHEV,229,Subaru,Crosstrek
-OR_Feb_20,PHEV,706,Toyota,Prius Plug-in Hybrid
-OR_Feb_20,PHEV,1754,Toyota,Prius Prime
-OR_Feb_20,PHEV,5,Volvo,S60
-OR_Feb_20,PHEV,4,Volvo,S90
-OR_Feb_20,PHEV,115,Volvo,XC60
-OR_Feb_20,PHEV,142,Volvo,XC90
-FCEV_Equal_4,FCEV,1,Honda,Clarity
-FCEV_Equal_4,FCEV,1,Hyundai,Nexo
-FCEV_Equal_4,FCEV,1,Hyundai,Nexo Blue
-FCEV_Equal_4,FCEV,1,Toyota,Mirai
-CA_Feb_20,BEV,135,Audi,na
-CA_Feb_20,BEV,43,Bollore,na
-CA_Feb_20,BEV,11018,BMW,na
-CA_Feb_20,BEV,22616,Chevrolet,na
-CA_Feb_20,BEV,49,CODA,na
-CA_Feb_20,BEV,22461,FIAT,na
-CA_Feb_20,BEV,4336,Ford,na
-CA_Feb_20,BEV,2335,Honda,na
-CA_Feb_20,BEV,1769,Hyundai,na
-CA_Feb_20,BEV,146,Jaguar,na
-CA_Feb_20,BEV,2907,Kia,na
-CA_Feb_20,BEV,2326,Mercedes-Benz,na
-CA_Feb_20,BEV,253,Mitsubishi,na
-CA_Feb_20,BEV,39607,Nissan,na
-CA_Feb_20,BEV,3525,Smart,na
-CA_Feb_20,BEV,100906,Tesla,na
-CA_Feb_20,BEV,54,Ford,TH!NK
-CA_Feb_20,BEV,1785,Toyota,na
-CA_Feb_20,BEV,10314,Volkswagen,na
-CA_Feb_20,BEV,2,Wheego,na
-CA_Feb_20,FCEV,1176,Honda,na
-CA_Feb_20,FCEV,301,Hyundai,na
-CA_Feb_20,FCEV,24,Mercedes-Benz,na
-CA_Feb_20,FCEV,5403,Toyota,na
-CA_Feb_20,PHEV,2354,Audi,na
-CA_Feb_20,PHEV,2886,BMW,na
-CA_Feb_20,PHEV,271,Cadillac,na
-CA_Feb_20,PHEV,49241,Chevrolet,na
-CA_Feb_20,PHEV,2399,Chrysler,na
-CA_Feb_20,PHEV,24681,Ford,na
-CA_Feb_20,PHEV,8987,Honda,na
-CA_Feb_20,PHEV,2383,Hyundai,na
-CA_Feb_20,PHEV,2502,Kia,na
-CA_Feb_20,PHEV,70,Mercedes-Benz,na
-CA_Feb_20,PHEV,756,Mitsubishi,na
-CA_Feb_20,PHEV,266,Subaru,na
-CA_Feb_20,PHEV,33579,Toyota,na
-CA_Feb_20,PHEV,509,Volvo,na
-VT_mix,EBike,1,Dillenger,Bafang
-VT_mix,EBike,1,Dillenger,Samsung
-VT_mix,EBike,1,Electra,Townie
-VT_mix,EBike,1,Evelo,Aurora
-VT_mix,EBike,1,Juiced,Cross current
-VT_mix,EBike,1,Rad Power,Radwagon
-VT_mix,EBike,1,Rad Power,Rover
-VT_mix,EBike,1,Sondors,Original
-VT_mix,EBike,1,Yuba,Spicy Curry
+﻿mix_name,mix_type,count,make,model,source
+OR_Feb_20,BEV,118,Audi,e-tron,ODOT
+OR_Feb_20,BEV,261,BMW,i3,ODOT
+OR_Feb_20,BEV,1838,Chevrolet,Bolt EV,ODOT
+OR_Feb_20,BEV,757,Chevrolet,Spark EV,ODOT
+OR_Feb_20,BEV,509,FIAT,500e,ODOT
+OR_Feb_20,BEV,219,Ford,Focus,ODOT
+OR_Feb_20,BEV,2,Ford,Ranger,ODOT
+OR_Feb_20,BEV,106,Ford,TH!NK,ODOT
+OR_Feb_20,BEV,2,Ford,Transit Connect Electric,ODOT
+OR_Feb_20,BEV,165,Honda,Clarity Electric,ODOT
+OR_Feb_20,BEV,27,Honda,Fit EV,ODOT
+OR_Feb_20,BEV,42,Hyundai,Ioniq Electric,ODOT
+OR_Feb_20,BEV,170,Hyundai,Kona EV,ODOT
+OR_Feb_20,BEV,31,Jaguar,I-PACE,ODOT
+OR_Feb_20,BEV,120,Kia,Niro EV,ODOT
+OR_Feb_20,BEV,267,Kia,Soul EV,ODOT
+OR_Feb_20,BEV,85,Mercedes-Benz,B-Class,ODOT
+OR_Feb_20,BEV,49,Mitsubishi,i-MiEV,ODOT
+OR_Feb_20,BEV,4764,Nissan,LEAF,ODOT
+OR_Feb_20,BEV,1,Porsche,Taycan,ODOT
+OR_Feb_20,BEV,14,Smart,EQ fortwo,ODOT
+OR_Feb_20,BEV,233,Smart,fortwo electric drive,ODOT
+OR_Feb_20,BEV,4935,Tesla,Model 3,ODOT
+OR_Feb_20,BEV,2260,Tesla,Model S,ODOT
+OR_Feb_20,BEV,1281,Tesla,Model X,ODOT
+OR_Feb_20,BEV,13,Tesla,Roadster,ODOT
+OR_Feb_20,BEV,28,Toyota,RAV4 EV,ODOT
+OR_Feb_20,BEV,927,Volkswagen,e-Golf,ODOT
+OR_Feb_20,PHEV,270,Audi,A3 Sportback e-tron,ODOT
+OR_Feb_20,PHEV,2,Audi,Q5,ODOT
+OR_Feb_20,PHEV,97,BMW,3 Series,ODOT
+OR_Feb_20,PHEV,154,BMW,5 Series,ODOT
+OR_Feb_20,PHEV,17,BMW,7 Series,ODOT
+OR_Feb_20,PHEV,72,BMW,i8,ODOT
+OR_Feb_20,PHEV,323,BMW,X5,ODOT
+OR_Feb_20,PHEV,6,Cadillac,CT6 PLUG-IN Hybrid,ODOT
+OR_Feb_20,PHEV,25,Cadillac,ELR,ODOT
+OR_Feb_20,PHEV,2759,Chevrolet,Volt,ODOT
+OR_Feb_20,PHEV,428,Chrysler,Pacifica Hybrid,ODOT
+OR_Feb_20,PHEV,6,Fisker,Karma,ODOT
+OR_Feb_20,PHEV,1127,Ford,C-MAX Energi,ODOT
+OR_Feb_20,PHEV,1104,Ford,Fusion Energi,ODOT
+OR_Feb_20,PHEV,2,Honda,Accord Plug-In,ODOT
+OR_Feb_20,PHEV,428,Honda,Clarity Plug-In Hybrid,ODOT
+OR_Feb_20,PHEV,141,Hyundai,Ioniq Plug-in Hybrid,ODOT
+OR_Feb_20,PHEV,134,Hyundai,Sonata Plug-in Hybrid,ODOT
+OR_Feb_20,PHEV,2,Karma,Revero,ODOT
+OR_Feb_20,PHEV,230,Kia,Niro Plug-In Hybrid,ODOT
+OR_Feb_20,PHEV,45,Kia,Optima Plug-In Hybrid,ODOT
+OR_Feb_20,PHEV,2,Land Rover,Range Rover Sport,ODOT
+OR_Feb_20,PHEV,1,McLaren,P1,ODOT
+OR_Feb_20,PHEV,14,Mercedes-Benz,C-Class,ODOT
+OR_Feb_20,PHEV,110,Mercedes-Benz,GLC,ODOT
+OR_Feb_20,PHEV,26,Mercedes-Benz,GLE,ODOT
+OR_Feb_20,PHEV,10,Mercedes-Benz,S-Class,ODOT
+OR_Feb_20,PHEV,62,MINI,Countryman Plug-in Hybrid,ODOT
+OR_Feb_20,PHEV,141,Mitsubishi,Outlander PHEV,ODOT
+OR_Feb_20,PHEV,4,Porsche,918 Spyder,ODOT
+OR_Feb_20,PHEV,88,Porsche,Cayenne,ODOT
+OR_Feb_20,PHEV,41,Porsche,Panamera,ODOT
+OR_Feb_20,PHEV,229,Subaru,Crosstrek,ODOT
+OR_Feb_20,PHEV,706,Toyota,Prius Plug-in Hybrid,ODOT
+OR_Feb_20,PHEV,1754,Toyota,Prius Prime,ODOT
+OR_Feb_20,PHEV,5,Volvo,S60,ODOT
+OR_Feb_20,PHEV,4,Volvo,S90,ODOT
+OR_Feb_20,PHEV,115,Volvo,XC60,ODOT
+OR_Feb_20,PHEV,142,Volvo,XC90,ODOT
+FCEV_Equal_4,FCEV,1,Honda,Clarity,Artificial - equal weights
+FCEV_Equal_4,FCEV,1,Hyundai,Nexo,Artificial - equal weights
+FCEV_Equal_4,FCEV,1,Hyundai,Nexo Blue,Artificial - equal weights
+FCEV_Equal_4,FCEV,1,Toyota,Mirai,Artificial - equal weights
+CA_Feb_20,BEV,135,Audi,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,43,Bollore,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,11018,BMW,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,22616,Chevrolet,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,49,CODA,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,22461,FIAT,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,4336,Ford,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,2335,Honda,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,1769,Hyundai,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,146,Jaguar,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,2907,Kia,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,2326,Mercedes-Benz,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,253,Mitsubishi,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,39607,Nissan,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,3525,Smart,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,100906,Tesla,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,54,Ford,TH!NK,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,1785,Toyota,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,10314,Volkswagen,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,BEV,2,Wheego,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,FCEV,1176,Honda,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,FCEV,301,Hyundai,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,FCEV,24,Mercedes-Benz,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,FCEV,5403,Toyota,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,2354,Audi,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,2886,BMW,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,271,Cadillac,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,49241,Chevrolet,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,2399,Chrysler,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,24681,Ford,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,8987,Honda,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,2383,Hyundai,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,2502,Kia,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,70,Mercedes-Benz,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,756,Mitsubishi,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,266,Subaru,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,33579,Toyota,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+CA_Feb_20,PHEV,509,Volvo,na,https://cleanvehiclerebate.org/eng/rebate-statistics
+VT_mix,EBike,1,Dillenger,Bafang,Artificial - equal weights
+VT_mix,EBike,1,Dillenger,Samsung,Artificial - equal weights
+VT_mix,EBike,1,Electra,Townie,Artificial - equal weights
+VT_mix,EBike,1,Evelo,Aurora,Artificial - equal weights
+VT_mix,EBike,1,Juiced,Cross current,Artificial - equal weights
+VT_mix,EBike,1,Rad Power,Radwagon,Artificial - equal weights
+VT_mix,EBike,1,Rad Power,Rover,Artificial - equal weights
+VT_mix,EBike,1,Sondors,Original,Artificial - equal weights
+VT_mix,EBike,1,Yuba,Spicy Curry,Artificial - equal weights

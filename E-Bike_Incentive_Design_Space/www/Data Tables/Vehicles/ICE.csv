@@ -1,2 +1,3 @@
-﻿Name,Fuel_Economy,Fuel_Economy_Units
-CA_Average,25.2,mpg
+﻿Name,Fuel_Economy,Fuel_Economy_Units,source
+CA_Average,25.2,mpg,https://transweb.sjsu.edu/research/household-income-and-vehicle-fuel-economy-california
+US_2017_Average,24.2,mpg,https://www.bts.gov/content/average-fuel-efficiency-us-light-duty-vehicles
