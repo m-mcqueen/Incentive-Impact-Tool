@@ -236,7 +236,7 @@ kable(trips, caption = "Trips",
 
 ```
 
-The trips table shows the average number of automobile trips per household per day and the average number of automobile trip length in the region. Typically these values are obtained using from household travel surveys.
+The trips table shows the weighted average of number of automobile trips per household vehicle per day and the weighted average automobile trip length. Typically these values are obtained using household travel surveys. The preset values provided are sourced from the [2017 NHTS](https://nhts.ornl.gov/), filtered for cars, SUVs, vans, and pickups. Next, the data are filtered for trips where the person was the driver and aggregated by state. The state weighted averages are calculated using the "WTTRDFIN" weight.
 
 ```{r electricity, echo = FALSE}
 #Pre allocate the table
