@@ -1,40 +1,40 @@
-﻿Make,Model,epa_elec_econ,epa_elec_econ_unit,range_elec,epa_ICE_econ,epa_ICE_econ_unit,range_ICE,range_unit,source
-Audi,A3 Sportback e-tron,41,kWh/100 mi,16,36,mpg,384,mi,https://www.fueleconomy.gov/
-Audi,Q5,52,kWh/100 mi,20,27,mpg,370,mi,https://www.fueleconomy.gov/
-BMW,3 Series,47,kWh/100 mi,14,31,mpg,336,mi,https://www.fueleconomy.gov/
-BMW,5 Series,47,kWh/100 mi,21,21,mpg,329,mi,https://www.fueleconomy.gov/
-BMW,7 Series,61,kWh/100 mi,16,22,mpg,274,mi,https://www.fueleconomy.gov/
-BMW,i8,43,kWh/100 mi,15,28,mpg,315,mi,https://www.fueleconomy.gov/
-BMW,X5,59,kWh/100 mi,14,24,mpg,526,mi,https://www.fueleconomy.gov/
-Cadillac,CT6 PLUG-IN Hybrid,54,kWh/100 mi,31,25,mpg,399,mi,https://www.fueleconomy.gov/
-Cadillac,ELR,39,kWh/100 mi,40,32,mpg,300,mi,https://www.fueleconomy.gov/
-Chevrolet,Volt,31,kWh/100 mi,53,42,mpg,367,mi,https://www.fueleconomy.gov/
-Chrysler,Pacifica Hybrid,41,kWh/100 mi,32,30,mpg,488,mi,https://www.fueleconomy.gov/
-Fisker,Karma,62,kWh/100 mi,33,20,mpg,207,mi,https://www.fueleconomy.gov/
-Ford,C-MAX Energi,35,kWh/100 mi,20,39,mpg,550,mi,https://www.fueleconomy.gov/
-Ford,Fusion Energi,35,kWh/100 mi,21,42,mpg,589,mi,https://www.fueleconomy.gov/
-Honda,Accord Plug-In,29,kWh/100 mi,13,46,mpg,557,mi,https://www.fueleconomy.gov/
-Honda,Clarity Plug-In Hybrid,31,kWh/100 mi,48,42,mpg,292,mi,https://www.fueleconomy.gov/
-Hyundai,Ioniq Plug-in Hybrid,28,kWh/100 mi,29,52,mpg,591,mi,https://www.fueleconomy.gov/
-Hyundai,Sonata Plug-in Hybrid,34,kWh/100 mi,28,39,mpg,572,mi,https://www.fueleconomy.gov/
-Karma,Revero,56,kWh/100 mi,37,20,mpg,203,mi,https://www.fueleconomy.gov/
-Kia,Niro Plug-In Hybrid,32,kWh/100 mi,26,46,mpg,534,mi,https://www.fueleconomy.gov/
-Kia,Optima Plug-In Hybrid,33,kWh/100 mi,28,41,mpg,602,mi,https://www.fueleconomy.gov/
-Land Rover,Range Rover Sport,80,kWh/100 mi,19,19,mpg,461,mi,https://www.fueleconomy.gov/
-McLaren,P1,25,kWh/100 mi,19,17,mpg,281,mi,https://www.fueleconomy.gov/
-Mercedes-Benz,C-Class,56,kWh/100 mi,9,30,mpg,401,mi,https://www.fueleconomy.gov/
-Mercedes-Benz,GLC,59,kWh/100 mi,10,25,mpg,340,mi,https://www.fueleconomy.gov/
-Mercedes-Benz,GLE,69,kWh/100 mi,10,21,mpg,450,mi,https://www.fueleconomy.gov/
-Mercedes-Benz,S-Class,53,kWh/100 mi,19,23,mpg,491,mi,https://www.fueleconomy.gov/
-MINI,Countryman Plug-in Hybrid,46,kWh/100 mi,18,29,mpg,282,mi,https://www.fueleconomy.gov/
-Mitsubishi,Outlander PHEV,45,kWh/100 mi,22,25,mpg,288,mi,https://www.fueleconomy.gov/
-Porsche,918 Spyder,50,kWh/100 mi,12,22,mpg,408,mi,https://www.fueleconomy.gov/
-Porsche,Cayenne,71,kWh/100 mi,14,21,mpg,406,mi,https://www.fueleconomy.gov/
-Porsche,Panamera,51,kWh/100 mi,16,25,mpg,544,mi,https://www.fueleconomy.gov/
-Subaru,Crosstrek,38,kWh/100 mi,17,35,mpg,463,mi,https://www.fueleconomy.gov/
-Toyota,Prius Plug-in Hybrid,29,kWh/100 mi,11,50,mpg,529,mi,https://www.fueleconomy.gov/
-Toyota,Prius Prime,25,kWh/100 mi,25,54,mpg,615,mi,https://www.fueleconomy.gov/
-Volvo,S60,47,kWh/100 mi,22,30,mpg,488,mi,https://www.fueleconomy.gov/
-Volvo,S90,50,kWh/100 mi,21,30,mpg,469,mi,https://www.fueleconomy.gov/
-Volvo,XC60,57,kWh/100 mi,19,27,mpg,501,mi,https://www.fueleconomy.gov/
-Volvo,XC90,58,kWh/100 mi,18,27,mpg,502,mi,https://www.fueleconomy.gov/
+﻿Make,Model,epa_elec_econ,epa_elec_econ_unit,range_elec,epa_ICE_econ,epa_ICE_econ_unit,range_ICE,range_unit
+Audi,A3 Sportback e-tron,41,kWh/100 mi,16,36,mpg,384,mi
+Audi,Q5,52,kWh/100 mi,20,27,mpg,370,mi
+BMW,3 Series,47,kWh/100 mi,14,31,mpg,336,mi
+BMW,5 Series,47,kWh/100 mi,21,21,mpg,329,mi
+BMW,7 Series,61,kWh/100 mi,16,22,mpg,274,mi
+BMW,i8,43,kWh/100 mi,15,28,mpg,315,mi
+BMW,X5,59,kWh/100 mi,14,24,mpg,526,mi
+Cadillac,CT6 PLUG-IN Hybrid,54,kWh/100 mi,31,25,mpg,399,mi
+Cadillac,ELR,39,kWh/100 mi,40,32,mpg,300,mi
+Chevrolet,Volt,31,kWh/100 mi,53,42,mpg,367,mi
+Chrysler,Pacifica Hybrid,41,kWh/100 mi,32,30,mpg,488,mi
+Fisker,Karma,62,kWh/100 mi,33,20,mpg,207,mi
+Ford,C-MAX Energi,35,kWh/100 mi,20,39,mpg,550,mi
+Ford,Fusion Energi,35,kWh/100 mi,21,42,mpg,589,mi
+Honda,Accord Plug-In,29,kWh/100 mi,13,46,mpg,557,mi
+Honda,Clarity Plug-In Hybrid,31,kWh/100 mi,48,42,mpg,292,mi
+Hyundai,Ioniq Plug-in Hybrid,28,kWh/100 mi,29,52,mpg,591,mi
+Hyundai,Sonata Plug-in Hybrid,34,kWh/100 mi,28,39,mpg,572,mi
+Karma,Revero,56,kWh/100 mi,37,20,mpg,203,mi
+Kia,Niro Plug-In Hybrid,32,kWh/100 mi,26,46,mpg,534,mi
+Kia,Optima Plug-In Hybrid,33,kWh/100 mi,28,41,mpg,602,mi
+Land Rover,Range Rover Sport,80,kWh/100 mi,19,19,mpg,461,mi
+McLaren,P1,25,kWh/100 mi,19,17,mpg,281,mi
+Mercedes-Benz,C-Class,56,kWh/100 mi,9,30,mpg,401,mi
+Mercedes-Benz,GLC,59,kWh/100 mi,10,25,mpg,340,mi
+Mercedes-Benz,GLE,69,kWh/100 mi,10,21,mpg,450,mi
+Mercedes-Benz,S-Class,53,kWh/100 mi,19,23,mpg,491,mi
+MINI,Countryman Plug-in Hybrid,46,kWh/100 mi,18,29,mpg,282,mi
+Mitsubishi,Outlander PHEV,45,kWh/100 mi,22,25,mpg,288,mi
+Porsche,918 Spyder,50,kWh/100 mi,12,22,mpg,408,mi
+Porsche,Cayenne,71,kWh/100 mi,14,21,mpg,406,mi
+Porsche,Panamera,51,kWh/100 mi,16,25,mpg,544,mi
+Subaru,Crosstrek,38,kWh/100 mi,17,35,mpg,463,mi
+Toyota,Prius Plug-in Hybrid,29,kWh/100 mi,11,50,mpg,529,mi
+Toyota,Prius Prime,25,kWh/100 mi,25,54,mpg,615,mi
+Volvo,S60,47,kWh/100 mi,22,30,mpg,488,mi
+Volvo,S90,50,kWh/100 mi,21,30,mpg,469,mi
+Volvo,XC60,57,kWh/100 mi,19,27,mpg,501,mi
+Volvo,XC90,58,kWh/100 mi,18,27,mpg,502,mi

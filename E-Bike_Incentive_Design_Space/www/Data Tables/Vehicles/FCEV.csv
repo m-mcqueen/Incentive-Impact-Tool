@@ -1,6 +1,6 @@
-﻿Make,Model,epa_h2_econ,epa_h2_econ_unit,source
-Honda,Clarity,66,mi/kg,https://www.fueleconomy.gov/
-Hyundai,Nexo,56,mi/kg,https://www.fueleconomy.gov/
-Hyundai,Nexo Blue,60,mi/kg,https://www.fueleconomy.gov/
-Toyota,Mirai,66,mi/kg,https://www.fueleconomy.gov/
-Mercedes-Benz,B-Class FC,64,mi/kg,https://www.fueleconomy.gov/
+﻿Make,Model,epa_h2_econ,epa_h2_econ_unit
+Honda,Clarity,66,mi/kg
+Hyundai,Nexo,56,mi/kg
+Hyundai,Nexo Blue,60,mi/kg
+Toyota,Mirai,66,mi/kg
+Mercedes-Benz,B-Class FC,64,mi/kg

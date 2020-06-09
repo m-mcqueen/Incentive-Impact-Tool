@@ -1,32 +1,32 @@
-﻿Make,Model,epa_econ,epa_econ_unit,source
-Audi,e-tron,46,kWh/100 mi,https://www.fueleconomy.gov/
-BMW,i3,30,kWh/100 mi,https://www.fueleconomy.gov/
-Chevrolet,Bolt EV,29,kWh/100 mi,https://www.fueleconomy.gov/
-Chevrolet,Spark EV,28,kWh/100 mi,https://www.fueleconomy.gov/
-FIAT,500e,30,kWh/100 mi,https://www.fueleconomy.gov/
-Ford,Focus,31,kWh/100 mi,https://www.fueleconomy.gov/
-Ford,Ranger,50,kWh/100 mi,https://www.fueleconomy.gov/
-Ford,TH!NK,52,kWh/100 mi,https://www.fueleconomy.gov/
-Ford,Transit Connect Electric,54,kWh/100 mi,https://www.fueleconomy.gov/
-Honda,Clarity Electric,30,kWh/100 mi,https://www.fueleconomy.gov/
-Honda,Fit EV,29,kWh/100 mi,https://www.fueleconomy.gov/
-Hyundai,Ioniq Electric,25,kWh/100 mi,https://www.fueleconomy.gov/
-Hyundai,Kona EV,27,kWh/100 mi,https://www.fueleconomy.gov/
-Jaguar,I-PACE,44,kWh/100 mi,https://www.fueleconomy.gov/
-Kia,Niro EV,30,kWh/100 mi,https://www.fueleconomy.gov/
-Kia,Soul EV,30,kWh/100 mi,https://www.fueleconomy.gov/
-Mercedes-Benz,B-Class,40,kWh/100 mi,https://www.fueleconomy.gov/
-Mitsubishi,i-MiEV,30,kWh/100 mi,https://www.fueleconomy.gov/
-Nissan,LEAF,30,kWh/100 mi,https://www.fueleconomy.gov/
-Porsche,Taycan,49,kWh/100 mi,https://www.fueleconomy.gov/
-Smart,EQ fortwo,31,kWh/100 mi,https://www.fueleconomy.gov/
-Smart,fortwo electric drive,33,kWh/100 mi,https://www.fueleconomy.gov/
-Tesla,Model 3,26,kWh/100 mi,https://www.fueleconomy.gov/
-Tesla,Model S,38,kWh/100 mi,https://www.fueleconomy.gov/
-Tesla,Model X,40,kWh/100 mi,https://www.fueleconomy.gov/
-Tesla,Roadster,32,kWh/100 mi,https://www.fueleconomy.gov/
-Toyota,RAV4 EV,44,kWh/100 mi,https://www.fueleconomy.gov/
-Volkswagen,e-Golf,30,kWh/100 mi,https://www.fueleconomy.gov/
-Bollore,Bluecar,44,kWh/100 mi,https://www.fueleconomy.gov/
-CODA,CODA,46,kWh/100 mi,https://www.fueleconomy.gov/
-Wheego,Whip,30,kWh/100 mi,https://www.fueleconomy.gov/
+﻿Make,Model,epa_econ,epa_econ_unit
+Audi,e-tron,46,kWh/100 mi
+BMW,i3,30,kWh/100 mi
+Chevrolet,Bolt EV,29,kWh/100 mi
+Chevrolet,Spark EV,28,kWh/100 mi
+FIAT,500e,30,kWh/100 mi
+Ford,Focus,31,kWh/100 mi
+Ford,Ranger,50,kWh/100 mi
+Ford,TH!NK,52,kWh/100 mi
+Ford,Transit Connect Electric,54,kWh/100 mi
+Honda,Clarity Electric,30,kWh/100 mi
+Honda,Fit EV,29,kWh/100 mi
+Hyundai,Ioniq Electric,25,kWh/100 mi
+Hyundai,Kona EV,27,kWh/100 mi
+Jaguar,I-PACE,44,kWh/100 mi
+Kia,Niro EV,30,kWh/100 mi
+Kia,Soul EV,30,kWh/100 mi
+Mercedes-Benz,B-Class,40,kWh/100 mi
+Mitsubishi,i-MiEV,30,kWh/100 mi
+Nissan,LEAF,30,kWh/100 mi
+Porsche,Taycan,49,kWh/100 mi
+Smart,EQ fortwo,31,kWh/100 mi
+Smart,fortwo electric drive,33,kWh/100 mi
+Tesla,Model 3,26,kWh/100 mi
+Tesla,Model S,38,kWh/100 mi
+Tesla,Model X,40,kWh/100 mi
+Tesla,Roadster,32,kWh/100 mi
+Toyota,RAV4 EV,44,kWh/100 mi
+Volkswagen,e-Golf,30,kWh/100 mi
+Bollore,Bluecar,44,kWh/100 mi
+CODA,CODA,46,kWh/100 mi
+Wheego,Whip,30,kWh/100 mi

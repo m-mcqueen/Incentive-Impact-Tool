@@ -1,3 +1,3 @@
-﻿Name,Fuel_Economy,Fuel_Economy_Units,source
-CA_Average,25.2,mpg,https://transweb.sjsu.edu/research/household-income-and-vehicle-fuel-economy-california
-US_2017_Average,24.2,mpg,https://www.bts.gov/content/average-fuel-efficiency-us-light-duty-vehicles
+﻿Name,Fuel_Economy,Fuel_Economy_Units,source,descr
+CA_Average,25.2,mpg,https://transweb.sjsu.edu/research/household-income-and-vehicle-fuel-economy-california,"The average fuel economy for the state of CA as of 2015, reported by the Mineta Transportation Institute"
+US_2017_Average,24.2,mpg,https://www.bts.gov/content/average-fuel-efficiency-us-light-duty-vehicles,"The average fuel economy in the US for light-duty vehicles as of 2017, reported by the US BTS"
