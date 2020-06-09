@@ -1,0 +1,8 @@
+﻿mix_name,mix_type,mix_source,data_source,descr
+OR_Feb_20,BEV,https://www.oregon.gov/ODOT/Pages/index.aspx,https://www.fueleconomy.gov/,A weighted average of the attributes of the BEVs incentivized in OR as of Feb 2020. Fuel economy information from the US EPA.
+OR_Feb_20,PHEV,https://www.oregon.gov/ODOT/Pages/index.aspx,https://www.fueleconomy.gov/,A weighted average of the attributes of the PHEVs incentivized in OR as of Feb 2020. Fuel economy information from the US EPA.
+FCEV_Equal_4,FCEV,https://trec.pdx.edu/,https://www.fueleconomy.gov/,An equally weighted average of the four main FCEV models available to consumers. Fuel economy information from the US EPA.
+CA_Feb_20,BEV,https://cleanvehiclerebate.org/eng/rebate-statistics,https://www.fueleconomy.gov/,A weighted average of the attributes of the BEVs incentivized in CA as of Feb 2020. Fuel economy information from the US EPA.
+CA_Feb_20,FCEV,https://cleanvehiclerebate.org/eng/rebate-statistics,https://www.fueleconomy.gov/,A weighted average of the attributes of the FCEVs incentivized in CA as of Feb 2020. Fuel economy information from the US EPA.
+CA_Feb_20,PHEV,https://cleanvehiclerebate.org/eng/rebate-statistics,https://www.fueleconomy.gov/,A weighted average of the attributes of the PHEVs incentivized in CA as of Feb 2020. Fuel economy information from the US EPA.
+VT_mix,EBike,https://www.efficiencyvermont.com/Media/Default/docs/white-papers/efficiency-vermont-electric-bike-white-paper.pdf,https://www.efficiencyvermont.com/Media/Default/docs/white-papers/efficiency-vermont-electric-bike-white-paper.pdf,An equally weighted average of the e-bikes studied in the Efficiency Vermont report. Fuel economy information from the Efficiency Vermont report.
