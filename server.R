@@ -365,7 +365,7 @@ server <-  function(input, output, session) {
   ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
   
   #================================#
-  #Update the info text underneath preset selection box####
+  #Update the selection box toolTip####
   #================================#
 
   #Trips Preset
