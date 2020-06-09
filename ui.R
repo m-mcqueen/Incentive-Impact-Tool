@@ -16,8 +16,10 @@ library(shinyjs)
 
 # Define UI for application
 ui <- dashboardPage(skin = "green",
-                    
-  # Application header
+  
+  #================================#
+  #Header####
+  #================================#                  
   dashboardHeader(title = "Electric Vehicle Incentive Cost and Impact",
                   titleWidth = 450,
                   #some magic I found on the internet to add the logo to the upper right hand corner
