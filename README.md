@@ -5,9 +5,38 @@ This is a tool that allows users to visualize the impacts of electric vehicle in
 
 ### ui.R
 This file contains the front-end ui code. It makes use of shinydashboard, shinyBS, and shinyjs.
+* Header: contains the Trec logo which links to Trec
+* Sidebar: contains an assortment of menuItems and input fields for feeding information to the app
+* Body: contains the output plots and sliders for adjusting the plot axes
 
 ## server.R
 This file performs the reactive calculations to supply outputs for the ui.
+* Intro Modal
+  - Creates a pop up as soon as the app starts to introduce the app to the user. Click the button to close.
+* Plot Dimensions
+  - These store input parameters in reactive vars for use in defining the plot axes limits.
+* Plot Colors
+  - Defines the color palette to be used for plots. Uses a viridis colorblind accessible palette.
+* Text input preset value updaters
+  - Observes that a preset "apply" button was pressed and retrieves the corresponding values to the preset that was selected
+  - Saves the "state" of the input fields once the values have been updated.
+* Flags to know if a preset was applied
+  - These flags indicate whether or not a preset is actually being used.
+  - The flag is initialized as T as the default values belong to a preset
+  - The flag becomes false if any of the input fields are changed by the user
+  - The flag become true once a preset is applied again
+  - This information is passed to the Report.Rmd in order for it to know whether or not to display information about the preset that was selected
+* Update the selection box toolTip
+  - These event observers update the toolTips for each preset box to contain the preset description provided in the databases
+  - They make use of shinyjs::delay in order to remove the existing toolTip and add a new toolTip sequentially
+* Limit the budget inputs to sum to 100 using observers
+  - These event observers ensure that the user can never allot more than 100% of the total budget to all modes
+* Calcs
+  - In this section, helper functions from util.R are called in order to calculate the min/max values of all of the lines that will be plotted. Only two points are calculated for each ggplot feature, since everything is a line. The min/max of each axis are used to determine which points should be calculated.
+* Plots
+  - Calls the ggplot helper functions in util.R to generate plot outputs for the ui
+* Report
+  - Passes several parameters of the current state of the app to the report.Rmd so that a report can be generated and saved
 
 ## util.R
 This file contains helper functions for calculations and plots referenced by server.R and report.Rmd.
