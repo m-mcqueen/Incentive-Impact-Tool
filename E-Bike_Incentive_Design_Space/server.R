@@ -21,6 +21,26 @@ library(viridis)
 server <-  function(input, output, session) {
   
   #================================#
+  #Intro Modal####
+  #================================#
+  
+  #show intro modal
+  observeEvent("", {
+    showModal(modalDialog(
+      includeHTML("intro_text.html"),
+      easyClose = TRUE,
+      footer = tagList(
+        actionButton(inputId = "intro", label = "Let's go!", icon = icon("check"))
+      )
+    ))
+  })
+  
+  #Closes the modal once the Got it! button is pressed
+  observeEvent(input$intro,{
+    removeModal()
+  })
+  
+  #================================#
   #Plot Dimensions####
   #================================#
   #cost per kg CO2 saved
