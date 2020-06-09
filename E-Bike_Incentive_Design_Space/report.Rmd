@@ -218,141 +218,227 @@ In this section, the inputs that were provided to the tool are displayed.
 ```{r trips, echo = FALSE}
 #Pre allocate the table
 N = 2
-trips <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), stringsAsFactors = F)
+trips <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N),
+                    Description = rep("", N), stringsAsFactors = F)
+trips_preset = "" #initialize the preset for if no preset was used
+link <- "" #Initialize the link for if no preset was used
+preset_description <- "User Defined" #Initialize the preset description for if no preset was used
 
 #Learn if a preset was used or not
 if (params$flag_preset_Car_Trips_Daily_Avg) {
-  trips_preset = params$in_preset_Car_Trips_Daily_Avg
-} else {trips_preset = "User Defined"}
+  trips_preset <-  params$in_preset_Car_Trips_Daily_Avg
+  preset_description <-  Trips %>% filter(State == trips_preset) %>% pull(descr)
+  link <- Trips %>% filter(State == trips_preset) %>% pull(source)
+}
 
 #Build the table
-trips[1,] <- list("Average Trips per Day", params$Car_Trips_Daily_Avg, "Trips", trips_preset)
-trips[2,] <- list("Average Auto Trip Length", params$Car_Trip_Avg_Length, "mi", trips_preset)
+trips[1,] <- list("Average Trips per Day", params$Car_Trips_Daily_Avg, "Trips", trips_preset, preset_description)
+trips[2,] <- list("Average Auto Trip Length", params$Car_Trip_Avg_Length, "mi", trips_preset, preset_description)
+
+#Give the table hyperlinks in the right place if a preset was used
+if (params$flag_preset_Car_Trips_Daily_Avg) {
+  trips <- trips %>% 
+    mutate(Description = cell_spec(Description, link = link))
+}
 
 #Display the table
 kable(trips, caption = "Trips",
+      escape = F,
       align = rep('l', ncol(trips))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 ```
 
-The trips table shows the weighted average of number of automobile trips per household vehicle per day and the weighted average automobile trip length. Typically these values are obtained using household travel surveys. The preset values provided are sourced from the [2017 NHTS](https://nhts.ornl.gov/), filtered for cars, SUVs, vans, and pickups. Next, the data are filtered for trips where the person was the driver and aggregated by state. The state weighted averages are calculated using the "WTTRDFIN" weight.
+The trips table shows the weighted average of number of automobile trips per household vehicle per day and the weighted average automobile trip length. Typically these values are obtained using household travel surveys. Data sourced from the [2017 NHTS](https://nhts.ornl.gov/), was filtered for cars, SUVs, vans, and pickups. Next, the data are filtered for trips where the person was the driver and aggregated by state. The state weighted averages are calculated using the "WTTRDFIN" weight.
 
 ```{r electricity, echo = FALSE}
 #Pre allocate the table
 N = 1
-elec <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), stringsAsFactors = F)
+elec <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N),
+                   Description = rep("", N), stringsAsFactors = F)
+elec_preset = "" #initialize the preset for if no preset was used
+link <- "" #Initialize the link for if no preset was used
+preset_description <- "User Defined" #Initialize the preset description for if no preset was used
 
 #Learn if a preset was used or not
 if (params$flag_preset_elec_gen_emissions) {
-  elec_preset = params$in_preset_elec_gen_emissions
-} else {elec_preset = "User Defined"}
+  elec_preset <-  params$in_preset_elec_gen_emissions
+  preset_description <-  Electricity %>% filter(State == elec_preset) %>% pull(descr)
+  link <- Electricity %>% filter(State == elec_preset) %>% pull(source)
+}
 
 #Build the table
-elec[1,] <- list("Electricity Carbon Emissions", params$elec_gen_emissions, "lb CO2 / MWh", elec_preset)
+elec[1,] <- list("Electricity Carbon Emissions", params$elec_gen_emissions, "lb CO2 / MWh", elec_preset, preset_description)
+
+#Give the table hyperlinks in the right place if a preset was used
+if (params$flag_preset_elec_gen_emissions) {
+  elec <- elec %>% 
+    mutate(Description = cell_spec(Description, link = link))
+}
 
 #Display the table
 kable(elec, caption = "Electricity",
+      escape = F,
       align = rep('l', ncol(elec))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
-The electricity table shows the average carbon intensity of electricity generation in the given region. This information can be obtained from the [US EPA's eGRID](https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid).
+The electricity table shows the average carbon intensity of electricity generation in the given region.
 
 ```{r ICE, echo = FALSE}
 #Pre allocate the table
 N = 2
-ICE <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), stringsAsFactors = F)
+ICE_out <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N),
+                  Description = rep("", N), stringsAsFactors = F)
+ICE_preset = "" #initialize the preset for if no preset was used
+link <- "" #Initialize the link for if no preset was used
+preset_description <- "User Defined" #Initialize the preset description for if no preset was used
 
 #Learn if a preset was used or not
 if (params$flag_in_preset_ICE_Fuel_Economy) {
-  ICE_preset = params$in_preset_ICE_Fuel_Economy
-} else {ICE_preset = "User Defined"}
+  ICE_preset <-  params$in_preset_ICE_Fuel_Economy
+  preset_description <-  ICE %>% filter(Name == ICE_preset) %>% pull(descr)
+  link <- ICE %>% filter(Name == ICE_preset) %>% pull(source)
+}
 
 #Build the table
-ICE[1,] <- list("Average Fuel Economy", params$ICE_Fuel_Economy, "mpg", ICE_preset)
-ICE[2,] <- list("Carbon Emissions from Gasoline", drop_units(set_units(set_units(1, "gal"), CO2_g)), "g CO2/gal", "(Constant)")
+ICE_out[1,] <- list("Average Fuel Economy", params$ICE_Fuel_Economy, "mpg", ICE_preset, preset_description)
+ICE_out[2,] <- list("Carbon Emissions from Gasoline", drop_units(set_units(set_units(1, "gal"), CO2_g)), "g CO2/gal", "", text_spec("(Constant)", link = "https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references"))
+
+#Give the table hyperlinks in the right place if a preset was used
+if (params$flag_in_preset_ICE_Fuel_Economy) {
+  ICE_out <- ICE_out %>% 
+    mutate(Description = case_when(Preset == ICE_preset ~ text_spec(Description, link = link),
+                                   TRUE ~ Description))
+}
 
 #Display the table
-kable(ICE, caption = "ICE",
+kable(ICE_out, caption = "ICE",
+      escape = F,
       align = rep('l', ncol(ICE))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
 ```
 
-The ICE (internal combustion engine) table shows the average fuel economy of an automobile. The carbon emissions from gasoline was obtained from the [US EPA](https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references).
+The ICE (internal combustion engine) table shows the average fuel economy of an automobile.
 
 ```{r EBike, echo = FALSE}
 if (params$EBike_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
   N = 2
-  EBike <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), stringsAsFactors = F)
+  EBike_out <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N),
+                  Description = rep("", N), DataSource = rep("", N), stringsAsFactors = F)
+  EBike_preset = "" #initialize the preset for if no preset was used
+  mix_link <- "" #Initialize the link for if no preset was used
+  data_link <- "" #Initialize the link for if no preset was used
+  EBike_preset_combined <- "" #Initialize the preset for if no preset was used
+  preset_description <- "User Defined" #Initialize the preset description for if no preset was used
   
   #Learn if a preset was used or not
   if (params$flag_in_preset_EBike) {
-    EBike_preset = params$in_preset_EBike
-    EBike_preset_2 = paste(params$in_preset_EBike_2, "Efficiency")
-  } else {
-    EBike_preset = "User Defined"
-    EBike_preset_2 = NULL
+    EBike_preset <-  params$in_preset_EBike
+    EBike_preset_2 <-  paste(params$in_preset_EBike_2, "Efficiency")
+    EBike_preset_combined <-  paste(EBike_preset, EBike_preset_2)
+    preset_description <-  mix_info %>% filter(mix_name== EBike_preset, mix_type == "EBike") %>% pull(descr)
+    mix_link <- mix_info %>% filter(mix_name == EBike_preset, mix_type == "EBike") %>% pull(mix_source)
+    data_link <- mix_info %>% filter(mix_name == EBike_preset, mix_type == "EBike") %>% pull(data_source)
   }
   
   #Build the table
-  EBike[1,] <- list("Average Economy", params$EBike_econ, "kWh/100 mi", paste(EBike_preset, EBike_preset_2))
-  EBike[2,] <- list("Ratio, portion of car miles replaced by e-bike (maximum 1)", params$EBike_VMT_r, "", "User Defined")
+  EBike_out[1,] <- list("Average Economy", params$EBike_econ, "kWh/100 mi", EBike_preset_combined, preset_description, "")
+  EBike_out[2,] <- list("Ratio, portion of car miles replaced by e-bike (maximum 1)", params$EBike_VMT_r, "", "", "User Defined", "")
+  
+  #Give the table hyperlinks in the right place if a preset was used
+if (params$flag_in_preset_EBike) {
+  EBike_out <- EBike_out %>% 
+    mutate(Description = case_when(Preset == EBike_preset_combined ~ text_spec(Description, link = mix_link), TRUE ~ Description)) %>% 
+    mutate(DataSource = case_when(Preset == EBike_preset_combined ~ text_spec("Source", link = data_link), TRUE ~ ""))
+}
   
   #Display the table
-  kable(EBike, caption = "E-Bike",
+  kable(EBike_out %>% rename("Data Source" = DataSource), caption = "E-Bike",
+        escape = F,
       align = rep('l', ncol(EBike))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 }
 
 ```
 
-`r if (params$EBike_include) {"The E-Bike table shows the average fuel economy of e-bikes eligible for an e-bike incentive.This value can be obtained from e-bike manufacturers. Data used for presets was obtained from a report published by [Efficiency Vermont](https://www.efficiencyvermont.com/Media/Default/docs/white-papers/efficiency-vermont-electric-bike-white-paper.pdf). Additionally, the ratio of automobile miles that are replaced by e-bike miles is specified by the user. This value can be obtained from local e-bike use studies."}`
+`r if (params$EBike_include) {"The E-Bike table shows the average fuel economy of e-bikes eligible for an e-bike incentive.This value can be obtained from e-bike manufacturers. The ratio of automobile miles that are replaced by e-bike miles is specified by the user. This value can be obtained from local e-bike use studies."}`
 
 ``` {r BEV, echo = FALSE}
 if (params$BEV_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
   N = 1
-  BEV <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), stringsAsFactors = F)
+  BEV_out <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N),
+                        Description = rep("", N), DataSource = rep("", N), stringsAsFactors = F)
+  BEV_preset = "" #initialize the preset for if no preset was used
+  mix_link <- "" #Initialize the link for if no preset was used
+  data_link <- "" #Initialize the link for if no preset was used
+  preset_description <- "User Defined" #Initialize the preset description for if no preset was used
   
   #Learn if a preset was used or not
   if (params$flag_in_preset_BEV) {
-    BEV_preset = params$in_preset_BEV
-  } else {BEV_preset = "User Defined"}
+    BEV_preset <-  params$in_preset_BEV
+    preset_description <-  mix_info %>% filter(mix_name== BEV_preset, mix_type == "BEV") %>% pull(descr)
+    mix_link <- mix_info %>% filter(mix_name == BEV_preset, mix_type == "BEV") %>% pull(mix_source)
+    data_link <- mix_info %>% filter(mix_name == BEV_preset, mix_type == "BEV") %>% pull(data_source)
+  }
   
   #Build the table
-  BEV[1,] <- list("Average Fuel Economy", params$BEV_econ, "kWh / 100 mi", BEV_preset)
+  BEV_out[1,] <- list("Average Fuel Economy", params$BEV_econ, "kWh / 100 mi", BEV_preset, preset_description, "")
+  
+   #Give the table hyperlinks in the right place if a preset was used
+if (params$flag_in_preset_BEV) {
+  BEV_out <- BEV_out %>% 
+    mutate(Description = case_when(Preset == BEV_preset ~ text_spec(Description, link = mix_link), TRUE ~ Description)) %>% 
+    mutate(DataSource = case_when(Preset == BEV_preset ~ text_spec("Source", link = data_link), TRUE ~ ""))
+}
   
   #Display the table
-  kable(BEV, caption = "BEV",
+  kable(BEV_out %>% rename("Data Source" = DataSource), caption = "BEV",
+        escape = F,
       align = rep('l', ncol(BEV))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 }
 
 ```
 
-`r if (params$BEV_include) {"The BEV (Battery Electric Vehicle) table shows the average fuel economy of BEVs eligible for an incentive. This value can be obtained from the fuel economy information provided by the [US EPA](https://www.fueleconomy.gov/)."}`
+`r if (params$BEV_include) {"The BEV (Battery Electric Vehicle) table shows the average fuel economy of BEVs eligible for an incentive."}`
 
 ``` {r PHEV, echo = FALSE}
 if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
   N = 3
-  PHEV <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), stringsAsFactors = F)
+  PHEV_out <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), Description = rep("", N), DataSource = rep("", N), stringsAsFactors = F)
+  PHEV_preset = "" #initialize the preset for if no preset was used
+  mix_link <- "" #Initialize the link for if no preset was used
+  data_link <- "" #Initialize the link for if no preset was used
+  preset_description <- "User Defined" #Initialize the preset description for if no preset was used
   
   #Learn if a preset was used or not
   if (params$flag_in_preset_PHEV) {
     PHEV_preset = params$in_preset_PHEV
-  } else {PHEV_preset = "User Defined"}
+    preset_description <-  mix_info %>% filter(mix_name== PHEV_preset, mix_type == "PHEV") %>% pull(descr)
+    mix_link <- mix_info %>% filter(mix_name == PHEV_preset, mix_type == "PHEV") %>% pull(mix_source)
+    data_link <- mix_info %>% filter(mix_name == PHEV_preset, mix_type == "PHEV") %>% pull(data_source)
+  }
   
   #Build the table
-  PHEV[1,] <- list("Average E-Mode Fuel Economy", params$PHEV_elec_econ, "kWh / 100 mi", PHEV_preset)
-  PHEV[2,] <- list("Average E-Mode Range", params$PHEV_range_elec, "mi", PHEV_preset)
-  PHEV[3,] <- list("Average ICE Mode Fuel Economy", params$PHEV_ICE_econ, "mpg", PHEV_preset)
+  PHEV_out[1,] <- list("Average E-Mode Fuel Economy", params$PHEV_elec_econ, "kWh / 100 mi", PHEV_preset, preset_description, "")
+  PHEV_out[2,] <- list("Average E-Mode Range", params$PHEV_range_elec, "mi", PHEV_preset, preset_description, "")
+  PHEV_out[3,] <- list("Average ICE Mode Fuel Economy", params$PHEV_ICE_econ, "mpg", PHEV_preset, preset_description, "")
+  
+     #Give the table hyperlinks in the right place if a preset was used
+  if (params$flag_in_preset_PHEV) {
+    PHEV_out <- PHEV_out %>% 
+      mutate(Description = case_when(Preset == PHEV_preset ~ text_spec(Description, link = mix_link), TRUE ~ Description)) %>% 
+      mutate(DataSource = case_when(Preset == PHEV_preset ~ text_spec("Source", link = data_link), TRUE ~ ""))
+  }
   
   #Display the table
-  kable(PHEV, caption = "PHEV",
+  kable(PHEV_out %>% rename("Data Source" = DataSource), caption = "PHEV",
+        escape = F,
       align = rep('l', ncol(PHEV))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 }
@@ -365,26 +451,41 @@ if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
 if (params$FCEV_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
   N = 3
-  FCEV <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), stringsAsFactors = F)
+  FCEV_out <- data.frame(Name = rep("", N), Value = rep(NA, N), Unit = rep("", N), Preset = rep("", N), Description = rep("", N), DataSource = rep("", N), stringsAsFactors = F)
+  FCEV_preset = "" #initialize the preset for if no preset was used
+  mix_link <- "" #Initialize the link for if no preset was used
+  data_link <- "" #Initialize the link for if no preset was used
+  preset_description <- "User Defined" #Initialize the preset description for if no preset was used
   
   #Learn if a preset was used or not
   if (params$flag_in_preset_FCEV) {
-    FCEV_preset = params$in_preset_FCEV
-  } else {FCEV_preset = "User Defined"}
+    FCEV_preset <-  params$in_preset_FCEV
+    preset_description <-  mix_info %>% filter(mix_name== FCEV_preset, mix_type == "FCEV") %>% pull(descr)
+    mix_link <- mix_info %>% filter(mix_name == FCEV_preset, mix_type == "FCEV") %>% pull(mix_source)
+    data_link <- mix_info %>% filter(mix_name == FCEV_preset, mix_type == "FCEV") %>% pull(data_source)
+  }
   
   #Build the table
-  FCEV[1,] <- list("Average Fuel Economy", params$FCEV_econ, "mi / kg H2", FCEV_preset)
-  FCEV[2,] <- list("Ratio, Amount of electricity for electrolysis produced by 100% renewable sources (maximum 1)", params$renew_energy_ratio, "", "User Defined")
-  FCEV[3,] <- list("Electricity required to electrolyze 1 kg H2", drop_units(set_units(set_units(1, "H2_kg"), kiloWatthour)), "kWh", "(Constant)")
+  FCEV_out[1,] <- list("Average Fuel Economy", params$FCEV_econ, "mi / kg H2", FCEV_preset, preset_description, "")
+  FCEV_out[2,] <- list("Ratio, Amount of electricity for electrolysis produced by 100% renewable sources (maximum 1)", params$renew_energy_ratio, "", "", "User Defined", "")
+  FCEV_out[3,] <- list("Electricity required to electrolyze 1 kg H2", drop_units(set_units(set_units(1, "H2_kg"), kiloWatthour)), "kWh", "", text_spec("(Constant)", link = "https://www.energy.gov/eere/fuelcells/doe-technical-targets-hydrogen-production-electrolysis"), "")
+  
+       #Give the table hyperlinks in the right place if a preset was used
+  if (params$flag_in_preset_FCEV) {
+    FCEV_out <- FCEV_out %>% 
+      mutate(Description = case_when(Preset == FCEV_preset ~ text_spec(Description, link = mix_link), TRUE ~ Description)) %>% 
+      mutate(DataSource = case_when(Preset == FCEV_preset ~ text_spec("Source", link = data_link), TRUE ~ ""))
+  }
   
   #Display the table
-  kable(FCEV, caption = "FCEV",
+  kable(FCEV_out %>% rename("Data Source" = DataSource), caption = "FCEV",
+        escape = F,
       align = rep('l', ncol(FCEV))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 }
 ```
 
-`r if (params$FCEV_include) {"The FCEV (Fuel Cell Electric Vehicle) table shows the average fuel economy of FCEVs eligible for an incentive. Additionally, it shows the ratio of electricity used for electrolysis that is provided by 100% renewable sources. Lastly, it specifies the electricity required to electrolyze H2, provided by [energy.gov](https://www.energy.gov/eere/fuelcells/doe-technical-targets-hydrogen-production-electrolysis)."}`
+`r if (params$FCEV_include) {"The FCEV (Fuel Cell Electric Vehicle) table shows the average fuel economy of FCEVs eligible for an incentive. Additionally, it shows the ratio of electricity used for electrolysis that is provided by 100% renewable sources. Lastly, it displays the electricity required to electrolyze H2."}`
 
 ```{r Incentives, echo = FALSE}
 #Pre allocate the table
