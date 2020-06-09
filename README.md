@@ -61,6 +61,9 @@ This file is used to generate an html page containing all of the outputs from th
 * Inputs
   - Only the modes that were "included" using the button in the app are reported
   - If presets were used, they are reported, along with their descriptions and links to the sources for the data.
+  
+## intro_text.html
+This file is called by the ui on startup to display as a popup welcome message to the user.
 
 ## Incentive Impact Tool.Rproj
 The R project file, useful to open when editing any R file.
