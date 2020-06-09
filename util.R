@@ -1,10 +1,8 @@
 #This file contains helper functions
 
 #================================#
-####Define Helper Functions####
+#General Helper Functions####
 #================================#
-
-#~General Helper Functions####
 #Exclude Items that are not selected
 exclude_items <- function(data, EBike, PHEV, BEV, FCEV) {
   if(!EBike) {
@@ -119,8 +117,9 @@ calc_EBike_CO2_saved <- function(mileage_day, VMT_r, ICE_Fuel_Economy, ICE_emiss
   return(EBike_CO2_saved)
 }
 
-#~Plotting helper functions####
-
+#================================#
+#Plotting helper functions####
+#================================#
 #~~g1: Cost per kg CO2 saved by mode####
 g1plot <- function(costperkg, test_points, costperkg_x, costperkg_y, mode_scale_colors) {
   xlab <- seq(costperkg_x[1], costperkg_x[2], 1000) #Set axis breaks manually
