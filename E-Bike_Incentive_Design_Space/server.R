@@ -14,6 +14,7 @@ library(units)
 library(measurements)
 library(stringr)
 library(viridis)
+library(shinyjs)
 
 
 
@@ -362,6 +363,95 @@ server <-  function(input, output, session) {
     }
   },
   ignoreInit = T) #So that the preset is shown if nothing is changed, since the default values are from a preset
+  
+  #================================#
+  #Update the info text underneath preset selection box####
+  #================================#
+
+  #Trips Preset
+  observeEvent({
+    input$in_preset_Car_Trips_Daily_Avg
+    }, {
+      removeTooltip(session,
+                    "in_preset_Car_Trips_Daily_Avg")
+      delay(200, addTooltip(session,
+                 "in_preset_Car_Trips_Daily_Avg",
+                 title = Trips %>% filter(State == input$in_preset_Car_Trips_Daily_Avg) %>% pull(descr),
+                 "right",
+                 options = list(container = "body")))
+      })
+  #Electricity Preset
+  observeEvent({
+    input$in_preset_elec_gen_emissions
+  }, {
+    removeTooltip(session,
+                  "in_preset_elec_gen_emissions")
+    delay(200, addTooltip(session,
+                          "in_preset_elec_gen_emissions",
+                          title = Electricity %>% filter(State == input$in_preset_elec_gen_emissions) %>% pull(descr),
+                          "right",
+                          options = list(container = "body")))
+  })
+  #ICE Preset
+  observeEvent({
+    input$in_preset_ICE_Fuel_Economy
+  }, {
+    removeTooltip(session,
+                  "in_preset_ICE_Fuel_Economy")
+    delay(200, addTooltip(session,
+                          "in_preset_ICE_Fuel_Economy",
+                          title = ICE %>% filter(Name == input$in_preset_ICE_Fuel_Economy) %>% pull(descr),
+                          "right",
+                          options = list(container = "body")))
+  })
+  #E-Bike Preset
+  observeEvent({
+    input$in_preset_EBike
+  }, {
+    removeTooltip(session,
+                  "in_preset_EBike")
+    delay(200, addTooltip(session,
+                          "in_preset_EBike",
+                          title = mix_info %>% filter(mix_name == input$in_preset_EBike, mix_type == "EBike") %>% pull(descr),
+                          "right",
+                          options = list(container = "body")))
+  })
+  #BEV Preset
+  observeEvent({
+    input$in_preset_BEV
+  }, {
+    removeTooltip(session,
+                  "in_preset_BEV")
+    delay(200, addTooltip(session,
+                          "in_preset_BEV",
+                          title = mix_info %>% filter(mix_name == input$in_preset_BEV, mix_type == "BEV") %>% pull(descr),
+                          "right",
+                          options = list(container = "body")))
+  })
+  #PHEV Preset
+  observeEvent({
+    input$in_preset_PHEV
+  }, {
+    removeTooltip(session,
+                  "in_preset_PHEV")
+    delay(200, addTooltip(session,
+                          "in_preset_PHEV",
+                          title = mix_info %>% filter(mix_name == input$in_preset_PHEV, mix_type == "PHEV") %>% pull(descr),
+                          "right",
+                          options = list(container = "body")))
+  })
+  #FCEV Preset
+  observeEvent({
+    input$in_preset_FCEV
+  }, {
+    removeTooltip(session,
+                  "in_preset_FCEV")
+    delay(200, addTooltip(session,
+                          "in_preset_FCEV",
+                          title = mix_info %>% filter(mix_name == input$in_preset_FCEV, mix_type == "FCEV") %>% pull(descr),
+                          "right",
+                          options = list(container = "body")))
+  })
   
   #================================#
   #Limit the budget inputs to sum to 100 using observers####
