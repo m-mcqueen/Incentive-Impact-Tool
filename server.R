@@ -36,7 +36,7 @@ server <-  function(input, output, session) {
     ))
   })
   
-  #Closes the modal once the Got it! button is pressed
+  #Closes the modal once the button is pressed
   observeEvent(input$intro,{
     removeModal()
   })
