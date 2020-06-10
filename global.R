@@ -14,7 +14,7 @@ library(stringr)
 #================================#
 #Load data tables####
 #================================#
-load("www/Data Tables/data.Rdata")
+load("www/Data Tables/data.RData")
 
 #================================#
 #Clean up tables to combine units with scalar values####
