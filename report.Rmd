@@ -215,6 +215,8 @@ For this plot, **higher is better**.
 ## Inputs
 
 In this section, the inputs that were provided to the tool are displayed.
+
+### Trips
 ```{r trips, echo = FALSE}
 #Pre allocate the table
 N = 2
@@ -242,7 +244,7 @@ if (params$flag_preset_Car_Trips_Daily_Avg) {
 }
 
 #Display the table
-kable(trips, caption = "Trips",
+kable(trips,
       escape = F,
       align = rep('l', ncol(trips))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
@@ -251,6 +253,7 @@ kable(trips, caption = "Trips",
 
 The trips table shows the weighted average of number of automobile trips per household vehicle per day and the weighted average automobile trip length. Typically these values are obtained using household travel surveys. Data sourced from the [2017 NHTS](https://nhts.ornl.gov/), was filtered for cars, SUVs, vans, and pickups. Next, the data are filtered for trips where the person was the driver and aggregated by state. The state weighted averages are calculated using the "WTTRDFIN" weight.
 
+### Electricity
 ```{r electricity, echo = FALSE}
 #Pre allocate the table
 N = 1
@@ -277,7 +280,7 @@ if (params$flag_preset_elec_gen_emissions) {
 }
 
 #Display the table
-kable(elec, caption = "Electricity",
+kable(elec,
       escape = F,
       align = rep('l', ncol(elec))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
@@ -285,6 +288,7 @@ kable(elec, caption = "Electricity",
 
 The electricity table shows the average carbon intensity of electricity generation in the given region.
 
+### ICE
 ```{r ICE, echo = FALSE}
 #Pre allocate the table
 N = 2
@@ -313,7 +317,7 @@ if (params$flag_in_preset_ICE_Fuel_Economy) {
 }
 
 #Display the table
-kable(ICE_out, caption = "ICE",
+kable(ICE_out,
       escape = F,
       align = rep('l', ncol(ICE))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
@@ -322,6 +326,7 @@ kable(ICE_out, caption = "ICE",
 
 The ICE (internal combustion engine) table shows the average fuel economy of an automobile.
 
+`r if (params$EBike_include) {"### E-Bike"}`
 ```{r EBike, echo = FALSE}
 if (params$EBike_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
@@ -356,7 +361,7 @@ if (params$flag_in_preset_EBike) {
 }
   
   #Display the table
-  kable(EBike_out %>% rename("Data Source" = DataSource), caption = "E-Bike",
+  kable(EBike_out %>% rename("Data Source" = DataSource),
         escape = F,
       align = rep('l', ncol(EBike))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
@@ -366,6 +371,7 @@ if (params$flag_in_preset_EBike) {
 
 `r if (params$EBike_include) {"The E-Bike table shows the average fuel economy of e-bikes eligible for an e-bike incentive.This value can be obtained from e-bike manufacturers. The ratio of automobile miles that are replaced by e-bike miles is specified by the user. This value can be obtained from local e-bike use studies."}`
 
+`r if (params$BEV_include) {"### BEV"}`
 ``` {r BEV, echo = FALSE}
 if (params$BEV_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
@@ -396,7 +402,7 @@ if (params$flag_in_preset_BEV) {
 }
   
   #Display the table
-  kable(BEV_out %>% rename("Data Source" = DataSource), caption = "BEV",
+  kable(BEV_out %>% rename("Data Source" = DataSource),
         escape = F,
       align = rep('l', ncol(BEV))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
@@ -406,6 +412,7 @@ if (params$flag_in_preset_BEV) {
 
 `r if (params$BEV_include) {"The BEV (Battery Electric Vehicle) table shows the average fuel economy of BEVs eligible for an incentive."}`
 
+`r if (params$PHEV_include) {"### PHEV"}`
 ``` {r PHEV, echo = FALSE}
 if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
@@ -437,7 +444,7 @@ if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
   }
   
   #Display the table
-  kable(PHEV_out %>% rename("Data Source" = DataSource), caption = "PHEV",
+  kable(PHEV_out %>% rename("Data Source" = DataSource),
         escape = F,
       align = rep('l', ncol(PHEV))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
@@ -447,6 +454,7 @@ if (params$PHEV_include) { #only include if "include" tickbox checked in GUI
 
 `r if (params$PHEV_include) {"The PHEV (Plug-in Hybrid Electric Vehicle) table shows the average fuel economies of PHEVs eligible for an incentive. The Average E-Mode Fuel Economy is used for the E-Mode range of the daily average miles traveled. Thereafter, the ICE Mode Fuel Economy is used. The sum of emissions from both types of propulsion are used to calculate total emissions."}`
 
+`r if (params$FCEV_include) {"### FCEV"}`
 ``` {r FCEV, echo = FALSE}
 if (params$FCEV_include) { #only include if "include" tickbox checked in GUI
   #Pre allocate the table
@@ -478,7 +486,7 @@ if (params$FCEV_include) { #only include if "include" tickbox checked in GUI
   }
   
   #Display the table
-  kable(FCEV_out %>% rename("Data Source" = DataSource), caption = "FCEV",
+  kable(FCEV_out %>% rename("Data Source" = DataSource),
         escape = F,
       align = rep('l', ncol(FCEV))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
@@ -487,6 +495,7 @@ if (params$FCEV_include) { #only include if "include" tickbox checked in GUI
 
 `r if (params$FCEV_include) {"The FCEV (Fuel Cell Electric Vehicle) table shows the average fuel economy of FCEVs eligible for an incentive. Additionally, it shows the ratio of electricity used for electrolysis that is provided by 100% renewable sources. Lastly, it displays the electricity required to electrolyze H2."}`
 
+### Total Budget and Incentive Amounts
 ```{r Incentives, echo = FALSE}
 #Pre allocate the table
 N = 5
@@ -505,7 +514,6 @@ incentives_input <- exclude_items(incentives_input, params$EBike_include, params
 
 #Display the table
 kable(incentives_input,
-      caption = "Total Budget and Incentive Amounts",
       align = rep('l', ncol(incentives_input))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 
@@ -513,6 +521,7 @@ kable(incentives_input,
 
 The Incentives table shows the total E-Vehicle incentive budget and the incentive provided to the consumer by e-vehicle type.
 
+### Budget Distribution
 ``` {r Incentives Distribution, echo = FALSE}
 
 #Clean up the table
@@ -526,7 +535,6 @@ inputs_num_incentivized_distrib <- params$num_incentivized_distrib %>%
 #Display the table
 kable(inputs_num_incentivized_distrib,
       col.names = c("Mode", "Allotted Percent of Total Budget"),
-      caption = "Budget Distribution",
       align = rep('l', ncol(inputs_num_incentivized_distrib))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
