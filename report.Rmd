@@ -172,16 +172,16 @@ For this plot, **higher is better**.
 print(g4plot(params$num_incentivized, params$num_incentivized_distrib, params$test_budget_points_distrib, params$num_x, params$num_y, params$mode_scale_colors, params$mode_scale_fill))
 
 #Update table such that its values are formatted correctly
-test_budget_points_distrib <- params$test_budget_points_distrib %>% 
+test_budget_points_distrib <- params$test_budget_points_distrib %>%
+  select(mode, budget_portion_perct, budget_portion, num) %>% 
   mutate(mode = recode(mode, `EBike` = "E-Bike"),
-         budget = paste("$", format(print.million(budget), nsmall = 2L)),
          budget_portion_perct = percent(budget_portion_perct),
          budget_portion = paste("$", format(print.million(budget_portion), nsmall = 2L)),
          num = floor(num))
 
 #Table, Budget distribution specific number incentivized
 kable(test_budget_points_distrib,
-      col.names = c("Mode", "Total Budget", "Allotted Percent of Total Budget", "Allotted Portion of Total Budget", "Number of Incentives"),
+      col.names = c("Mode", "Allotted Percent of Total Budget", "Allotted Portion of Total Budget", "Number of Incentives"),
       align = rep('l', ncol(test_budget_points_distrib))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
@@ -196,14 +196,15 @@ print(g5plot(params$num_incentivized, params$CO2_saved_distrib, params$test_budg
 
 #Update table such that its values are formatted correctly
 test_budget_points_w_CO2_distrib <- params$test_budget_points_w_CO2_distrib %>% 
+  select(mode, budget_portion_perct, budget_portion, total_CO2_saved) %>% 
   mutate(mode = recode(mode, `EBike` = "E-Bike"),
-         budget = paste("$", format(print.million(budget), nsmall = 2L)),
-         total_CO2_saved = paste(format(print.million(total_CO2_saved), nsmall = 2L), "kg")) %>% 
-  select(mode, budget, total_CO2_saved)
+         budget_portion_perct = percent(budget_portion_perct),
+         budget_portion = paste("$", format(print.million(budget_portion), nsmall = 2L)),
+         total_CO2_saved = paste(format(print.million(total_CO2_saved), nsmall = 2L), "kg"))
 
 #Table, Budget distribution specific CO2 saved
 kable(test_budget_points_w_CO2_distrib,
-      col.names = c("Mode", "Total Budget", "Total CO2 Saved by this mode"),
+      col.names = c("Mode", "Allotted Percent of Total Budget", "Allotted Portion of Total Budget", "Total CO2 Saved by this mode"),
       align = rep('l', ncol(test_budget_points_w_CO2_distrib))) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
