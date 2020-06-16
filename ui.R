@@ -302,6 +302,10 @@ ui <- dashboardPage(skin = "green",
                              bsTooltip("apply_in_preset_FCEV", "Apply the preset selected above",
                                        "right", options = list(container = "body"))
                   ),
+                  menuItem("Source Code",
+                           icon = icon("laptop-code"),
+                           href = ("https://github.com/futurDesign/Incentive-Impact-Tool")
+                  ),
                   fluidRow(
                     column(width = 10, align = "center",
                            downloadButton("report", "Download report", class = "butt"),
