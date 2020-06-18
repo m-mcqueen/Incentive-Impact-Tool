@@ -320,7 +320,13 @@ ui <- dashboardPage(skin = "green",
                   ),
                   menuItem("Source Code",
                            icon = icon("laptop-code"),
-                           href = ("https://github.com/futurDesign/Incentive-Impact-Tool")
+                           href = ("https://github.com/futurDesign/Incentive-Impact-Tool"),
+                           newtab = T
+                  ),
+                  menuItem("Feedback? Email Us",
+                           icon = icon("comments"),
+                           href = ("mailto:jhmacart@pdx.edu"),
+                           newtab = T
                   ),
                   fluidRow(
                     column(width = 10, align = "center",
