@@ -318,6 +318,13 @@ ui <- dashboardPage(skin = "green",
                              bsTooltip("apply_in_preset_FCEV", "Apply the preset selected above",
                                        "right", options = list(container = "body"))
                   ),
+                  fluidRow(
+                    column(width = 10, align = "center",
+                           downloadButton("report", "Download report", class = "butt"),
+                           tags$head(tags$style(".butt{background-color: SteelBlue;} .butt{color: white;}"))),
+                    bsTooltip("report", "Generates an html output of the current tool state and graphs for printing and sharing",
+                              "right", options = list(container = "body"))
+                  ),
                   menuItem("Source Code",
                            icon = icon("laptop-code"),
                            href = ("https://github.com/futurDesign/Incentive-Impact-Tool"),
@@ -327,13 +334,6 @@ ui <- dashboardPage(skin = "green",
                            icon = icon("comments"),
                            href = ("mailto:jhmacart@pdx.edu"),
                            newtab = T
-                  ),
-                  fluidRow(
-                    column(width = 10, align = "center",
-                           downloadButton("report", "Download report", class = "butt"),
-                           tags$head(tags$style(".butt{background-color: SteelBlue;} .butt{color: white;}"))),
-                    bsTooltip("report", "Generates an html output of the current tool state and graphs for printing and sharing",
-                              "right", options = list(container = "body"))
                   )
     )
   ),
