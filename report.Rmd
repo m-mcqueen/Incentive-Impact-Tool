@@ -543,5 +543,5 @@ kable(inputs_num_incentivized_distrib,
 The budget distribution table shows what percent of the total budget is allotted for which types of e-vehicle.
 
 <hr>
-<p align=center style='text-align:left'> This report was generated using the Electric Vehicle Incentive Cost and Impact Tool, hosted by Portland State University's <a href="https://trec.pdx.edu/">Transportation Research and Education Center (TREC)</a>. Source code can be found <a href = "https://github.com/futurDesign/Incentive-Impact-Tool">here</a> and is made available using the <a href="https://github.com/futurDesign/Incentive-Impact-Tool/blob/master/LICENSE.txt">GNU GPL v3 license</a>.</p>
+<p align=center style='text-align:left'> This report was generated using the Electric Vehicle Incentive Cost and Impact Tool, hosted by Portland State University's <a href="https://trec.pdx.edu/">Transportation Research and Education Center (TREC)</a>. Source code can be found <a href = "https://github.com/PSUTrec/Incentive-Impact-Tool">here</a> and is made available using the <a href="https://github.com/PSUTrec/Incentive-Impact-Tool/blob/master/LICENSE.txt">GNU GPL v3 license</a>.</p>
 <p align=center style='text-align:center'>Copyright (C) 2020  Michael McQueen</p>

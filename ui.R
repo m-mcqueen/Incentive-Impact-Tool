@@ -327,7 +327,7 @@ ui <- dashboardPage(skin = "green",
                   ),
                   menuItem("Source Code",
                            icon = icon("laptop-code"),
-                           href = ("https://github.com/futurDesign/Incentive-Impact-Tool"),
+                           href = ("https://github.com/PSUTrec/Incentive-Impact-Tool"),
                            newtab = T
                   ),
                   menuItem("Feedback? Email Us",
